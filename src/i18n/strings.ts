@@ -29,11 +29,16 @@ export interface Strings {
     settings: string;
     scoreToWin: string;
     roundTimer: string;
+    judgeTimer: string;
     timerOff: string;
+    noTime: string;
     judgeMode: string;
     judgeRotate: string;
     judgeEverybody: string;
     secondsSuffix: (n: number) => string;
+    minutesSuffix: (n: number) => string;
+    /** mm:ss style for non-whole-minute durations. */
+    clockSuffix: (m: number, s: number) => string;
     players: (n: number) => string;
     needMore: (n: number) => string;
     hostBadge: string;

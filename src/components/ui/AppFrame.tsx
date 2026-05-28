@@ -17,7 +17,7 @@ export function AppFrame({
   return (
     <div className="min-h-[100dvh] text-ink flex flex-col">
       <div
-        className="mx-auto w-full max-w-md flex-1 flex flex-col"
+        className="mx-auto w-full max-w-lg flex-1 flex flex-col"
         style={{
           paddingTop: "max(env(safe-area-inset-top), 16px)",
           paddingBottom: "max(env(safe-area-inset-bottom), 16px)",

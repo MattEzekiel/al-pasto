@@ -79,11 +79,65 @@
     -webkit-user-select: none;
   }
 
+  /* Per-screen enter fade. Pure CSS so it always completes (framer's
+     AnimatePresence mode="wait" could leave a screen stuck invisible). */
+  .screen-enter {
+    animation: screen-fade-in 200ms ease-out both;
+  }
+  @keyframes screen-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+  }
+
   .scroll-rail {
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
   .scroll-rail::-webkit-scrollbar { display: none; }
+
+  /*
+   * Card carousel rail. CSS-only scroll snapping (see css-tricks.com
+   * "Practical CSS Scroll Snapping"): mandatory x-snap, scroll-padding so
+   * snapped cards clear the rail gutter, a visible thin scrollbar, and a
+   * mask that fades both edges (cheaper than overlay pseudo-elements and it
+   * fades to true transparency over the animated background).
+   */
+  .card-rail {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: theme("spacing.rail");
+    scroll-padding-right: theme("spacing.rail");
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.hairline.strong") transparent;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 36px,
+      #000 calc(100% - 36px),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 36px,
+      #000 calc(100% - 36px),
+      transparent
+    );
+  }
+  .card-rail > * {
+    scroll-snap-align: start;
+  }
+  .card-rail::-webkit-scrollbar {
+    height: 6px;
+  }
+  .card-rail::-webkit-scrollbar-thumb {
+    background: theme("colors.hairline.strong");
+    border-radius: theme("borderRadius.pill");
+  }
+  .card-rail::-webkit-scrollbar-track {
+    background: transparent;
+  }
 }
 
 @layer components {

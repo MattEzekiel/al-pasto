@@ -72,17 +72,16 @@ export default function App() {
 
   return (
     <>
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={screen}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -4 }}
-          transition={{ duration: 0.2 }}
-        >
-          {Screen()}
-        </motion.div>
-      </AnimatePresence>
+      {/*
+       * Render the phase-driven screen directly. We deliberately do NOT wrap
+       * this in `AnimatePresence mode="wait"`: under React 19 StrictMode a
+       * keyed screen swap could leave the entering element stuck at its
+       * `initial` opacity:0 (mounted but invisible -> blank screen). A subtle
+       * per-screen fade lives in each view instead.
+       */}
+      <div key={screen} className="screen-enter">
+        {Screen()}
+      </div>
 
       {/* Toast tray */}
       <div className="fixed top-3 inset-x-0 mx-auto max-w-md px-rail flex flex-col gap-2 pointer-events-none z-50">

@@ -107,26 +107,21 @@ export function LobbyView() {
             />
           </Setting>
 
-          <Setting
+          <TimerSetting
             label={t.lobby.roundTimer}
-            value={
-              view.settings.timeLimitSec
-                ? t.lobby.secondsSuffix(view.settings.timeLimitSec)
-                : t.lobby.timerOff
-            }
-          >
-            <input
-              type="range"
-              min={0}
-              max={120}
-              step={15}
-              aria-label={t.lobby.roundTimer}
-              disabled={!isHost}
-              value={view.settings.timeLimitSec}
-              onChange={(e) => setSettings({ timeLimitSec: +e.target.value })}
-              className="w-full accent-ink"
-            />
-          </Setting>
+            seconds={view.settings.timeLimitSec}
+            defaultSec={120}
+            disabled={!isHost}
+            onChange={(timeLimitSec) => setSettings({ timeLimitSec })}
+          />
+
+          <TimerSetting
+            label={t.lobby.judgeTimer}
+            seconds={view.settings.judgeTimeLimitSec}
+            defaultSec={60}
+            disabled={!isHost}
+            onChange={(judgeTimeLimitSec) => setSettings({ judgeTimeLimitSec })}
+          />
 
           <div>
             <span className="text-body block mb-2">{t.lobby.judgeMode}</span>
@@ -264,6 +259,80 @@ function Setting({
         <span className="text-body font-semibold tabular-nums">{value}</span>
       </div>
       {children}
+    </div>
+  );
+}
+
+/** Human-readable duration: "45s", "2 min", "1:30", or "No time" at 0. */
+function formatDuration(sec: number, t: ReturnType<typeof useT>): string {
+  if (sec <= 0) return t.lobby.noTime;
+  if (sec < 60) return t.lobby.secondsSuffix(sec);
+  if (sec % 60 === 0) return t.lobby.minutesSuffix(sec / 60);
+  return t.lobby.clockSuffix(Math.floor(sec / 60), sec % 60);
+}
+
+/**
+ * A duration slider (0–10 min) paired with a "No time" switch. Storing 0
+ * means no limit; the switch toggles between 0 and `defaultSec` so flipping
+ * it back restores a sensible value instead of the slider minimum.
+ */
+function TimerSetting({
+  label,
+  seconds,
+  defaultSec,
+  disabled,
+  onChange,
+}: {
+  label: string;
+  seconds: number;
+  defaultSec: number;
+  disabled: boolean;
+  onChange: (sec: number) => void;
+}) {
+  const t = useT();
+  const noTime = seconds <= 0;
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-body">{label}</span>
+        <span className="text-body font-semibold tabular-nums">
+          {formatDuration(seconds, t)}
+        </span>
+      </div>
+      <input
+        type="range"
+        min={30}
+        max={600}
+        step={30}
+        aria-label={label}
+        disabled={disabled || noTime}
+        value={noTime ? defaultSec : seconds}
+        onChange={(e) => onChange(+e.target.value)}
+        className="w-full accent-ink disabled:opacity-40"
+      />
+      <label className="mt-2 flex items-center justify-between">
+        <span className="text-label uppercase text-ink-mute">{t.lobby.noTime}</span>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={noTime}
+          aria-label={t.lobby.noTime}
+          disabled={disabled}
+          onClick={() => onChange(noTime ? defaultSec : 0)}
+          className={[
+            "relative h-6 w-11 rounded-pill transition-colors disabled:opacity-40",
+            "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+            noTime ? "bg-ink" : "bg-surface-elevated hairline",
+          ].join(" ")}
+        >
+          <span
+            className={[
+              "absolute top-0.5 size-5 rounded-full transition-transform",
+              noTime ? "translate-x-[22px] bg-canvas" : "translate-x-0.5 bg-ink",
+            ].join(" ")}
+          />
+        </button>
+      </label>
     </div>
   );
 }

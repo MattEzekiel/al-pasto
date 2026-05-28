@@ -22,7 +22,7 @@ export function WinnerView() {
 
   return (
     <div className="min-h-[100dvh] bg-brand text-ink flex flex-col">
-      <div className="mx-auto w-full max-w-md flex-1 flex flex-col px-rail py-10">
+      <div className="mx-auto w-full max-w-lg flex-1 flex flex-col px-rail py-10">
         <motion.header
           initial={{ y: 12, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

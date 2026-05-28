@@ -123,8 +123,10 @@ export type JudgeMode = "rotate" | "everybody";
 export interface GameSettings {
   /** Maximum cards in hand. Defaults to 5. */
   handSize: number;
-  /** Per-round timer in seconds. 0 disables. */
+  /** Submission (card-picking) timer in seconds. 0 = no limit (forever). */
   timeLimitSec: number;
+  /** Judging/voting timer in seconds. 0 = no limit (forever). */
+  judgeTimeLimitSec: number;
   win: WinCondition;
   /** Who judges each round. Defaults to "rotate". */
   judgeMode: JudgeMode;

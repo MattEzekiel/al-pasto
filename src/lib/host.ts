@@ -58,7 +58,8 @@ export function shuffle<T>(input: readonly T[]): T[] {
 export function defaultSettings(locale: Locale = DEFAULT_LOCALE): GameSettings {
   return {
     handSize: 5,
-    timeLimitSec: 60,
+    timeLimitSec: 120,
+    judgeTimeLimitSec: 60,
     win: { kind: "score", target: 7 },
     judgeMode: "rotate",
     locale,
@@ -266,6 +267,13 @@ function expectedSubmitters(state: GameState): number {
   ).length;
 }
 
+/** Wall-clock deadline for the judging phase, or null when no time limit. */
+function judgingDeadline(state: GameState): number | null {
+  return state.settings.judgeTimeLimitSec > 0
+    ? Date.now() + state.settings.judgeTimeLimitSec * 1000
+    : null;
+}
+
 /**
  * Apply a submission. Cards are immediately burned from the player's hand
  * — "instant burn" is part of the UX contract. The anonymous projection
@@ -308,6 +316,8 @@ export function submit(
       ...state.round,
       submissions,
       anonymous: phase === "judging" ? anonymize(submissions) : state.round.anonymous,
+      // Switch to the judging clock the moment judging begins.
+      deadline: phase === "judging" ? judgingDeadline(state) : state.round.deadline,
     },
   };
 
@@ -335,6 +345,7 @@ export function expireSubmissions(state: GameState): GameState {
     round: {
       ...state.round,
       anonymous: anonymize(submissions),
+      deadline: judgingDeadline(state),
     },
   };
 

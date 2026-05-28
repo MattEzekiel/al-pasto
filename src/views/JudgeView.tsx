@@ -8,8 +8,6 @@ import { useGameStore, useSelfPlayer } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
 import { useT } from "@/i18n";
 
-const TIE_BREAK_GRACE_MS = 5_000;
-
 /**
  * Voting Matrix — Judge / Vote View.
  *
@@ -36,13 +34,15 @@ export function JudgeView() {
   const submittedCardIds = useUIStore((s) => s.submittedCardIds);
   const [votedRound, setVotedRound] = useState(-1);
 
-  // Host-only — schedule the tie-breaker after the deadline + grace.
+  // Host-only — auto-resolve when the judging clock runs out (if one is set).
   useEffect(() => {
     if (role !== "host") return;
     if (view?.phase !== "judging") return;
     if (!view.round.deadline) return;
-    const fireAt = view.round.deadline + TIE_BREAK_GRACE_MS;
-    const id = window.setTimeout(forceTieBreak, Math.max(0, fireAt - Date.now()));
+    const id = window.setTimeout(
+      forceTieBreak,
+      Math.max(0, view.round.deadline - Date.now()),
+    );
     return () => window.clearTimeout(id);
   }, [role, view?.phase, view?.round.deadline, forceTieBreak]);
 
@@ -71,9 +71,9 @@ export function JudgeView() {
       <WaitScreen
         title={t.judge.judgingHeader}
         subtitle={t.judge.waiting}
-        deadline={round.deadline ? round.deadline + TIE_BREAK_GRACE_MS : null}
-        totalMs={view.settings.timeLimitSec * 1000 + TIE_BREAK_GRACE_MS}
-        timerOn={view.settings.timeLimitSec > 0}
+        deadline={round.deadline}
+        totalMs={view.settings.judgeTimeLimitSec * 1000}
+        timerOn={view.settings.judgeTimeLimitSec > 0}
       />
     );
   }
@@ -85,9 +85,9 @@ export function JudgeView() {
         title={t.judge.judgingHeader}
         subtitle={playedThisRound ? t.judge.votedWaiting : t.judge.waiting}
         progress={t.judge.votesProgress(round.voteCount, expectedVoters)}
-        deadline={round.deadline ? round.deadline + TIE_BREAK_GRACE_MS : null}
-        totalMs={view.settings.timeLimitSec * 1000 + TIE_BREAK_GRACE_MS}
-        timerOn={view.settings.timeLimitSec > 0}
+        deadline={round.deadline}
+        totalMs={view.settings.judgeTimeLimitSec * 1000}
+        timerOn={view.settings.judgeTimeLimitSec > 0}
       />
     );
   }
