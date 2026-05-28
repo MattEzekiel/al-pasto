@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node server/index.js"
+    "server": "node server/index.js",
+    "skills": "npx autoskills"
   },
   "dependencies": {
     "framer-motion": "^11.18.0",

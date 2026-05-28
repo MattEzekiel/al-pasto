@@ -4,7 +4,7 @@ import { useGameStore } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
 import { HomeView } from "@/views/HomeView";
 import { LobbyView } from "@/views/LobbyView";
-import { PlayerView } from "@/views/PlayerView";
+import { GameplayView } from "@/views/GameplayView";
 import { JudgeView } from "@/views/JudgeView";
 import { RevealView } from "@/views/RevealView";
 import { WinnerView } from "@/views/WinnerView";
@@ -39,7 +39,7 @@ function pickScreen(phase: string | undefined, hasRoom: boolean): Screen {
 const SCREENS: Record<Screen, () => ReactNode> = {
   home: () => <HomeView joinHint={readJoinHint() ?? undefined} />,
   lobby: () => <LobbyView />,
-  player: () => <PlayerView />,
+  player: () => <GameplayView />,
   judge: () => <JudgeView />,
   reveal: () => <RevealView />,
   winner: () => <WinnerView />,

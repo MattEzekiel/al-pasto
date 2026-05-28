@@ -48,7 +48,7 @@ src/
     white_cards.json         response deck — { id, text }
   components/ui/
     PillButton.tsx           the canonical button
-    Card.tsx                 PlayingCard + PromptText
+    GameCard.tsx             GameCard + PromptText
     TimerBar.tsx             round timer with rose alert below 25%
     Avatar.tsx               initials-only, hairline ring
     ScoreChip.tsx            teal positive chip
@@ -56,7 +56,7 @@ src/
   views/
     HomeView.tsx
     LobbyView.tsx
-    PlayerView.tsx
+    GameplayView.tsx
     JudgeView.tsx
     RevealView.tsx
     WinnerView.tsx

@@ -5,6 +5,7 @@ import { PillButton } from "@/components/ui/PillButton";
 import { Avatar } from "@/components/ui/Avatar";
 import { useGameStore } from "@/store/useGameStore";
 import { inviteUrl, renderInviteQR } from "@/lib/qr";
+import { useT } from "@/i18n";
 
 /**
  * Pre-game waiting room.
@@ -15,6 +16,7 @@ import { inviteUrl, renderInviteQR } from "@/lib/qr";
  *   - CTA: "Start" — disabled below 3 players.
  */
 export function LobbyView() {
+  const t = useT();
   const view = useGameStore((s) => s.view);
   const role = useGameStore((s) => s.role);
   const setSettings = useGameStore((s) => s.setSettings);
@@ -45,23 +47,28 @@ export function LobbyView() {
     <AppFrame>
       <div className="space-y-6 pt-6">
         <header className="space-y-2">
-          <span className="text-label uppercase text-ink-mute">Sala</span>
+          <span className="text-label uppercase text-ink-mute">{t.lobby.room}</span>
           <h1 className="display text-display-lg tracking-[-1.2px]">
             {view.roomId}
           </h1>
         </header>
 
         {/* QR + invite */}
-        <section className="rounded-card hairline bg-surface-card p-5 flex items-center gap-4">
+        <section
+          aria-label={t.lobby.shareToInvite}
+          className="rounded-card hairline bg-surface-card p-5 flex items-center gap-4"
+        >
           <div className="size-24 grid place-items-center rounded-card bg-canvas hairline overflow-hidden">
             {qr ? (
-              <img src={qr} alt="QR de invitación" className="size-full" />
+              <img src={qr} alt={t.lobby.shareToInvite} className="size-full" />
             ) : (
               <span className="text-ink-mute text-label">QR</span>
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-label uppercase text-ink-mute">Compartí para invitar</p>
+            <p className="text-label uppercase text-ink-mute">
+              {t.lobby.shareToInvite}
+            </p>
             <p className="text-body break-all">
               {typeof window !== "undefined" ? inviteUrl(view.roomId) : ""}
             </p>
@@ -69,11 +76,16 @@ export function LobbyView() {
         </section>
 
         {/* Settings */}
-        <section className="rounded-card hairline bg-surface-card p-5 space-y-4">
-          <span className="text-label uppercase text-ink-mute">Ajustes</span>
+        <section
+          aria-label={t.lobby.settings}
+          className="rounded-card hairline bg-surface-card p-5 space-y-4"
+        >
+          <span className="text-label uppercase text-ink-mute">
+            {t.lobby.settings}
+          </span>
 
           <Setting
-            label="Puntos para ganar"
+            label={t.lobby.scoreToWin}
             value={
               view.settings.win.kind === "score"
                 ? `${view.settings.win.target}`
@@ -85,6 +97,7 @@ export function LobbyView() {
               min={3}
               max={15}
               step={1}
+              aria-label={t.lobby.scoreToWin}
               disabled={!isHost}
               value={view.settings.win.kind === "score" ? view.settings.win.target : 7}
               onChange={(e) =>
@@ -95,11 +108,11 @@ export function LobbyView() {
           </Setting>
 
           <Setting
-            label="Tiempo por ronda"
+            label={t.lobby.roundTimer}
             value={
               view.settings.timeLimitSec
-                ? `${view.settings.timeLimitSec}s`
-                : "Sin límite"
+                ? t.lobby.secondsSuffix(view.settings.timeLimitSec)
+                : t.lobby.timerOff
             }
           >
             <input
@@ -107,6 +120,7 @@ export function LobbyView() {
               min={0}
               max={120}
               step={15}
+              aria-label={t.lobby.roundTimer}
               disabled={!isHost}
               value={view.settings.timeLimitSec}
               onChange={(e) => setSettings({ timeLimitSec: +e.target.value })}
@@ -116,14 +130,14 @@ export function LobbyView() {
         </section>
 
         {/* Players */}
-        <section className="space-y-3">
+        <section aria-label={t.lobby.players(playerCount)} className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-label uppercase text-ink-mute">
-              Jugadores ({playerCount})
+              {t.lobby.players(playerCount)}
             </span>
             {playerCount < 3 && (
               <span className="text-label uppercase text-accent-rose">
-                Faltan {3 - playerCount}
+                {t.lobby.needMore(3 - playerCount)}
               </span>
             )}
           </div>
@@ -150,26 +164,29 @@ export function LobbyView() {
                       </span>
                       {p.isHost && (
                         <span className="text-[10px] uppercase tracking-[0.4px] text-ink-mute">
-                          anfitrión
+                          {t.lobby.hostBadge}
                         </span>
                       )}
                       {p.id === selfId && (
                         <span className="text-[10px] uppercase tracking-[0.4px] text-brand">
-                          vos
+                          {t.lobby.youBadge}
                         </span>
                       )}
                     </div>
                     {!p.connected && (
-                      <span className="text-label text-ink-mute">reconectando…</span>
+                      <span className="text-label text-ink-mute">
+                        {t.lobby.reconnecting}
+                      </span>
                     )}
                   </div>
                   {isHost && p.id !== selfId && (
                     <PillButton
                       variant="danger"
                       size="sm"
+                      aria-label={`${t.lobby.kick} ${p.name}`}
                       onClick={() => kickPlayer(p.id)}
                     >
-                      Echar
+                      {t.lobby.kick}
                     </PillButton>
                   )}
                 </motion.li>
@@ -187,7 +204,7 @@ export function LobbyView() {
             disabled={!canStart}
             onClick={start}
           >
-            {isHost ? "Empezar la partida" : "Esperando al anfitrión…"}
+            {isHost ? t.lobby.start : t.lobby.waiting}
           </PillButton>
         </div>
       </div>

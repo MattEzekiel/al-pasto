@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import type { Locale } from "@/i18n";
-import { DEFAULT_LOCALE } from "@/i18n";
+import type { Locale } from "@/i18n/locale";
+import { DEFAULT_LOCALE } from "@/i18n/locale";
 
 /**
  * Ephemeral UI state — nothing here survives a refresh. Drag-and-drop

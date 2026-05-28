@@ -54,6 +54,7 @@ const es: Strings = {
     judgingHeader: "Juzgando",
     waiting: "El juez está eligiendo. Bancá un toque.",
     round: (n) => `Ronda ${n}`,
+    cardOrdinal: (n) => `Carta ${n}`,
     tapToPick: "TOCÁ PARA ELEGIR",
     tapAgainToConfirm: "Tocá de nuevo la carta dada vuelta para confirmar",
     tapACardToReveal: "Tocá una carta para revelar",

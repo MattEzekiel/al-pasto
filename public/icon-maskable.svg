@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="corta.">
+  <title>corta.</title>
+  <!-- 80% safe-zone for maskable: art lives inside the inner 410x410 -->
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- white card (safe-zone padded) -->
+  <rect x="156" y="118" width="200" height="276" rx="36" fill="#ffffff"/>
+  <!-- corta. wordmark on the card -->
+  <text x="256" y="262" text-anchor="middle"
+        font-family="Inter, system-ui, sans-serif"
+        font-weight="700" font-size="62"
+        letter-spacing="-3.5"
+        fill="#000000">corta.</text>
+  <!-- cobalt-violet underscore stamp -->
+  <rect x="196" y="308" width="120" height="14" fill="#494fdf"/>
+</svg>

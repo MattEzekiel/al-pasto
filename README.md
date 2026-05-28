@@ -35,7 +35,7 @@ src/lib/host.ts            pure reducers: deal/judge/score/tie-break/kick
 src/lib/anonymize.ts       sanitize for broadcast; shuffle for judging
 src/lib/persist.ts         IndexedDB mirror (failover)
 src/store/useGameStore.ts  the host source-of-truth + peer view
-src/views/                 HomeView, LobbyView, PlayerView, JudgeView, RevealView, WinnerView
+src/views/                 HomeView, LobbyView, GameplayView, JudgeView, RevealView, WinnerView
 server/index.js            passthrough + host election
 tailwind.config.ts         every color / radius / font is a token
 ```

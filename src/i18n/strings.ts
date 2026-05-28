@@ -54,6 +54,7 @@ export interface Strings {
     judgingHeader: string;
     waiting: string;
     round: (n: number) => string;
+    cardOrdinal: (n: number) => string;
     tapToPick: string;
     tapAgainToConfirm: string;
     tapACardToReveal: string;

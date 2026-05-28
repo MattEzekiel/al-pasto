@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# No tracking, no DB — but room URLs (?room=XXXX) are ephemeral and not
+# valuable to index. Crawlers should focus on the public landing.

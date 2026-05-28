@@ -2,10 +2,11 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { AppFrame } from "@/components/ui/AppFrame";
 import { PillButton } from "@/components/ui/PillButton";
-import { PlayingCard, PromptText } from "@/components/ui/Card";
+import { GameCard, PromptText } from "@/components/ui/GameCard";
 import { TimerBar } from "@/components/ui/TimerBar";
 import { useGameStore, useSelfPlayer } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
+import { useT } from "@/i18n";
 
 const TIE_BREAK_GRACE_MS = 5_000;
 
@@ -21,6 +22,7 @@ const TIE_BREAK_GRACE_MS = 5_000;
  * lives in `lib/host.ts`.
  */
 export function JudgeView() {
+  const t = useT();
   const view = useGameStore((s) => s.view);
   const pick = useGameStore((s) => s.pick);
   const forceTieBreak = useGameStore((s) => s.forceTieBreak);
@@ -47,10 +49,10 @@ export function JudgeView() {
     return (
       <AppFrame>
         <div className="pt-10 space-y-4">
-          <span className="text-label uppercase text-ink-mute">Judging</span>
-          <p className="display text-display-md">
-            The judge is picking. Hold tight.
-          </p>
+          <span className="text-label uppercase text-ink-mute">
+            {t.judge.judgingHeader}
+          </span>
+          <p className="display text-display-md">{t.judge.waiting}</p>
           {round.deadline && view.settings.timeLimitSec > 0 && (
             <TimerBar
               deadline={round.deadline + TIE_BREAK_GRACE_MS}
@@ -66,29 +68,38 @@ export function JudgeView() {
     <AppFrame
       header={
         <div className="pt-3 pb-4 flex items-center justify-between">
-          <span className="text-label uppercase text-brand">You are the judge</span>
+          <span className="text-label uppercase text-brand">{t.judge.youAreJudge}</span>
           <span className="text-label uppercase text-ink-mute">
-            Round {round.index}
+            {t.judge.round(round.index)}
           </span>
         </div>
       }
     >
       {/* Prompt */}
-      <section className="pt-2">
+      <section aria-label={t.judge.round(round.index)} className="pt-2">
         <div className="rounded-card hairline bg-surface-card p-5">
           {round.blackCard && <PromptText text={round.blackCard.text} />}
         </div>
       </section>
 
       {/* Matrix */}
-      <section className="mt-5 grid grid-cols-2 gap-3">
-        {round.anonymous.map((sub) => {
+      <section
+        aria-label={t.judge.tapACardToReveal}
+        className="mt-5 grid grid-cols-2 gap-3"
+      >
+        {round.anonymous.map((sub, idx) => {
           const isFlipped = flipped === sub.id;
+          const label = isFlipped
+            ? sub.cards.map((c) => c.text).join(" + ")
+            : t.judge.cardOrdinal(idx + 1);
           return (
             <button
               key={sub.id}
+              type="button"
+              aria-label={label}
+              aria-pressed={isFlipped}
               onClick={() => (isFlipped ? pick(sub.id) : flip(sub.id))}
-              className="relative aspect-[3/4] [perspective:1000px]"
+              className="relative aspect-[3/4] [perspective:1000px] rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             >
               <motion.div
                 className="absolute inset-0 [transform-style:preserve-3d]"
@@ -96,14 +107,14 @@ export function JudgeView() {
                 transition={{ type: "spring", stiffness: 240, damping: 24 }}
               >
                 <div className="absolute inset-0 [backface-visibility:hidden]">
-                  <PlayingCard tone="black" faceDown>
+                  <GameCard tone="black" faceDown>
                     {""}
-                  </PlayingCard>
+                  </GameCard>
                 </div>
                 <div className="absolute inset-0 [transform:rotateY(180deg)] [backface-visibility:hidden]">
-                  <PlayingCard tone="white" meta="TAP TO PICK">
+                  <GameCard tone="white" meta={t.judge.tapToPick}>
                     {sub.cards.map((c) => c.text).join(" + ")}
-                  </PlayingCard>
+                  </GameCard>
                 </div>
               </motion.div>
             </button>
@@ -113,7 +124,7 @@ export function JudgeView() {
 
       <div className="mt-6">
         <PillButton variant="ghost" size="md" full disabled>
-          {flipped ? "Tap the flipped card again to confirm" : "Tap a card to reveal"}
+          {flipped ? t.judge.tapAgainToConfirm : t.judge.tapACardToReveal}
         </PillButton>
       </div>
     </AppFrame>

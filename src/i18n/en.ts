@@ -50,6 +50,7 @@ const en: Strings = {
     judgingHeader: "Judging",
     waiting: "The judge is picking. Hold tight.",
     round: (n) => `Round ${n}`,
+    cardOrdinal: (n) => `Card ${n}`,
     tapToPick: "TAP TO PICK",
     tapAgainToConfirm: "Tap the flipped card again to confirm",
     tapACardToReveal: "Tap a card to reveal",

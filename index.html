@@ -2,17 +2,60 @@
 <html lang="es-AR" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+
+    <!-- Primary -->
+    <title>Corta — el juego de cartas extraoficial</title>
+    <meta name="description" content="Corta es un juego de cartas multijugador inspirado en Cards Against Humanity. Sin base de datos, sin cuentas, alojado entre pares. PWA mobile-first." />
+    <meta name="author" content="Matias Bubello (@mattezekiel)" />
     <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="application-name" content="Corta" />
+    <meta name="keywords" content="corta, cards against humanity, hdp, juego de cartas, multijugador, pwa, fiesta, argentina" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+    <link rel="mask-icon" href="/favicon.svg" color="#494fdf" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- iOS PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Corta" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <link rel="preconnect" href="https://rsms.me/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Corta" />
+    <meta property="og:title" content="Corta — el juego de cartas extraoficial" />
+    <meta property="og:description" content="Multijugador. Sin cuentas. Nada sale del cuarto. Una PWA inspirada en CAH/HDP, alojada entre pares y sin base de datos." />
+    <meta property="og:image" content="/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Corta — el juego de cartas extraoficial" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Corta — el juego de cartas extraoficial" />
+    <meta name="twitter:description" content="Multijugador. Sin cuentas. Nada sale del cuarto. PWA mobile-first inspirada en CAH/HDP." />
+    <meta name="twitter:image" content="/og-image.svg" />
+
+    <!-- Crawlers -->
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://rsms.me/" crossorigin />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-    <title>Corta — el juego de cartas extraoficial</title>
   </head>
   <body class="bg-canvas text-ink antialiased">
+    <noscript>
+      <p style="padding:24px;font-family:Inter,sans-serif;color:#fff;background:#000;">
+        Corta necesita JavaScript para funcionar — habilitalo en tu navegador y volvé a intentarlo.
+      </p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

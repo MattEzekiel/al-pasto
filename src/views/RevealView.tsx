@@ -1,16 +1,18 @@
 import { motion } from "framer-motion";
 import { AppFrame } from "@/components/ui/AppFrame";
 import { PillButton } from "@/components/ui/PillButton";
-import { PlayingCard, PromptText } from "@/components/ui/Card";
+import { GameCard, PromptText } from "@/components/ui/GameCard";
 import { Avatar } from "@/components/ui/Avatar";
 import { useGameStore } from "@/store/useGameStore";
+import { useT } from "@/i18n";
 
 /**
  * Post-judging beat. Surfaces the winning submission as a cobalt-violet
- * featured card — the brand's single permitted "stamp". Host taps Continue
+ * featured card — the brand's single permitted "stamp". Host taps the CTA
  * to draw the next round.
  */
 export function RevealView() {
+  const t = useT();
   const view = useGameStore((s) => s.view);
   const role = useGameStore((s) => s.role);
   const advanceRound = useGameStore((s) => s.advanceRound);
@@ -19,14 +21,15 @@ export function RevealView() {
   const round = view.round;
   const winnerSub = round.anonymous.find((s) => s.id === round.winnerSubmissionId);
   const winner = view.players.find((p) => p.id === round.winnerPlayerId);
+  const winnerName = winner?.name ?? "—";
 
   return (
     <AppFrame>
       <div className="pt-6 space-y-6">
         <header className="space-y-2">
-          <span className="text-label uppercase text-brand">Round won</span>
+          <span className="text-label uppercase text-brand">{t.reveal.badge}</span>
           <h1 className="display text-display-md">
-            {winner?.name ?? "Someone"} takes the round.
+            {t.reveal.takesRound(winnerName)}
           </h1>
         </header>
 
@@ -42,9 +45,9 @@ export function RevealView() {
           transition={{ type: "spring", stiffness: 220, damping: 22 }}
           className="flex justify-center"
         >
-          <PlayingCard tone="featured" meta="WINNER">
+          <GameCard tone="featured" meta={t.reveal.winnerTag}>
             {winnerSub?.cards.map((c) => c.text).join(" + ")}
-          </PlayingCard>
+          </GameCard>
         </motion.div>
 
         {winner && (
@@ -52,7 +55,7 @@ export function RevealView() {
             <Avatar name={winner.name} size={40} />
             <div>
               <p className="text-body font-semibold">{winner.name}</p>
-              <p className="text-label uppercase text-ink-mute">+1 point</p>
+              <p className="text-label uppercase text-ink-mute">{t.reveal.pointPlus}</p>
             </div>
           </div>
         )}
@@ -65,7 +68,7 @@ export function RevealView() {
             disabled={role !== "host"}
             onClick={advanceRound}
           >
-            {role === "host" ? "Next round" : "Waiting for host…"}
+            {role === "host" ? t.reveal.nextRound : t.reveal.waitingHost}
           </PillButton>
         </div>
       </div>

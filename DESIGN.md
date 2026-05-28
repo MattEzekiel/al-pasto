@@ -35,7 +35,7 @@ The brand voice is "off-the-record" — irreverent, unfiltered. The visual syste
 - **Surface Elevated** (`{colors.surface.elevated}` — `#1C1C1E`) — nested or "active" panels: avatars, dragged-card hint, banner pills.
 - **Surface Deep** (`{colors.surface.deep}` — `#0a0a0a`) — reserved for nested chrome inside the dark canvas; rare.
 - **Hairline** (`{colors.hairline}` — `#2A2A2A`) — 1px borders on dark cards; replaces shadow.
-- **Hairline Strong** (`{colors.hairline.strong}` — `#3A3A3A`) — the dashed drop-zone border in `PlayerView`.
+- **Hairline Strong** (`{colors.hairline.strong}` — `#3A3A3A`) — the dashed drop-zone border in `GameplayView`.
 
 ### Text
 
@@ -78,7 +78,7 @@ JetBrains Mono is declared but currently unused — reserved for any future debu
 - Display sizes always run at weight 700 with negative tracking. Inter at 700 without negative tracking reads as too wide — the tightened tracking gives Corta its precise, engineered voice.
 - Body and labels stay at 400 (body) and 600 (UI). **Weight 500 is forbidden** — the hierarchy depends on size + the 200-step weight gap.
 - UI labels are uppercase, +0.4px tracked. The small spacing nudge makes them feel slightly mechanical — fintech-precision applied to a party game.
-- Card prompts are display-700 with `_` slots rendered as cobalt-violet underlines, not as text. See `PromptText` in `src/components/ui/Card.tsx`.
+- Card prompts are display-700 with `_` slots rendered as cobalt-violet underlines, not as text. See `PromptText` in `src/components/ui/GameCard.tsx`.
 
 ## Layout
 
@@ -144,9 +144,9 @@ Variants:
 - **`ghost`** — transparent + hairline. Used as the secondary CTA on `HomeView` (the "Join" button beside "Host").
 - **`danger`** — `bg-accent-rose`. Reserved for the per-peer Kick action in the lobby. The only red button.
 
-### PlayingCard — `src/components/ui/Card.tsx`
+### GameCard — `src/components/ui/GameCard.tsx`
 
-The card primitive used for prompts (`tone="black"`), responses (`tone="white"`), and the winning stamp (`tone="featured"`). 244×326px, `rounded-card`. The tone is the only mode that changes — typography stays identical across all three.
+The card primitive used for prompts (`tone="black"`), responses (`tone="white"`), and the winning stamp (`tone="featured"`). 244×326px, `rounded-card`. The tone is the only mode that changes — typography stays identical across all three. Exported as `GameCard`.
 
 `PromptText` is a small helper that splits a black-card prompt on `_` and renders the placeholders as cobalt-violet underscored slots. This is the only place `brand.bright` is used as an underline.
 
@@ -160,7 +160,7 @@ Initials-only on `surface.elevated`. No photographs, no gradients, no hashed bac
 
 ### ScoreChip — `src/components/ui/ScoreChip.tsx`
 
-Inline teal chip — `accent-teal/15` background, `accent-teal` text, with a tiny solid dot. The only place teal appears in the UI. Used in `PlayerView` and inside the active player's row in the lobby.
+Inline teal chip — `accent-teal/15` background, `accent-teal` text, with a tiny solid dot. The only place teal appears in the UI. Used in `GameplayView` and inside the active player's row in the lobby.
 
 ## Motion
 

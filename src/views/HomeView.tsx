@@ -2,14 +2,18 @@ import { useState } from "react";
 import { PillButton } from "@/components/ui/PillButton";
 import { AppFrame } from "@/components/ui/AppFrame";
 import { useGameStore } from "@/store/useGameStore";
+import { useUIStore } from "@/store/useUIStore";
 import { defaultSettings } from "@/lib/host";
+import { useT } from "@/i18n";
 
 /**
  * Entry point. Two paths: create a room (become host) or join with a code.
- * The brand voice lives here at full volume — display-xxl headline,
- * "off-the-record" subtitle, single white pill primary CTA.
+ * All visible copy goes through `useT()` — the locale lives on the UI
+ * store and the host's settings carry the chosen deck.
  */
 export function HomeView({ joinHint }: { joinHint?: string }) {
+  const t = useT();
+  const locale = useUIStore((s) => s.locale);
   const [name, setName] = useState("");
   const [room, setRoom] = useState(joinHint ?? "");
   const createRoom = useGameStore((s) => s.createRoom);
@@ -23,35 +27,47 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
       <div className="flex-1 flex flex-col justify-between pt-12 pb-8">
         <header className="space-y-3">
           <span className="text-label text-ink-mute uppercase">
-            El juego de cartas extraoficial
+            {t.app.tagline}
           </span>
           <h1 className="display text-display-xxl">
-            corta.<span className="text-brand">_</span>
+            <span className="sr-only">{t.app.name}</span>
+            <span aria-hidden>
+              corta.<span className="text-brand">_</span>
+            </span>
           </h1>
-          <p className="text-body text-ink-mute max-w-xs">
-            Multijugador. Sin cuentas. Nada sale del cuarto. El anfitrión corre la
-            partida desde su propio celular — cerraste la pestaña, se terminó.
-          </p>
+          <p className="text-body text-ink-mute max-w-xs">{t.home.intro}</p>
         </header>
 
         <section className="space-y-3">
           <label className="block">
-            <span className="text-label uppercase text-ink-mute">Tu nombre</span>
+            <span className="text-label uppercase text-ink-mute">
+              {t.home.name}
+            </span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Mati"
-              className="mt-2 w-full h-12 bg-surface-card hairline rounded-card px-4 text-body text-ink placeholder:text-ink-faint focus:outline-none focus:border-ink"
+              placeholder={t.home.namePlaceholder}
+              aria-label={t.home.name}
+              autoComplete="nickname"
+              maxLength={24}
+              className="mt-2 w-full h-12 bg-surface-card hairline rounded-card px-4 text-body text-ink placeholder:text-ink-faint focus:outline-none focus-visible:border-ink"
             />
           </label>
 
           <label className="block">
-            <span className="text-label uppercase text-ink-mute">Código de sala</span>
+            <span className="text-label uppercase text-ink-mute">
+              {t.home.roomCode}
+            </span>
             <input
               value={room}
               onChange={(e) => setRoom(e.target.value.toUpperCase())}
-              placeholder="4F2K"
-              className="mt-2 w-full h-12 bg-surface-card hairline rounded-card px-4 text-body text-ink placeholder:text-ink-faint tracking-[0.4em] uppercase focus:outline-none focus:border-ink"
+              placeholder={t.home.roomPlaceholder}
+              aria-label={t.home.roomCode}
+              autoComplete="off"
+              spellCheck={false}
+              maxLength={6}
+              inputMode="text"
+              className="mt-2 w-full h-12 bg-surface-card hairline rounded-card px-4 text-body text-ink placeholder:text-ink-faint tracking-[0.4em] uppercase focus:outline-none focus-visible:border-ink"
             />
           </label>
 
@@ -62,15 +78,15 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
               disabled={!canJoin}
               onClick={() => joinRoom(room.trim(), name.trim())}
             >
-              Entrar
+              {t.home.join}
             </PillButton>
             <PillButton
               variant="primary"
               size="lg"
               disabled={!canCreate}
-              onClick={() => createRoom(name.trim(), defaultSettings())}
+              onClick={() => createRoom(name.trim(), defaultSettings(locale))}
             >
-              Crear sala
+              {t.home.host}
             </PillButton>
           </div>
         </section>

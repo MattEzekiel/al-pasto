@@ -1,5 +1,9 @@
-import blackCardsRaw from "@/data/black_cards.json";
-import whiteCardsRaw from "@/data/white_cards.json";
+import esBlack from "@/data/es/black_cards.json";
+import esWhite from "@/data/es/white_cards.json";
+import enBlack from "@/data/en/black_cards.json";
+import enWhite from "@/data/en/white_cards.json";
+import type { Locale } from "@/i18n/locale";
+import { DEFAULT_LOCALE } from "@/i18n/locale";
 import type {
   BlackCard,
   GameSettings,
@@ -15,10 +19,20 @@ import type {
  * updates and broadcast atomically.
  *
  * Nothing in here touches sockets or IndexedDB — that's the store's job.
+ *
+ * Decks are statically imported per locale and selected by
+ * `GameSettings.locale`. Add a new locale by extending `DECKS` and
+ * adding the matching JSON files under `src/data/<locale>/`.
  */
 
-const BLACK = blackCardsRaw as BlackCard[];
-const WHITE = whiteCardsRaw as WhiteCard[];
+const DECKS: Record<Locale, { black: BlackCard[]; white: WhiteCard[] }> = {
+  es: { black: esBlack as BlackCard[], white: esWhite as WhiteCard[] },
+  en: { black: enBlack as BlackCard[], white: enWhite as WhiteCard[] },
+};
+
+function deckFor(locale: Locale) {
+  return DECKS[locale] ?? DECKS[DEFAULT_LOCALE];
+}
 
 const newId = (prefix: string) =>
   `${prefix}-${Math.random().toString(36).slice(2, 8)}${Date.now().toString(36).slice(-4)}`;
@@ -36,11 +50,12 @@ export function shuffle<T>(input: readonly T[]): T[] {
 /* Initial state                                                       */
 /* ------------------------------------------------------------------ */
 
-export function defaultSettings(): GameSettings {
+export function defaultSettings(locale: Locale = DEFAULT_LOCALE): GameSettings {
   return {
     handSize: 5,
     timeLimitSec: 60,
     win: { kind: "score", target: 7 },
+    locale,
   };
 }
 
@@ -50,6 +65,7 @@ export function createInitialState(args: {
   settings?: GameSettings;
 }): GameState {
   const settings = args.settings ?? defaultSettings();
+  const { black, white } = deckFor(settings.locale);
   return {
     roomId: args.roomId,
     version: 1,
@@ -67,8 +83,8 @@ export function createInitialState(args: {
       },
     ],
     banned: [],
-    blackDeck: shuffle(BLACK),
-    whiteDeck: shuffle(WHITE),
+    blackDeck: shuffle(black),
+    whiteDeck: shuffle(white),
     round: emptyRound(),
     winnerId: null,
   };
