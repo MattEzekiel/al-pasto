@@ -92,3 +92,34 @@ To run a real local match: open `pnpm dev` in three browser windows (or one phon
 - The `commitHost → mirror → broadcast → fan-out-private-hands` sequence in `useGameStore`. If any step fails, the failover guarantee breaks.
 - `anonymizeSubmissions` — the order of "shuffle then strip ids" matters; if you reverse it, position becomes a tell.
 - `promoteOrTerminate` in `server/index.js` — the 3-player quorum is the only correctness invariant on the server side.
+
+## Token-efficient working rules
+
+Adapted from github.com/drona23/claude-token-efficient (universal + coding profile).
+
+### Approach
+- Read existing files before writing. Don't re-read unless changed.
+- Thorough in reasoning, concise in output.
+- Skip files over 100KB unless required.
+- No sycophantic openers or closing fluff.
+- No emojis or em-dashes. Plain hyphens and straight quotes only.
+- Do not guess APIs, versions, flags, commit SHAs, or package names. Verify by reading code or docs before asserting.
+
+### Output
+- Return code first. Explanation after, only if non-obvious.
+- No inline prose. Comments only where logic is unclear.
+- No boilerplate unless explicitly requested.
+
+### Code
+- Simplest working solution. No over-engineering.
+- No abstractions for single-use operations. Three similar lines beats a premature abstraction.
+- No speculative features or "you might also want...".
+- Read the file before modifying it. Never edit blind.
+- No docstrings or type annotations on code not being changed.
+- No error handling for scenarios that cannot happen.
+
+### Review / debugging
+- State the bug. Show the fix. Stop. No suggestions beyond the review's scope, no compliments.
+- Never speculate about a bug without reading the relevant code first. One pass: what you found, where, the fix.
+- If the cause is unclear, say so. Do not guess.
+- Validate before declaring done.
