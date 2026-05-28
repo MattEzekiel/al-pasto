@@ -1,0 +1,18 @@
+{
+  "name": "Corta — el juego de cartas extraoficial",
+  "short_name": "Corta",
+  "description": "Juego de cartas multijugador, sin base de datos, alojado entre pares. Mobile-first.",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
