@@ -24,7 +24,7 @@ function randomFrom<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function randomCode(len = 4): string {
+function randomCode(len = 8): string {
   let out = "";
   for (let i = 0; i < len; i++) out += randomFrom(CODE_CHARS.split(""));
   return out;
@@ -44,7 +44,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
   const [roomPlaceholder] = useState(() => randomCode());
 
   const canCreate = name.trim().length >= 2;
-  const canJoin = canCreate && room.trim().length >= 4;
+  const canJoin = canCreate && room.trim().length >= 8;
 
   return (
     <AppFrame>
@@ -111,7 +111,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
                   aria-label={t.home.roomCode}
                   autoComplete="off"
                   spellCheck={false}
-                  maxLength={6}
+                  maxLength={8}
                   inputMode="text"
                   className="mt-2 w-full h-12 bg-surface-card hairline rounded-card px-4 text-body text-ink placeholder:text-ink-faint tracking-[0.4em] uppercase focus:outline-none focus-visible:border-ink"
                 />

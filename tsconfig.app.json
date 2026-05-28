@@ -16,10 +16,9 @@
     "jsx": "react-jsx",
     "resolveJsonModule": true,
 
-    /* Paths */
-    "baseUrl": ".",
+    /* Paths (resolved relative to this config; no deprecated baseUrl) */
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
 
     /* Linting */

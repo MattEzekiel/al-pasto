@@ -49,8 +49,20 @@ const players = new Map();
 
 const MIN_PLAYERS = 3;
 
+// 8-char codes from an unambiguous alphabet (no 0/O, 1/I). Retried until
+// unique so two live rooms can never collide.
+const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const CODE_LENGTH = 8;
+
 function newRoomCode() {
-  return Math.random().toString(36).slice(2, 6).toUpperCase();
+  let code;
+  do {
+    code = "";
+    for (let i = 0; i < CODE_LENGTH; i++) {
+      code += CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)];
+    }
+  } while (rooms.has(code));
+  return code;
 }
 
 function newPlayerId() {
