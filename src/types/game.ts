@@ -71,6 +71,16 @@ export interface AnonymousSubmission {
   cards: WhiteCard[];
 }
 
+/**
+ * A vote in "everybody" judge mode. Host-only — `voterId` never crosses
+ * the wire (only an aggregate count does), so a voter can't be linked to
+ * a submission.
+ */
+export interface Vote {
+  voterId: PlayerId;
+  submissionId: SubmissionId;
+}
+
 export type GamePhase =
   | "lobby"
   | "dealing"
@@ -82,14 +92,16 @@ export type GamePhase =
 
 export interface RoundState {
   index: number;
-  /** Player id of the current judge. */
+  /** Player id of the current judge. `null` in "everybody" judge mode. */
   judgeId: PlayerId | null;
   blackCard: BlackCard | null;
   /** Submissions in arrival order (Host-side). */
   submissions: Submission[];
   /** Submissions shuffled and stripped, for the judge. */
   anonymous: AnonymousSubmission[];
-  /** The winning submission's id once the judge picks. */
+  /** Votes cast in "everybody" judge mode (Host-side only). */
+  votes: Vote[];
+  /** The winning submission's id once the judge picks / votes resolve. */
   winnerSubmissionId: SubmissionId | null;
   /** Wall-clock deadline if `timeLimitSec` is configured. */
   deadline: number | null;
@@ -100,12 +112,22 @@ export type WinCondition =
   | { kind: "time"; minutes: number }
   | { kind: "deck" };
 
+/**
+ * How the winning submission is chosen each round.
+ *   - "rotate"    — a single judge rotates each round and picks (classic).
+ *   - "everybody" — no fixed judge; every player who submitted votes, and
+ *                   the submission with the most votes wins.
+ */
+export type JudgeMode = "rotate" | "everybody";
+
 export interface GameSettings {
   /** Maximum cards in hand. Defaults to 5. */
   handSize: number;
   /** Per-round timer in seconds. 0 disables. */
   timeLimitSec: number;
   win: WinCondition;
+  /** Who judges each round. Defaults to "rotate". */
+  judgeMode: JudgeMode;
   /** Deck locale — set by the host. All peers play with the same deck. */
   locale: "es" | "en";
 }
@@ -140,6 +162,10 @@ export interface SanitizedGameState {
     judgeId: PlayerId | null;
     blackCard: BlackCard | null;
     anonymous: AnonymousSubmission[];
+    /** How many players have submitted so far. Count only — no authors. */
+    submissionCount: number;
+    /** How many votes are in (everybody mode). Count only — no voters. */
+    voteCount: number;
     winnerSubmissionId: SubmissionId | null;
     deadline: number | null;
     /** Once revealed, the winning submission's author. */
@@ -171,8 +197,10 @@ export type ClientToServer =
   | { t: "state/private"; target: PlayerId; payload: PrivateHandPayload }
   /** Peer: submit cards for the current round. */
   | { t: "action/submit"; submission: Omit<Submission, "id"> }
-  /** Judge: pick a submission. */
+  /** Judge: pick a submission (rotate mode). */
   | { t: "action/pick"; submissionId: SubmissionId }
+  /** Player: cast a vote for a submission (everybody mode). */
+  | { t: "action/vote"; voterId: PlayerId; submissionId: SubmissionId }
   /** Host: forcibly remove a peer. */
   | { t: "host/kick"; playerId: PlayerId }
   /** Heartbeat from any peer so AFK timers can advance. */

@@ -182,6 +182,7 @@ function handle(socket, msg) {
     case "state/broadcast":
     case "action/submit":
     case "action/pick":
+    case "action/vote":
     case "ping": {
       const roomId = socket.data.roomId;
       if (!roomId) return;

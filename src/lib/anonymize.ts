@@ -59,6 +59,8 @@ export function sanitizeState(state: GameState): SanitizedGameState {
       judgeId: state.round.judgeId,
       blackCard: state.round.blackCard,
       anonymous: state.round.anonymous,
+      submissionCount: state.round.submissions.length,
+      voteCount: state.round.votes.length,
       winnerSubmissionId: state.round.winnerSubmissionId,
       deadline: state.round.deadline,
       // Once the round is "reveal" or later, surface the author.

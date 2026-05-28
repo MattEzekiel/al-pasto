@@ -4,22 +4,23 @@ import type {
   ClientToServer,
   GameSettings,
   GameState,
+  NetworkPayload,
   PlayerId,
   RoomId,
   SanitizedGameState,
-  ServerToClient,
   Submission,
   WhiteCard,
 } from "@/types/game";
 import { sanitizeState } from "@/lib/anonymize";
 import {
   addPlayer,
+  castVote,
   createInitialState,
   endRound,
+  expireSubmissions,
   judgePick,
   kick,
   markConnection,
-  removePlayer,
   resolveTieBreaker,
   startGame,
   startNextRound,
@@ -75,9 +76,13 @@ interface GameStoreShape {
   kickPlayer: (playerId: PlayerId) => void;
   advanceRound: () => void;
   forceTieBreak: () => void;
+  /** Host-only — force the submission phase closed when the timer expires. */
+  expireSubmission: () => void;
 
   /* peer actions */
   submitCards: (cards: WhiteCard[]) => void;
+  /** Everybody-judge mode — cast a vote for a submission. */
+  vote: (submissionId: string) => void;
 
   /** Test/devtools helper — never called in production. */
   __setHostState: (state: GameState) => void;
@@ -111,7 +116,7 @@ export const useGameStore = create<GameStoreShape>()(
     };
 
     /** Host-side handler for inbound server messages. */
-    const handleHostMessage = (msg: ServerToClient) => {
+    const handleHostMessage = (msg: NetworkPayload) => {
       const state = get().hostState;
       if (!state) return;
 
@@ -130,6 +135,18 @@ export const useGameStore = create<GameStoreShape>()(
           commitHost(markConnection(state, msg.playerId, false));
           return;
         }
+        case "action/submit": {
+          commitHost(submit(state, msg.submission));
+          return;
+        }
+        case "action/pick": {
+          commitHost(judgePick(state, msg.submissionId));
+          return;
+        }
+        case "action/vote": {
+          commitHost(castVote(state, { voterId: msg.voterId, submissionId: msg.submissionId }));
+          return;
+        }
         default:
         // Host receives broadcast/private as well (the server fan-outs to
         // everyone in the room) — safe to ignore.
@@ -137,7 +154,7 @@ export const useGameStore = create<GameStoreShape>()(
     };
 
     /** Peer-side handler. */
-    const handlePeerMessage = (msg: ServerToClient) => {
+    const handlePeerMessage = (msg: NetworkPayload) => {
       switch (msg.t) {
         case "state/broadcast": {
           const current = get().view;
@@ -279,6 +296,12 @@ export const useGameStore = create<GameStoreShape>()(
         commitHost(resolveTieBreaker(state));
       },
 
+      expireSubmission: () => {
+        const state = get().hostState;
+        if (!state) return;
+        commitHost(expireSubmissions(state));
+      },
+
       advanceRound: () => {
         const state = get().hostState;
         if (!state) return;
@@ -316,6 +339,23 @@ export const useGameStore = create<GameStoreShape>()(
         useNetworkStore
           .getState()
           .socket?.send({ t: "action/submit", submission: wireSub } as ClientToServer);
+      },
+
+      vote: (submissionId) => {
+        const me = get().selfId;
+        if (!me) return;
+
+        // Host short-circuits the wire — apply locally then broadcast.
+        if (get().role === "host") {
+          const state = get().hostState;
+          if (!state) return;
+          commitHost(castVote(state, { voterId: me, submissionId }));
+          return;
+        }
+
+        useNetworkStore
+          .getState()
+          .socket?.send({ t: "action/vote", voterId: me, submissionId });
       },
 
       __setHostState: (state) => set({ hostState: state, view: sanitizeState(state) }),

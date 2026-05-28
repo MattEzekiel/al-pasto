@@ -15,7 +15,7 @@ export function AppFrame({
   footer?: ReactNode;
 }) {
   return (
-    <div className="min-h-[100dvh] bg-canvas text-ink flex flex-col">
+    <div className="min-h-[100dvh] text-ink flex flex-col">
       <div
         className="mx-auto w-full max-w-md flex-1 flex flex-col"
         style={{

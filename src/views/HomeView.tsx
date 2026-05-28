@@ -16,6 +16,20 @@ type Mode = "select" | "create" | "join";
  * All visible copy goes through `useT()` — the locale lives on the UI store
  * and the host's settings carry the chosen deck.
  */
+// Room-code placeholder charset — mirrors the server's 4-char codes,
+// minus ambiguous glyphs (0/O, 1/I) so the sample reads cleanly.
+const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+function randomFrom<T>(arr: readonly T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomCode(len = 4): string {
+  let out = "";
+  for (let i = 0; i < len; i++) out += randomFrom(CODE_CHARS.split(""));
+  return out;
+}
+
 export function HomeView({ joinHint }: { joinHint?: string }) {
   const t = useT();
   const locale = useUIStore((s) => s.locale);
@@ -24,6 +38,10 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
   const [room, setRoom] = useState(joinHint ?? "");
   const createRoom = useGameStore((s) => s.createRoom);
   const joinRoom = useGameStore((s) => s.joinRoom);
+
+  // Randomised once per mount so the placeholders feel fresh, not canned.
+  const [namePlaceholder] = useState(() => randomFrom(t.home.namePool));
+  const [roomPlaceholder] = useState(() => randomCode());
 
   const canCreate = name.trim().length >= 2;
   const canJoin = canCreate && room.trim().length >= 4;
@@ -72,7 +90,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={t.home.namePlaceholder}
+                placeholder={namePlaceholder}
                 aria-label={t.home.name}
                 autoComplete="nickname"
                 autoFocus
@@ -89,7 +107,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
                 <input
                   value={room}
                   onChange={(e) => setRoom(e.target.value.toUpperCase())}
-                  placeholder={t.home.roomPlaceholder}
+                  placeholder={roomPlaceholder}
                   aria-label={t.home.roomCode}
                   autoComplete="off"
                   spellCheck={false}

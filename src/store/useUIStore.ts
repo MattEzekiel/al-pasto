@@ -27,6 +27,12 @@ interface UIState {
   draggingCardId: string | null;
   /** Cards the player has staged into the play zone but not yet submitted. */
   stagedCardIds: string[];
+  /**
+   * Card ids the player actually submitted this round. Purely local — it
+   * never crosses the wire. Lets "everybody votes" mode recognise the
+   * player's own submission so they can't vote for it.
+   */
+  submittedCardIds: string[];
   /** Submission id the judge has flipped (for the 3D reveal). */
   flippedSubmissionId: string | null;
 
@@ -37,6 +43,7 @@ interface UIState {
   stage: (id: string) => void;
   unstage: (id: string) => void;
   clearStaged: () => void;
+  setSubmittedCards: (ids: string[]) => void;
   flip: (id: string | null) => void;
   toast: (t: Omit<Toast, "id" | "expiresAt"> & { ttlMs?: number }) => void;
   dismiss: (id: string) => void;
@@ -46,6 +53,7 @@ export const useUIStore = create<UIState>((set) => ({
   locale: DEFAULT_LOCALE,
   draggingCardId: null,
   stagedCardIds: [],
+  submittedCardIds: [],
   flippedSubmissionId: null,
   toasts: [],
 
@@ -62,6 +70,8 @@ export const useUIStore = create<UIState>((set) => ({
     set((s) => ({ stagedCardIds: s.stagedCardIds.filter((x) => x !== id) })),
 
   clearStaged: () => set({ stagedCardIds: [], draggingCardId: null }),
+
+  setSubmittedCards: (ids) => set({ submittedCardIds: ids }),
 
   flip: (id) => set({ flippedSubmissionId: id }),
 

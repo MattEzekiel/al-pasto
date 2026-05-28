@@ -14,9 +14,9 @@ export interface Strings {
   home: {
     intro: string;
     name: string;
-    namePlaceholder: string;
+    /** Pool of sample names; the placeholder is picked at random from it. */
+    namePool: string[];
     roomCode: string;
-    roomPlaceholder: string;
     join: string;
     host: string;
     createCta: string;
@@ -30,6 +30,9 @@ export interface Strings {
     scoreToWin: string;
     roundTimer: string;
     timerOff: string;
+    judgeMode: string;
+    judgeRotate: string;
+    judgeEverybody: string;
     secondsSuffix: (n: number) => string;
     players: (n: number) => string;
     needMore: (n: number) => string;
@@ -47,10 +50,16 @@ export interface Strings {
     picks: (n: number) => string;
     playZone: string;
     dragHere: (n: number) => string;
+    tapToPlay: (n: number) => string;
     submit: string;
     submitProgress: (a: number, b: number) => string;
     yourHand: string;
     cardCount: (n: number) => string;
+    /** Wait screen shown after you submit / when you're the judge. */
+    waitingTitle: string;
+    submittedWaiting: string;
+    playersProgress: (a: number, b: number) => string;
+    cardsProgress: (a: number, b: number) => string;
   };
   judge: {
     youAreJudge: string;
@@ -61,6 +70,12 @@ export interface Strings {
     tapToPick: string;
     tapAgainToConfirm: string;
     tapACardToReveal: string;
+    /** Everybody-judge mode. */
+    voteHeader: string;
+    tapToVote: string;
+    tapACardToVote: string;
+    votedWaiting: string;
+    votesProgress: (a: number, b: number) => string;
   };
   reveal: {
     badge: string;

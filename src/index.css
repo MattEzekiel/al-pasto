@@ -21,18 +21,57 @@
   }
 
   html, body, #root {
-    height: 100%;
-    min-height: 100vh;
     min-height: 100dvh;
-    background-color: #000;
     color: #fff;
     overscroll-behavior: none;
+    height: fit-content;
+  }
+
+  /* Black fallback on <html>; the animated aurora lives on <body> below.
+     #root stays transparent so the body gradient shows through. */
+  html {
+    background-color: #000;
   }
 
   body {
     margin: 0;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+
+    /*
+     * Ambient "aurora" mesh — adapted from a generated mesh-gradient to the
+     * Corta palette: a black canvas with cobalt-tinted near-black depth
+     * blobs (--c-0/1) and brand cobalt-violet glows (--c-2/3/4) at low
+     * alpha. The grain layer is the same fractal-noise SVG, blended in
+     * `overlay`. Custom props are animated via @property (declared below).
+     */
+    --c-0: hsla(238, 40%, 7%, 1);
+    --x-0: 92%;
+    --y-0: 49%;
+    --c-1: hsla(238, 40%, 7%, 1);
+    --x-1: 14%;
+    --y-1: 63%;
+    --c-2: hsla(238, 71%, 58%, 0.15);
+    --x-2: 94%;
+    --y-2: 13%;
+    --x-3: 72%;
+    --y-3: 93%;
+    --c-3: hsla(238, 71%, 58%, 0.2);
+    --c-4: hsla(238, 71%, 58%, 0.2);
+    --x-4: 39%;
+    --y-4: 8%;
+
+    background-color: #000;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 2785 2785' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
+      radial-gradient(circle at var(--x-0) var(--y-0), var(--c-0) var(--s-start-0), transparent var(--s-end-0)),
+      radial-gradient(circle at var(--x-1) var(--y-1), var(--c-1) var(--s-start-1), transparent var(--s-end-1)),
+      radial-gradient(circle at var(--x-2) var(--y-2), var(--c-2) var(--s-start-2), transparent var(--s-end-2)),
+      radial-gradient(circle at var(--x-3) var(--y-3), var(--c-3) var(--s-start-3), transparent var(--s-end-3)),
+      radial-gradient(circle at var(--x-4) var(--y-4), var(--c-4) var(--s-start-4), transparent var(--s-end-4));
+    background-attachment: fixed;
+    background-blend-mode: overlay, normal, normal, normal, normal, normal;
+    animation: corta-aurora 18s linear infinite alternate;
+    will-change: background-position;
   }
 
   .no-select {
@@ -88,5 +127,69 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Ambient aurora background — animated mesh gradient on <body>.       */
+/*                                                                     */
+/* Typed custom properties (@property) so the radial-gradient stops    */
+/* and colors can be smoothly interpolated by the `corta-aurora`       */
+/* keyframes. Colors are the Corta palette (see body rule above):      */
+/* near-black cobalt depth blobs + brand cobalt-violet glows.          */
+/* `prefers-reduced-motion` freezes this at frame 0 via the global     */
+/* duration override above.                                            */
+/* ------------------------------------------------------------------ */
+@property --s-start-0 { syntax: "<percentage>"; inherits: false; initial-value: 12%; }
+@property --s-end-0   { syntax: "<percentage>"; inherits: false; initial-value: 38.96%; }
+@property --c-0       { syntax: "<color>"; inherits: false; initial-value: hsla(238, 40%, 7%, 1); }
+@property --x-0       { syntax: "<percentage>"; inherits: false; initial-value: 92%; }
+@property --y-0       { syntax: "<percentage>"; inherits: false; initial-value: 49%; }
+
+@property --s-start-1 { syntax: "<percentage>"; inherits: false; initial-value: 12%; }
+@property --s-end-1   { syntax: "<percentage>"; inherits: false; initial-value: 51.16%; }
+@property --c-1       { syntax: "<color>"; inherits: false; initial-value: hsla(238, 40%, 7%, 1); }
+@property --x-1       { syntax: "<percentage>"; inherits: false; initial-value: 14%; }
+@property --y-1       { syntax: "<percentage>"; inherits: false; initial-value: 63%; }
+
+@property --s-start-2 { syntax: "<percentage>"; inherits: false; initial-value: 12%; }
+@property --s-end-2   { syntax: "<percentage>"; inherits: false; initial-value: 28.71%; }
+@property --c-2       { syntax: "<color>"; inherits: false; initial-value: hsla(238, 71%, 58%, 0.15); }
+@property --x-2       { syntax: "<percentage>"; inherits: false; initial-value: 94%; }
+@property --y-2       { syntax: "<percentage>"; inherits: false; initial-value: 13%; }
+
+@property --s-start-3 { syntax: "<percentage>"; inherits: false; initial-value: 12%; }
+@property --s-end-3   { syntax: "<percentage>"; inherits: false; initial-value: 38.72%; }
+@property --c-3       { syntax: "<color>"; inherits: false; initial-value: hsla(238, 71%, 58%, 0.2); }
+@property --x-3       { syntax: "<percentage>"; inherits: false; initial-value: 72%; }
+@property --y-3       { syntax: "<percentage>"; inherits: false; initial-value: 93%; }
+
+@property --s-start-4 { syntax: "<percentage>"; inherits: false; initial-value: 12%; }
+@property --s-end-4   { syntax: "<percentage>"; inherits: false; initial-value: 25.74%; }
+@property --c-4       { syntax: "<color>"; inherits: false; initial-value: hsla(238, 71%, 58%, 0.2); }
+@property --x-4       { syntax: "<percentage>"; inherits: false; initial-value: 39%; }
+@property --y-4       { syntax: "<percentage>"; inherits: false; initial-value: 8%; }
+
+@keyframes corta-aurora {
+  0% {
+    --s-start-0: 12%;   --s-end-0: 38.96%;  --c-0: hsla(238, 40%, 7%, 1);    --x-0: 92%; --y-0: 49%;
+    --s-start-1: 12%;   --s-end-1: 51.16%;  --c-1: hsla(238, 40%, 7%, 1);    --x-1: 14%; --y-1: 63%;
+    --s-start-2: 12%;   --s-end-2: 28.71%;  --c-2: hsla(238, 71%, 58%, 0.15); --x-2: 94%; --y-2: 13%;
+    --s-start-3: 12%;   --s-end-3: 38.72%;  --c-3: hsla(238, 71%, 58%, 0.2);  --x-3: 72%; --y-3: 93%;
+    --s-start-4: 12%;   --s-end-4: 25.74%;  --c-4: hsla(238, 71%, 58%, 0.2);  --x-4: 39%; --y-4: 8%;
+  }
+  50% {
+    --s-start-0: 12%;   --s-end-0: 58.04%;  --c-0: hsla(238, 40%, 7%, 1);    --x-0: 27%; --y-0: 11%;
+    --s-start-1: 12%;   --s-end-1: 43.74%;  --c-1: hsla(238, 40%, 7%, 1);    --x-1: 59%; --y-1: 60%;
+    --s-start-2: 12%;   --s-end-2: 42.09%;  --c-2: hsla(238, 71%, 58%, 0.1);  --x-2: 93%; --y-2: 68%;
+    --s-start-3: 3.47%; --s-end-3: 33.12%;  --c-3: hsla(238, 71%, 58%, 0.05); --x-3: 55%; --y-3: 47%;
+    --s-start-4: 12%;   --s-end-4: 60.27%;  --c-4: hsla(238, 71%, 58%, 0.18); --x-4: 15%; --y-4: 69%;
+  }
+  100% {
+    --s-start-0: 12%;    --s-end-0: 43.16%; --c-0: hsla(238, 40%, 7%, 1);    --x-0: 38%; --y-0: 88%;
+    --s-start-1: 10.12%; --s-end-1: 40.60%; --c-1: hsla(238, 40%, 7%, 1);    --x-1: 89%; --y-1: 19%;
+    --s-start-2: 12%;    --s-end-2: 28.80%; --c-2: hsla(238, 71%, 58%, 0.2);  --x-2: 14%; --y-2: 83%;
+    --s-start-3: 12%;    --s-end-3: 34.24%; --c-3: hsla(238, 71%, 58%, 0.1);  --x-3: 47%; --y-3: 7%;
+    --s-start-4: 12%;    --s-end-4: 40.60%; --c-4: hsla(238, 71%, 58%, 0.1);  --x-4: 94%; --y-4: 49%;
   }
 }

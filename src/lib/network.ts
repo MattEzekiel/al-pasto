@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 import type { Socket } from "socket.io-client";
-import type { ClientToServer, ServerToClient } from "@/types/game";
+import type { ClientToServer, NetworkPayload } from "@/types/game";
 
 /**
  * Thin typed wrapper around socket.io-client.
@@ -15,7 +15,12 @@ const URL = import.meta.env.VITE_SIGNAL_URL ?? "http://localhost:3001";
 
 export interface CortaSocket {
   send(msg: ClientToServer): void;
-  on(handler: (msg: ServerToClient) => void): () => void;
+  /**
+   * The server is a passthrough, so the host also receives the
+   * `ClientToServer` action packets peers send — inbound is the full
+   * `NetworkPayload` union, not just `ServerToClient`.
+   */
+  on(handler: (msg: NetworkPayload) => void): () => void;
   onConnect(handler: () => void): () => void;
   onDisconnect(handler: (reason: string) => void): () => void;
   disconnect(): void;
@@ -38,7 +43,7 @@ export function connect(): CortaSocket {
       socket.emit("msg", msg);
     },
     on(handler) {
-      const wrapped = (msg: ServerToClient) => handler(msg);
+      const wrapped = (msg: NetworkPayload) => handler(msg);
       socket.on("msg", wrapped);
       return () => socket.off("msg", wrapped);
     },

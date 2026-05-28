@@ -13,6 +13,11 @@ import type {
   WhiteCard,
 } from "@/types/game";
 
+/** Build the judge's anonymous (shuffled, author-stripped) view of a set. */
+function anonymize(submissions: Submission[]) {
+  return shuffle(submissions).map((s) => ({ id: s.id, cards: s.cards }));
+}
+
 /**
  * Pure, host-side game logic. Every mutation is a function `(state) => state'`
  * so the Zustand store can call them inside its `set(produce(...))`-style
@@ -55,6 +60,7 @@ export function defaultSettings(locale: Locale = DEFAULT_LOCALE): GameSettings {
     handSize: 5,
     timeLimitSec: 60,
     win: { kind: "score", target: 7 },
+    judgeMode: "rotate",
     locale,
   };
 }
@@ -97,6 +103,7 @@ function emptyRound(): GameState["round"] {
     blackCard: null,
     submissions: [],
     anonymous: [],
+    votes: [],
     winnerSubmissionId: null,
     deadline: null,
   };
@@ -185,7 +192,10 @@ function dealEveryone(state: GameState, target: number): GameState {
   const players = state.players.map((p) => {
     if (!p.connected) return p;
     const need = Math.max(0, target - p.hand.length);
-    const drawn = deck.slice(-need);
+    // NB: `slice(-0)` is `slice(0)` — the WHOLE array. Guard need === 0 or a
+    // player who needs nothing (e.g. the judge) would be dealt the entire deck.
+    if (need === 0) return p;
+    const drawn = deck.slice(deck.length - need);
     deck = deck.slice(0, deck.length - need);
     return { ...p, hand: [...p.hand, ...drawn] };
   });
@@ -206,18 +216,23 @@ export function startNextRound(
     return { ...state, phase: "game-over", version: state.version + 1 };
   }
 
+  const everybodyJudges = state.settings.judgeMode === "everybody";
+
   // Rotate judge: pick the next eligible player after the current judge.
+  // In "everybody" mode there is no fixed judge — everyone plays and votes.
   const prevJudgeIdx = eligible.findIndex((p) => p.id === state.round.judgeId);
-  const nextJudge = opts.firstRound
-    ? eligible[Math.floor(Math.random() * eligible.length)]
-    : eligible[(prevJudgeIdx + 1) % eligible.length];
+  const nextJudge = everybodyJudges
+    ? null
+    : opts.firstRound
+      ? eligible[Math.floor(Math.random() * eligible.length)]
+      : eligible[(prevJudgeIdx + 1) % eligible.length];
 
   const black = state.blackDeck[state.blackDeck.length - 1];
   const blackDeck = state.blackDeck.slice(0, -1);
 
   const players = state.players.map((p) => ({
     ...p,
-    isJudge: p.id === nextJudge.id,
+    isJudge: nextJudge ? p.id === nextJudge.id : false,
   }));
 
   const deadline =
@@ -233,14 +248,22 @@ export function startNextRound(
     blackDeck,
     round: {
       index: state.round.index + 1,
-      judgeId: nextJudge.id,
+      judgeId: nextJudge?.id ?? null,
       blackCard: black,
       submissions: [],
       anonymous: [],
+      votes: [],
       winnerSubmissionId: null,
       deadline,
     },
   };
+}
+
+/** Players expected to submit this round (everyone connected but the judge). */
+function expectedSubmitters(state: GameState): number {
+  return state.players.filter(
+    (p) => p.connected && p.id !== state.round.judgeId,
+  ).length;
 }
 
 /**
@@ -272,13 +295,11 @@ export function submit(
 
   const submissions = [...state.round.submissions, sub];
 
-  // Auto-advance to judging when everyone non-judge has submitted.
-  const expecting = state.players.filter(
-    (p) => p.connected && p.id !== state.round.judgeId,
-  ).length;
-  const phase: GameState["phase"] = submissions.length >= expecting ? "judging" : "submission";
+  // Auto-advance to judging when everyone expected has submitted.
+  const phase: GameState["phase"] =
+    submissions.length >= expectedSubmitters(state) ? "judging" : "submission";
 
-  return {
+  const next: GameState = {
     ...state,
     version: state.version + 1,
     phase,
@@ -286,12 +307,42 @@ export function submit(
     round: {
       ...state.round,
       submissions,
-      anonymous:
-        phase === "judging"
-          ? shuffle(submissions).map((s) => ({ id: s.id, cards: s.cards }))
-          : state.round.anonymous,
+      anonymous: phase === "judging" ? anonymize(submissions) : state.round.anonymous,
     },
   };
+
+  // Everybody-votes with a single submission can't be voted on — award it.
+  if (phase === "judging" && next.settings.judgeMode === "everybody" && submissions.length <= 1) {
+    return resolveVotes(next);
+  }
+  return next;
+}
+
+/**
+ * Submission deadline expired. Force the round into judging with whatever
+ * was submitted — players who didn't play simply forfeit the round (no
+ * submission, no chance to win). If nobody played, skip to the next round.
+ */
+export function expireSubmissions(state: GameState): GameState {
+  if (state.phase !== "submission") return state;
+  const submissions = state.round.submissions;
+  if (submissions.length === 0) return startNextRound(state);
+
+  const next: GameState = {
+    ...state,
+    version: state.version + 1,
+    phase: "judging",
+    round: {
+      ...state.round,
+      anonymous: anonymize(submissions),
+    },
+  };
+
+  // Everybody-votes with a single submission can't be voted on — award it.
+  if (next.settings.judgeMode === "everybody" && submissions.length <= 1) {
+    return resolveVotes(next);
+  }
+  return next;
 }
 
 /**
@@ -317,11 +368,78 @@ export function judgePick(state: GameState, submissionId: string): GameState {
 }
 
 /**
+ * "Everybody" judge mode — a player votes for one submission. Cannot vote
+ * for their own, one vote per player. When every player who played has
+ * voted, the votes resolve into a winner.
+ */
+export function castVote(
+  state: GameState,
+  args: { voterId: string; submissionId: string },
+): GameState {
+  if (state.phase !== "judging") return state;
+  if (state.settings.judgeMode !== "everybody") return state;
+
+  const sub = state.round.submissions.find((s) => s.id === args.submissionId);
+  if (!sub) return state;
+  if (sub.playerId === args.voterId) return state; // no self-vote
+  if (state.round.votes.some((v) => v.voterId === args.voterId)) return state; // one vote
+
+  const voter = state.players.find((p) => p.id === args.voterId);
+  if (!voter || !voter.connected) return state;
+  // Only players who actually played get a vote.
+  if (!state.round.submissions.some((s) => s.playerId === args.voterId)) return state;
+
+  const votes = [...state.round.votes, { voterId: args.voterId, submissionId: args.submissionId }];
+  const withVote: GameState = {
+    ...state,
+    version: state.version + 1,
+    round: { ...state.round, votes },
+  };
+
+  // Everyone who played gets a vote. Resolve once they're all in.
+  if (votes.length >= state.round.submissions.length) return resolveVotes(withVote);
+  return withVote;
+}
+
+/**
+ * Tally votes and award the round. Highest vote count wins; ties are
+ * broken at random so a round can never deadlock.
+ */
+export function resolveVotes(state: GameState): GameState {
+  if (state.phase !== "judging") return state;
+
+  const tally = new Map<string, number>();
+  for (const v of state.round.votes) {
+    tally.set(v.submissionId, (tally.get(v.submissionId) ?? 0) + 1);
+  }
+
+  let best: string[] = [];
+  let max = -1;
+  for (const sub of state.round.submissions) {
+    const count = tally.get(sub.id) ?? 0;
+    if (count > max) {
+      max = count;
+      best = [sub.id];
+    } else if (count === max) {
+      best.push(sub.id);
+    }
+  }
+  if (best.length === 0) return state;
+
+  const winnerId = best[Math.floor(Math.random() * best.length)];
+  return judgePick(state, winnerId);
+}
+
+/**
  * Tie-breaker: invoked after the judging deadline if no pick was made.
- * Per spec — random algorithm prevents deadlocks.
+ * Per spec — random algorithm prevents deadlocks. In "everybody" mode we
+ * resolve whatever votes are in; only fall back to random if nobody voted.
  */
 export function resolveTieBreaker(state: GameState): GameState {
   if (state.phase !== "judging" || state.round.submissions.length === 0) return state;
+  if (state.settings.judgeMode === "everybody" && state.round.votes.length > 0) {
+    return resolveVotes(state);
+  }
   const idx = Math.floor(Math.random() * state.round.submissions.length);
   return judgePick(state, state.round.submissions[idx].id);
 }
