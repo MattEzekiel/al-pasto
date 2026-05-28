@@ -19,6 +19,9 @@ export interface Strings {
     roomPlaceholder: string;
     join: string;
     host: string;
+    createCta: string;
+    joinCta: string;
+    back: string;
   };
   lobby: {
     room: string;

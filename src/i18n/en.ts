@@ -14,6 +14,9 @@ const en: Strings = {
     roomPlaceholder: "4F2K",
     join: "Join",
     host: "Host",
+    createCta: "Create room",
+    joinCta: "Join room",
+    back: "Back",
   },
   lobby: {
     room: "Room",
