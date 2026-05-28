@@ -1,18 +1,117 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /*
  * Corta — Sin Filtro
  *
- * Dark-mode native. No light-mode counterpart; light is reserved for
- * inverted CTAs (white pill, black ink).
+ * Tailwind v4, CSS-first. All design tokens live in `@theme` below (there is
+ * no tailwind.config.ts). Dark-mode native — light is reserved for inverted
+ * CTAs (white pill, black ink).
  */
+
+@theme {
+  /* ---- color ---- */
+  --color-canvas: #000000;
+  --color-surface-card: #121212;
+  --color-surface-elevated: #1c1c1e;
+  --color-surface-deep: #0a0a0a;
+
+  --color-brand: #494fdf;
+  --color-brand-bright: #4f55f1;
+  --color-brand-deep: #3a40c4;
+
+  --color-ink: #ffffff;
+  --color-ink-mute: #8e8e93;
+  --color-ink-faint: #5c5e60;
+
+  --color-hairline: #2a2a2a;
+  --color-hairline-strong: #3a3a3a;
+
+  --color-accent-teal: #00a87e;
+  --color-accent-rose: #e23b4a;
+  --color-accent-amber: #b09000;
+
+  /* ---- fonts ---- */
+  --font-sans: "Inter Display", "Inter", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* ---- display ladder — Inter 700, tight tracking ---- */
+  --text-display-xxl: 80px;
+  --text-display-xxl--line-height: 1;
+  --text-display-xxl--letter-spacing: -1.6px;
+  --text-display-xxl--font-weight: 700;
+
+  --text-display-xl: 56px;
+  --text-display-xl--line-height: 1.05;
+  --text-display-xl--letter-spacing: -1.5px;
+  --text-display-xl--font-weight: 700;
+
+  --text-display-lg: 40px;
+  --text-display-lg--line-height: 1.1;
+  --text-display-lg--letter-spacing: -1.2px;
+  --text-display-lg--font-weight: 700;
+
+  --text-display-md: 32px;
+  --text-display-md--line-height: 1.15;
+  --text-display-md--letter-spacing: -1px;
+  --text-display-md--font-weight: 700;
+
+  --text-display-sm: 24px;
+  --text-display-sm--line-height: 1.2;
+  --text-display-sm--letter-spacing: -0.6px;
+  --text-display-sm--font-weight: 700;
+
+  /* ---- card type — the line on a white card ---- */
+  --text-card-lg: 28px;
+  --text-card-lg--line-height: 1.15;
+  --text-card-lg--letter-spacing: -1.5px;
+  --text-card-lg--font-weight: 700;
+
+  --text-card-md: 22px;
+  --text-card-md--line-height: 1.2;
+  --text-card-md--letter-spacing: -1px;
+  --text-card-md--font-weight: 700;
+
+  /* ---- body + UI labels — Inter, positive tracking ---- */
+  --text-body: 16px;
+  --text-body--line-height: 1.5;
+  --text-body--letter-spacing: 0.2px;
+  --text-body--font-weight: 400;
+
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 1.45;
+  --text-body-sm--letter-spacing: 0.2px;
+  --text-body-sm--font-weight: 400;
+
+  --text-label: 13px;
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: 0.4px;
+  --text-label--font-weight: 600;
+
+  --text-button: 15px;
+  --text-button--line-height: 1;
+  --text-button--letter-spacing: 0.2px;
+  --text-button--font-weight: 600;
+
+  /* ---- radius ---- */
+  --radius-chip: 9999px;
+  --radius-pill: 9999px;
+  --radius-card: 16px;
+  --radius-sheet: 24px;
+
+  /* ---- spacing (named) ---- */
+  --spacing-touch: 48px;
+  --spacing-gutter: 20px;
+  --spacing-rail: 24px;
+
+  /* ---- easing ---- */
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+}
 
 @layer base {
   :root {
     color-scheme: dark;
-    font-family: "Inter Display", "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-feature-settings: "cv11", "ss01", "ss03";
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -20,7 +119,9 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  html, body, #root {
+  html,
+  body,
+  #root {
     min-height: 100dvh;
     color: #fff;
     overscroll-behavior: none;
@@ -39,11 +140,10 @@
     touch-action: manipulation;
 
     /*
-     * Ambient "aurora" mesh — adapted from a generated mesh-gradient to the
-     * Corta palette: a black canvas with cobalt-tinted near-black depth
-     * blobs (--c-0/1) and brand cobalt-violet glows (--c-2/3/4) at low
-     * alpha. The grain layer is the same fractal-noise SVG, blended in
-     * `overlay`. Custom props are animated via @property (declared below).
+     * Ambient "aurora" mesh — a black canvas with cobalt-tinted near-black
+     * depth blobs (--c-0/1) and brand cobalt-violet glows (--c-2/3/4) at low
+     * alpha, plus a fractal-noise grain blended in `overlay`. Custom props
+     * are animated via @property (declared below).
      */
     --c-0: hsla(238, 40%, 7%, 1);
     --x-0: 92%;
@@ -74,89 +174,96 @@
     will-change: background-position;
   }
 
-  .no-select {
-    user-select: none;
-    -webkit-user-select: none;
-  }
-
   /* Per-screen enter fade. Pure CSS so it always completes (framer's
      AnimatePresence mode="wait" could leave a screen stuck invisible). */
-  .screen-enter {
-    animation: screen-fade-in 200ms ease-out both;
-  }
   @keyframes screen-fade-in {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: none; }
-  }
-
-  .scroll-rail {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .scroll-rail::-webkit-scrollbar { display: none; }
-
-  /*
-   * Card carousel rail. CSS-only scroll snapping (see css-tricks.com
-   * "Practical CSS Scroll Snapping"): mandatory x-snap, scroll-padding so
-   * snapped cards clear the rail gutter, a visible thin scrollbar, and a
-   * mask that fades both edges (cheaper than overlay pseudo-elements and it
-   * fades to true transparency over the animated background).
-   */
-  .card-rail {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-left: theme("spacing.rail");
-    scroll-padding-right: theme("spacing.rail");
-    overscroll-behavior-x: contain;
-    scrollbar-width: thin;
-    scrollbar-color: theme("colors.hairline.strong") transparent;
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent,
-      #000 36px,
-      #000 calc(100% - 36px),
-      transparent
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      #000 36px,
-      #000 calc(100% - 36px),
-      transparent
-    );
-  }
-  .card-rail > * {
-    scroll-snap-align: start;
-  }
-  .card-rail::-webkit-scrollbar {
-    height: 6px;
-  }
-  .card-rail::-webkit-scrollbar-thumb {
-    background: theme("colors.hairline.strong");
-    border-radius: theme("borderRadius.pill");
-  }
-  .card-rail::-webkit-scrollbar-track {
-    background: transparent;
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
-@layer components {
-  .hairline {
-    border: 1px solid theme("colors.hairline.DEFAULT");
-  }
+/* ---- custom utilities ---- */
 
-  .display {
-    font-weight: 700;
-    letter-spacing: -1.5px;
-    line-height: 1.0;
+@utility no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@utility hairline {
+  border: 1px solid var(--color-hairline);
+}
+
+@utility display {
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+
+@utility screen-enter {
+  animation: screen-fade-in 200ms ease-out both;
+}
+
+@utility scroll-rail {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
 /*
- * Accessibility — respect the OS-level "reduce motion" preference.
- * We deliberately only shrink animation/transition durations; user-driven
- * transforms (e.g. card drag) keep working because they don't rely on
- * animation/transition timing.
+ * Card carousel rail. CSS-only scroll snapping (css-tricks.com "Practical CSS
+ * Scroll Snapping"): mandatory x-snap, scroll-padding so snapped cards clear
+ * the gutter, a visible thin scrollbar, and a mask that fades both edges
+ * (cheaper than overlay pseudo-elements, and fades to true transparency over
+ * the animated background).
+ */
+@utility card-rail {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: var(--spacing-rail);
+  scroll-padding-right: var(--spacing-rail);
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-hairline-strong) transparent;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 36px,
+    #000 calc(100% - 36px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 36px,
+    #000 calc(100% - 36px),
+    transparent
+  );
+  & > * {
+    scroll-snap-align: start;
+  }
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-hairline-strong);
+    border-radius: var(--radius-pill);
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/*
+ * Accessibility — respect the OS-level "reduce motion" preference. We only
+ * shrink animation/transition durations; user-driven transforms keep working.
  */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -169,30 +276,12 @@
   }
 }
 
-/* sr-only utility for visually-hidden accessible labels */
-@layer utilities {
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-}
-
 /* ------------------------------------------------------------------ */
 /* Ambient aurora background — animated mesh gradient on <body>.       */
-/*                                                                     */
 /* Typed custom properties (@property) so the radial-gradient stops    */
-/* and colors can be smoothly interpolated by the `corta-aurora`       */
-/* keyframes. Colors are the Corta palette (see body rule above):      */
-/* near-black cobalt depth blobs + brand cobalt-violet glows.          */
-/* `prefers-reduced-motion` freezes this at frame 0 via the global     */
-/* duration override above.                                            */
+/* and colors interpolate smoothly across the `corta-aurora` keyframes.*/
+/* `prefers-reduced-motion` freezes this at frame 0 via the override   */
+/* above.                                                              */
 /* ------------------------------------------------------------------ */
 @property --s-start-0 { syntax: "<percentage>"; inherits: false; initial-value: 12%; }
 @property --s-end-0   { syntax: "<percentage>"; inherits: false; initial-value: 38.96%; }
