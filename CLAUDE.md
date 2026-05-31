@@ -6,7 +6,7 @@ Off-the-record multiplayer card game. Zero database, peer-hosted, mobile-first P
 
 - **Runtime:** React 19 + React Compiler, Vite, TypeScript strict.
 - **State:** Zustand. Three slices: `useGameStore` (host source-of-truth + peer view), `useNetworkStore` (socket lifecycle), `useUIStore` (drag/flip/toasts).
-- **Styling:** Tailwind v3 with hand-rolled tokens in `tailwind.config.ts`. **Never inline hex** — every color/radius/typography ramp is a token.
+- **Styling:** Tailwind v4 (CSS-first) via `@tailwindcss/vite`. Tokens live in the `@theme` block in `src/index.css` — there is no `tailwind.config.ts`. **Never inline hex** — every color/radius/typography ramp is a token.
 - **Motion:** Framer Motion for card drag, card flip (judge view), and screen transitions.
 - **Persistence:** `idb-keyval` mirrors the host state on every mutation (`src/lib/persist.ts`).
 - **Networking:** `socket.io-client` over a passthrough WebSocket. The server is dumb on purpose — see `server/index.js`.
@@ -78,7 +78,7 @@ To run a real local match: open `pnpm dev` in three browser windows (or one phon
 
 ## Conventions
 
-- **Tokens, not values.** No `#494fdf`, no `rounded-[16px]` — use `bg-brand`, `rounded-card`. The whole design system is in `tailwind.config.ts`. If you need a color or radius that isn't there, add it as a token first.
+- **Tokens, not values.** No `#494fdf`, no `rounded-[16px]` — use `bg-brand`, `rounded-card`. The whole design system is the `@theme` block in `src/index.css` (Tailwind v4). If you need a color or radius that isn't there, add it there as a `--color-*` / `--radius-*` / `--text-*` token first. In CSS, reference tokens as `var(--color-…)`, not the v3 `theme()` function.
 - **Display weight = 700, negative tracking.** Headings, card text, scoreboard numerals — Inter 700, `-1.5px`. Everything else is Inter 400 (body) or 600 (UI labels).
 - **The white pill on black is the primary CTA.** Cobalt-violet (`bg-brand`) is reserved for: winning-card stamps (RevealView), the active-judge label, the final WinnerView background. Do **not** make brand the primary button color.
 - **No drop shadows.** Depth is color-blocking only. `bg-canvas` → `bg-surface-card` (hairline) → `bg-surface-elevated` → `bg-brand`.

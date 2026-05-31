@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import path from "node:path";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
+import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
@@ -15,6 +16,7 @@ export default defineConfig({
     port: 5173,
   },
   plugins: [
+    tailwindcss(),
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     VitePWA({

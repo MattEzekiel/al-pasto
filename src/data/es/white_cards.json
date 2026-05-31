@@ -1,5 +1,5 @@
 [
-  { "id": "w001", "text": "Una llamada del Banco Galicia a las 3 de la mañana." },
+  { "id": "w001", "text": "Una llamada del Banco a las 3 de la mañana." },
   { "id": "w002", "text": "La pasión inexplicable por la cumbia villera vieja." },
   { "id": "w003", "text": "El olor a milanesa recién frita." },
   { "id": "w004", "text": "Mi psicóloga haciendo cara de 'uy, no'." },
@@ -78,5 +78,11 @@
   { "id": "w077", "text": "El cobrador del Galicia diciendo mi nombre completo." },
   { "id": "w078", "text": "Una charla obligatoria con el dentista." },
   { "id": "w079", "text": "El primer temblor del año en Mendoza." },
-  { "id": "w080", "text": "Quedarme dormida en el yoga." }
+  { "id": "w080", "text": "Quedarme dormida en el yoga." },
+  { "id": "w081", "text": "Sida en vivo."},
+  { "id": "w082", "text": "Lo lloran los zurdos."},
+  { "id": "w083", "text": "El remate de los bienes de Cristina Kirchner."},
+  { "id": "w084", "text": "Un oso mimoso."},
+  { "id": "w085", "text": "Negros."},
+  { "id": "w086", "text": "Puto el que lee."}
 ]
