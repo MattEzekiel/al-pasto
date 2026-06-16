@@ -37,6 +37,8 @@ export function GameplayView() {
   const unstage = useUIStore((s) => s.unstage);
   const clearStaged = useUIStore((s) => s.clearStaged);
   const setSubmittedCards = useUIStore((s) => s.setSubmittedCards);
+  const answers = useUIStore((s) => s.blankAnswers);
+  const setAnswers = useUIStore((s) => s.setBlankAnswers);
   const railRef = useRef<HTMLDivElement>(null);
 
   // Track the round we've submitted for, so we can flip to the wait screen.
@@ -64,7 +66,8 @@ export function GameplayView() {
   useEffect(() => {
     clearStaged();
     setSubmittedCards([]);
-  }, [roundIndex, clearStaged, setSubmittedCards]);
+    setAnswers([]);
+  }, [roundIndex, clearStaged, setSubmittedCards, setAnswers]);
 
   const stagedCards = useMemo(
     () => staged.map((id) => hand.find((c) => c.id === id)).filter(Boolean) as WhiteCard[],
@@ -93,6 +96,88 @@ export function GameplayView() {
         totalMs={view.settings.timeLimitSec * 1000}
         timerOn={view.settings.timeLimitSec > 0}
       />
+    );
+  }
+
+  // Blank mode: players type their own answers instead of playing a hand.
+  if (view.settings.whiteCards === "blank") {
+    const blankReady = Array.from({ length: required }).every(
+      (_, i) => (answers[i] ?? "").trim().length > 0,
+    );
+    const setAnswerAt = (i: number, val: string) => {
+      const next = answers.slice();
+      while (next.length < required) next.push("");
+      next[i] = val;
+      setAnswers(next);
+    };
+    const submitBlank = () => {
+      const cards: WhiteCard[] = Array.from({ length: required }).map((_, i) => ({
+        id: `ans-${round.index}-${i}-${Math.random().toString(36).slice(2, 8)}`,
+        text: (answers[i] ?? "").trim(),
+      }));
+      setSubmittedCards(cards.map((c) => c.id));
+      submitCards(cards);
+      setAnswers([]);
+      setSubmittedRound(round.index);
+    };
+
+    return (
+      <AppFrame
+        header={
+          <div className="pt-3 pb-4 flex items-center justify-between">
+            <span className="text-label uppercase text-ink-mute">
+              {t.player.round(round.index)}
+            </span>
+            <ScoreChip value={self.score} />
+          </div>
+        }
+      >
+        <section aria-label={t.player.round(round.index)} className="pt-2 overflow-hidden">
+          <div className="rounded-card hairline bg-surface-card p-5 space-y-4">
+            {black && <PromptText text={black.text} />}
+            <div className="flex items-center justify-between">
+              <span className="text-label uppercase text-ink-mute">
+                {t.player.picks(required)}
+              </span>
+              {deadline && view.settings.timeLimitSec > 0 && (
+                <div className="w-32">
+                  <TimerBar deadline={deadline} totalMs={view.settings.timeLimitSec * 1000} />
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section aria-label={t.player.yourAnswer} className="mt-auto pt-6 pb-2 space-y-3">
+          <span className="text-label uppercase text-ink-mute">
+            {t.player.writeAnswer(required)}
+          </span>
+          {Array.from({ length: required }).map((_, i) => (
+            <textarea
+              key={i}
+              value={answers[i] ?? ""}
+              onChange={(e) => setAnswerAt(i, e.target.value)}
+              placeholder={t.player.answerPlaceholder(i + 1)}
+              aria-label={t.player.answerPlaceholder(i + 1)}
+              rows={2}
+              maxLength={160}
+              className="w-full bg-ink text-canvas rounded-card px-4 py-3 text-body placeholder:text-canvas/40 resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            />
+          ))}
+        </section>
+
+        <div className="mt-4">
+          <PillButton
+            variant="primary"
+            size="lg"
+            full
+            disabled={!blankReady}
+            onClick={submitBlank}
+          >
+            {t.player.submit}
+          </PillButton>
+        </div>
+      </AppFrame>
     );
   }
 

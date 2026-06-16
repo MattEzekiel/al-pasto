@@ -63,6 +63,11 @@ export function defaultSettings(locale: Locale = DEFAULT_LOCALE): GameSettings {
     win: { kind: "score", target: 7 },
     judgeMode: "rotate",
     locale,
+    mode: "classic",
+    whiteCards: "deck",
+    blackCards: "deck",
+    blackAuthoring: "host",
+    blackTotal: 10,
   };
 }
 
@@ -73,6 +78,10 @@ export function createInitialState(args: {
 }): GameState {
   const settings = args.settings ?? defaultSettings();
   const { black, white } = deckFor(settings.locale);
+  // Custom mode builds its black deck later (host-authored at start, or after
+  // the authoring phase). Blank white answers are typed — no dealt deck.
+  const builtInBlack = settings.blackCards === "deck" ? shuffle(black) : [];
+  const builtInWhite = settings.whiteCards === "blank" ? [] : shuffle(white);
   return {
     roomId: args.roomId,
     version: 1,
@@ -90,11 +99,35 @@ export function createInitialState(args: {
       },
     ],
     banned: [],
-    blackDeck: shuffle(black),
-    whiteDeck: shuffle(white),
+    blackDeck: builtInBlack,
+    whiteDeck: builtInWhite,
+    authoredPrompts: [],
+    authoredBy: [],
+    authoringQuota: 0,
     round: emptyRound(),
     winnerId: null,
   };
+}
+
+/**
+ * Build the custom black deck from authored prompts.
+ *   - "custom" — authored prompts padded up to `blackTotal` with random
+ *                built-in prompts (covers the uneven-split remainder).
+ *   - "mix"    — authored prompts shuffled together with the full built-in deck.
+ * Authored prompts are single-answer (`spaces: 1`).
+ */
+function buildCustomBlackDeck(state: GameState): BlackCard[] {
+  const authored: BlackCard[] = state.authoredPrompts
+    .map((p) => p.text.trim())
+    .filter(Boolean)
+    .map((text) => ({ id: newId("b"), text, spaces: 1 as const }));
+  const builtIn = deckFor(state.settings.locale).black;
+  if (state.settings.blackCards === "mix") {
+    return shuffle([...authored, ...builtIn]);
+  }
+  const need = Math.max(0, state.settings.blackTotal - authored.length);
+  const pad = shuffle(builtIn).slice(0, need);
+  return shuffle([...authored, ...pad]);
 }
 
 function emptyRound(): GameState["round"] {
@@ -181,14 +214,95 @@ export function updateSettings(state: GameState, patch: Partial<GameSettings>): 
 /* Round lifecycle                                                     */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Whether the current settings require player-authored prompts to be
+ * written in a pre-game phase (custom/mix black source + "players" authoring).
+ */
+function needsAuthoringPhase(state: GameState): boolean {
+  const { blackCards, blackAuthoring } = state.settings;
+  return (blackCards === "custom" || blackCards === "mix") && blackAuthoring === "players";
+}
+
+/** Begin the round(s): deal (classic) or hand off to play, building any deck. */
+function beginPlay(state: GameState): GameState {
+  const custom = state.settings.blackCards === "custom" || state.settings.blackCards === "mix";
+  const prepared = custom ? { ...state, blackDeck: buildCustomBlackDeck(state) } : state;
+  const dealt =
+    state.settings.whiteCards === "blank"
+      ? prepared
+      : dealEveryone(prepared, state.settings.handSize);
+  return startNextRound(dealt, { firstRound: true });
+}
+
 export function startGame(state: GameState): GameState {
   if (state.players.length < 3) return state;
-  return startNextRound(dealEveryone(state, state.settings.handSize), {
-    firstRound: true,
-  });
+
+  // Custom/mix prompts written by all players: collect them first.
+  if (needsAuthoringPhase(state)) {
+    const connected = state.players.filter((p) => p.connected).length;
+    const quota = Math.max(1, Math.floor(state.settings.blackTotal / Math.max(1, connected)));
+    return {
+      ...state,
+      version: state.version + 1,
+      phase: "authoring",
+      authoringQuota: quota,
+      authoredPrompts: [],
+      authoredBy: [],
+    };
+  }
+
+  return beginPlay(state);
+}
+
+/**
+ * Lobby host-authoring editor — replace the host's prompt list. Stored under
+ * the host's id; `buildCustomBlackDeck` pads to `blackTotal` at start.
+ */
+export function setHostPrompts(state: GameState, hostId: string, prompts: string[]): GameState {
+  const others = state.authoredPrompts.filter((p) => p.playerId !== hostId);
+  const mine = prompts
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .map((text) => ({ playerId: hostId, text }));
+  return {
+    ...state,
+    version: state.version + 1,
+    authoredPrompts: [...others, ...mine],
+  };
+}
+
+/**
+ * Authoring phase — a player submits their share of prompts. When every
+ * connected player has submitted, build the deck and start the first round.
+ */
+export function submitAuthoredBlack(
+  state: GameState,
+  args: { playerId: string; prompts: string[] },
+): GameState {
+  if (state.phase !== "authoring") return state;
+  if (state.authoredBy.includes(args.playerId)) return state;
+
+  const cleaned = args.prompts.map((t) => t.trim()).filter(Boolean);
+  const next: GameState = {
+    ...state,
+    version: state.version + 1,
+    authoredPrompts: [
+      ...state.authoredPrompts,
+      ...cleaned.map((text) => ({ playerId: args.playerId, text })),
+    ],
+    authoredBy: [...state.authoredBy, args.playerId],
+  };
+
+  const submitted = new Set(next.authoredBy);
+  const allIn = next.players.filter((p) => p.connected).every((p) => submitted.has(p.id));
+  if (!allIn) return next;
+
+  return beginPlay(next);
 }
 
 function dealEveryone(state: GameState, target: number): GameState {
+  // Blank white answers are typed each round — there is no hand to deal.
+  if (state.settings.whiteCards === "blank") return state;
   let deck = [...state.whiteDeck];
   const players = state.players.map((p) => {
     if (!p.connected) return p;
@@ -207,8 +321,10 @@ export function startNextRound(
   state: GameState,
   opts: { firstRound?: boolean } = {},
 ): GameState {
-  // Deck depletion is a global win condition.
-  if (state.blackDeck.length === 0 || state.whiteDeck.length === 0) {
+  // Deck depletion is a global win condition. With blank (typed) white
+  // answers there is no white deck to deplete — only the black deck ends it.
+  const whiteDepleted = state.settings.whiteCards !== "blank" && state.whiteDeck.length === 0;
+  if (state.blackDeck.length === 0 || whiteDepleted) {
     return endGameByHighScore(state);
   }
 

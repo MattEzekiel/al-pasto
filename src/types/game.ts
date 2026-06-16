@@ -83,6 +83,8 @@ export interface Vote {
 
 export type GamePhase =
   | "lobby"
+  /** Custom mode, player-authored prompts: everyone writes their share. */
+  | "authoring"
   | "dealing"
   | "submission"
   | "judging"
@@ -120,6 +122,29 @@ export type WinCondition =
  */
 export type JudgeMode = "rotate" | "everybody";
 
+/**
+ * Game mode, chosen before the lobby.
+ *   - "classic" — built-in decks, white cards dealt to hands (the original).
+ *   - "custom"  — players type free-text white answers; black prompts come
+ *                 from `blackCards` (built-in / authored / mixed).
+ */
+export type GameMode = "classic" | "custom";
+
+/** Where white answers come from. "blank" = typed free-text each round. */
+export type WhiteCardSource = "deck" | "blank";
+
+/**
+ * Where black prompts come from in custom mode.
+ *   - "deck"   — built-in prompts only.
+ *   - "custom" — player/host-authored prompts only (padded with built-ins
+ *                when an even split leaves a remainder).
+ *   - "mix"    — authored prompts shuffled together with the built-in deck.
+ */
+export type BlackCardSource = "deck" | "custom" | "mix";
+
+/** Who writes the authored prompts when `blackCards` is custom/mix. */
+export type BlackAuthoring = "host" | "players";
+
 export interface GameSettings {
   /** Maximum cards in hand. Defaults to 5. */
   handSize: number;
@@ -132,6 +157,16 @@ export interface GameSettings {
   judgeMode: JudgeMode;
   /** Deck locale — set by the host. All peers play with the same deck. */
   locale: "es" | "en";
+  /** Classic or custom. Chosen before the lobby. Defaults to "classic". */
+  mode: GameMode;
+  /** White answer source. "blank" only in custom mode. */
+  whiteCards: WhiteCardSource;
+  /** Black prompt source (custom mode). */
+  blackCards: BlackCardSource;
+  /** Who authors prompts when `blackCards` is custom/mix. */
+  blackAuthoring: BlackAuthoring;
+  /** Target authored black-deck size (custom/mix). */
+  blackTotal: number;
 }
 
 export interface GameState {
@@ -147,6 +182,16 @@ export interface GameState {
   /** Decks consumed in order; pull from the tail. */
   blackDeck: BlackCard[];
   whiteDeck: WhiteCard[];
+  /**
+   * Host-side accumulator for player/host-authored prompts (custom mode).
+   * Host-authoring stores everything under the host's id. Prompt text never
+   * crosses the wire until a prompt is dealt as the round's `blackCard`.
+   */
+  authoredPrompts: { playerId: PlayerId; text: string }[];
+  /** Ids of players who have submitted their prompts (authoring phase). */
+  authoredBy: PlayerId[];
+  /** Per-player prompt quota during the "authoring" phase. */
+  authoringQuota: number;
   round: RoundState;
   /** Set once a win condition fires. */
   winnerId: PlayerId | null;
@@ -176,6 +221,10 @@ export interface SanitizedGameState {
   winnerId: PlayerId | null;
   blackRemaining: number;
   whiteRemaining: number;
+  /** Authoring phase: per-player prompt quota. Count-only — no prompt text. */
+  authoringQuota: number;
+  /** Authoring phase: how many players have submitted their prompts. */
+  authoredCount: number;
 }
 
 /** Private packet — only sent to a single peer (their own hand). */
@@ -199,6 +248,8 @@ export type ClientToServer =
   | { t: "state/private"; target: PlayerId; payload: PrivateHandPayload }
   /** Peer: submit cards for the current round. */
   | { t: "action/submit"; submission: Omit<Submission, "id"> }
+  /** Peer: submit authored black prompts during the authoring phase. */
+  | { t: "action/author-black"; playerId: PlayerId; prompts: string[] }
   /** Judge: pick a submission (rotate mode). */
   | { t: "action/pick"; submissionId: SubmissionId }
   /** Player: cast a vote for a submission (everybody mode). */

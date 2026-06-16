@@ -188,6 +188,10 @@
   }
 }
 
+button {
+  @apply cursor-pointer;
+}
+
 /* ---- custom utilities ---- */
 
 @utility no-select {

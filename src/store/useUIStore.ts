@@ -35,6 +35,8 @@ interface UIState {
   submittedCardIds: string[];
   /** Submission id the judge has flipped (for the 3D reveal). */
   flippedSubmissionId: string | null;
+  /** Blank-mode typed answers for the current round, indexed by prompt slot. */
+  blankAnswers: string[];
 
   toasts: Toast[];
 
@@ -44,6 +46,7 @@ interface UIState {
   unstage: (id: string) => void;
   clearStaged: () => void;
   setSubmittedCards: (ids: string[]) => void;
+  setBlankAnswers: (answers: string[]) => void;
   flip: (id: string | null) => void;
   toast: (t: Omit<Toast, "id" | "expiresAt"> & { ttlMs?: number }) => void;
   dismiss: (id: string) => void;
@@ -55,6 +58,7 @@ export const useUIStore = create<UIState>((set) => ({
   stagedCardIds: [],
   submittedCardIds: [],
   flippedSubmissionId: null,
+  blankAnswers: [],
   toasts: [],
 
   setLocale: (locale) => set({ locale }),
@@ -72,6 +76,8 @@ export const useUIStore = create<UIState>((set) => ({
   clearStaged: () => set({ stagedCardIds: [], draggingCardId: null }),
 
   setSubmittedCards: (ids) => set({ submittedCardIds: ids }),
+
+  setBlankAnswers: (answers) => set({ blankAnswers: answers }),
 
   flip: (id) => set({ flippedSubmissionId: id }),
 
