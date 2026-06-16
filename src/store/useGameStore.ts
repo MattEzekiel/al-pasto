@@ -22,9 +22,11 @@ import {
   kick,
   markConnection,
   resolveTieBreaker,
+  setHostPrompts,
   startGame,
   startNextRound,
   submit,
+  submitAuthoredBlack,
   updateSettings,
 } from "@/lib/host";
 import { mirrorState, readMirror } from "@/lib/persist";
@@ -57,6 +59,9 @@ interface GameStoreShape {
   /** Host-only — full source of truth. */
   hostState: GameState | null;
 
+  /** Settings chosen at create time, consumed when `room/created` arrives. */
+  pendingSettings: GameSettings | null;
+
   /** Peer-side projection — what everyone but the host actually reads. */
   view: SanitizedGameState | null;
 
@@ -71,6 +76,8 @@ interface GameStoreShape {
 
   /* host actions */
   setSettings: (patch: Partial<GameSettings>) => void;
+  /** Host-only — write/replace the host's authored prompts in the lobby. */
+  setPrompts: (prompts: string[]) => void;
   start: () => void;
   pick: (submissionId: string) => void;
   kickPlayer: (playerId: PlayerId) => void;
@@ -83,6 +90,8 @@ interface GameStoreShape {
   submitCards: (cards: WhiteCard[]) => void;
   /** Everybody-judge mode — cast a vote for a submission. */
   vote: (submissionId: string) => void;
+  /** Authoring phase — submit this player's share of black prompts. */
+  authorBlack: (prompts: string[]) => void;
 
   /** Test/devtools helper — never called in production. */
   __setHostState: (state: GameState) => void;
@@ -137,6 +146,12 @@ export const useGameStore = create<GameStoreShape>()(
         }
         case "action/submit": {
           commitHost(submit(state, msg.submission));
+          return;
+        }
+        case "action/author-black": {
+          commitHost(
+            submitAuthoredBlack(state, { playerId: msg.playerId, prompts: msg.prompts }),
+          );
           return;
         }
         case "action/pick": {
@@ -214,6 +229,7 @@ export const useGameStore = create<GameStoreShape>()(
       role: "peer",
       roomId: null,
       hostState: null,
+      pendingSettings: null,
       view: null,
       privateHand: [],
 
@@ -233,6 +249,7 @@ export const useGameStore = create<GameStoreShape>()(
             const hostState = createInitialState({
               roomId: msg.roomId,
               host: { id: msg.selfId, name, socketId: socket.id ?? "" },
+              settings: get().pendingSettings ?? undefined,
             });
             commitHost(hostState);
           }
@@ -247,7 +264,7 @@ export const useGameStore = create<GameStoreShape>()(
       },
 
       createRoom: (name, settings) => {
-        set({ selfName: name });
+        set({ selfName: name, pendingSettings: settings });
         get().bindSocket();
         useNetworkStore
           .getState()
@@ -276,6 +293,13 @@ export const useGameStore = create<GameStoreShape>()(
         const state = get().hostState;
         if (!state) return;
         commitHost(updateSettings(state, patch));
+      },
+
+      setPrompts: (prompts) => {
+        const state = get().hostState;
+        const me = get().selfId;
+        if (!state || !me) return;
+        commitHost(setHostPrompts(state, me, prompts));
       },
 
       start: () => {
@@ -356,6 +380,22 @@ export const useGameStore = create<GameStoreShape>()(
         useNetworkStore
           .getState()
           .socket?.send({ t: "action/vote", voterId: me, submissionId });
+      },
+
+      authorBlack: (prompts) => {
+        const me = get().selfId;
+        if (!me) return;
+
+        if (get().role === "host") {
+          const state = get().hostState;
+          if (!state) return;
+          commitHost(submitAuthoredBlack(state, { playerId: me, prompts }));
+          return;
+        }
+
+        useNetworkStore
+          .getState()
+          .socket?.send({ t: "action/author-black", playerId: me, prompts });
       },
 
       __setHostState: (state) => set({ hostState: state, view: sanitizeState(state) }),

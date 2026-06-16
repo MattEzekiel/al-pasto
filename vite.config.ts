@@ -23,8 +23,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg"],
       manifest: {
-        name: "Corta — el juego de cartas extraoficial",
-        short_name: "Corta",
+        name: "Al pasto — el juego de cartas extraoficial",
+        short_name: "Al pasto",
         description:
           "Juego de cartas multijugador, sin base de datos, alojado entre pares. Mobile-first.",
         theme_color: "#000000",

@@ -23,6 +23,38 @@ export interface Strings {
     joinCta: string;
     back: string;
   };
+  /** Pre-lobby game-mode picker. */
+  mode: {
+    title: string;
+    classic: string;
+    classicDesc: string;
+    custom: string;
+    customDesc: string;
+    /** The three custom presets. */
+    presetTitle: string;
+    blank: string;
+    blankDesc: string;
+    customBlack: string;
+    customBlackDesc: string;
+    mix: string;
+    mixDesc: string;
+    /** Who writes the prompts. */
+    authoringTitle: string;
+    authoringHost: string;
+    authoringPlayers: string;
+    deckSize: string;
+    continue: string;
+  };
+  /** Pre-game prompt-writing phase (custom black, players authoring). */
+  authoring: {
+    header: string;
+    hint: (quota: number) => string;
+    placeholder: (n: number) => string;
+    submit: string;
+    waitingTitle: string;
+    waiting: string;
+    progress: (a: number, b: number) => string;
+  };
   lobby: {
     room: string;
     shareToInvite: string;
@@ -47,6 +79,15 @@ export interface Strings {
     kick: string;
     start: string;
     waiting: string;
+    /** Custom-mode lobby additions. */
+    gameMode: string;
+    modeClassic: string;
+    modeCustom: string;
+    prompts: string;
+    promptPlaceholder: (n: number) => string;
+    addPrompt: string;
+    promptsNeeded: (n: number) => string;
+    customNotice: string;
   };
   player: {
     judgeBanner: string;
@@ -65,6 +106,10 @@ export interface Strings {
     submittedWaiting: string;
     playersProgress: (a: number, b: number) => string;
     cardsProgress: (a: number, b: number) => string;
+    /** Blank (typed) white answers. */
+    yourAnswer: string;
+    answerPlaceholder: (n: number) => string;
+    writeAnswer: (n: number) => string;
   };
   judge: {
     youAreJudge: string;

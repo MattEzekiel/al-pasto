@@ -74,5 +74,8 @@ export function sanitizeState(state: GameState): SanitizedGameState {
     winnerId: state.winnerId,
     blackRemaining: state.blackDeck.length,
     whiteRemaining: state.whiteDeck.length,
+    // Counts only — prompt text stays host-side until dealt as a blackCard.
+    authoringQuota: state.authoringQuota,
+    authoredCount: state.authoredBy.length,
   };
 }

@@ -1,21 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Corta — el juego de cartas extraoficial">
-  <title>Corta — el juego de cartas extraoficial</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Al pasto — el juego de cartas extraoficial">
+  <title>Al pasto — el juego de cartas extraoficial</title>
   <rect width="1200" height="630" fill="#000000"/>
 
   <!-- top label -->
-  <text x="80" y="120"
+  <text x="80" y="110"
         font-family="Inter, system-ui, sans-serif"
         font-weight="600" font-size="20" letter-spacing="2"
         fill="#8E8E93">EL JUEGO DE CARTAS EXTRAOFICIAL</text>
 
-  <!-- giant corta. headline -->
-  <text x="80" y="370"
+  <!-- giant al pasto. headline, stacked -->
+  <text x="80" y="300"
         font-family="Inter, system-ui, sans-serif"
-        font-weight="700" font-size="240" letter-spacing="-12"
-        fill="#ffffff">corta.<tspan fill="#494fdf">_</tspan></text>
+        font-weight="700" font-size="190" letter-spacing="-10"
+        fill="#ffffff">al</text>
+  <text x="80" y="470"
+        font-family="Inter, system-ui, sans-serif"
+        font-weight="700" font-size="190" letter-spacing="-10"
+        fill="#ffffff">pasto.<tspan fill="#494fdf">_</tspan></text>
 
   <!-- subtitle -->
-  <text x="80" y="450"
+  <text x="80" y="545"
         font-family="Inter, system-ui, sans-serif"
         font-weight="400" font-size="24" letter-spacing="0.5"
         fill="#8E8E93">Multijugador. Sin cuentas. Nada sale del cuarto.</text>
@@ -30,7 +34,7 @@
       en el grupo familiar:
     </text>
     <rect x="26" y="118" width="120" height="3" fill="#494fdf"/>
-    <text x="26" y="282" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="18" letter-spacing="-0.5" fill="#ffffff">corta.</text>
+    <text x="26" y="282" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="18" letter-spacing="-0.5" fill="#ffffff">al pasto.</text>
   </g>
   <g transform="translate(890,250) rotate(8)">
     <rect width="220" height="300" rx="20" fill="#ffffff"/>
@@ -40,6 +44,6 @@
     <text x="26" y="92" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="26" letter-spacing="-1.2" fill="#000000">
       Galicia a las 3 a.m.
     </text>
-    <text x="26" y="282" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="18" letter-spacing="-0.5" fill="#000000">corta.</text>
+    <text x="26" y="282" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="18" letter-spacing="-0.5" fill="#000000">al pasto.</text>
   </g>
 </svg>

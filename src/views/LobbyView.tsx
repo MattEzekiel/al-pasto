@@ -20,11 +20,15 @@ export function LobbyView() {
   const view = useGameStore((s) => s.view);
   const role = useGameStore((s) => s.role);
   const setSettings = useGameStore((s) => s.setSettings);
+  const setPrompts = useGameStore((s) => s.setPrompts);
   const start = useGameStore((s) => s.start);
   const kickPlayer = useGameStore((s) => s.kickPlayer);
   const selfId = useGameStore((s) => s.selfId);
 
   const [qr, setQR] = useState<string | null>(null);
+  // Host-authored prompts (host-only editor). Local source of truth; synced
+  // into host state via setPrompts for persistence and deck building.
+  const [prompts, setPromptDrafts] = useState<string[]>(["", "", ""]);
 
   useEffect(() => {
     if (!view?.roomId) return;
@@ -41,7 +45,24 @@ export function LobbyView() {
 
   const isHost = role === "host";
   const playerCount = view.players.length;
-  const canStart = isHost && playerCount >= 3;
+
+  const isCustom = view.settings.mode === "custom";
+  const authoredBlack =
+    view.settings.blackCards === "custom" || view.settings.blackCards === "mix";
+  const hostAuthors = authoredBlack && view.settings.blackAuthoring === "host";
+  const playersAuthor = authoredBlack && view.settings.blackAuthoring === "players";
+  const filledPrompts = prompts.filter((p) => p.trim().length > 0).length;
+
+  const syncPrompts = (next: string[]) => {
+    setPromptDrafts(next);
+    setPrompts(next);
+  };
+  const setPromptAt = (i: number, val: string) =>
+    syncPrompts(prompts.map((p, idx) => (idx === i ? val : p)));
+  const addPrompt = () => syncPrompts([...prompts, ""]);
+
+  const canStart =
+    isHost && playerCount >= 3 && (!hostAuthors || filledPrompts >= 1);
 
   return (
     <AppFrame>
@@ -83,6 +104,13 @@ export function LobbyView() {
           <span className="text-label uppercase text-ink-mute">
             {t.lobby.settings}
           </span>
+
+          <div className="flex items-center justify-between">
+            <span className="text-body">{t.lobby.gameMode}</span>
+            <span className="text-body font-semibold">
+              {isCustom ? t.lobby.modeCustom : t.lobby.modeClassic}
+            </span>
+          </div>
 
           <Setting
             label={t.lobby.scoreToWin}
@@ -159,6 +187,44 @@ export function LobbyView() {
             </div>
           </div>
         </section>
+
+        {/* Custom prompts */}
+        {isCustom && hostAuthors && isHost && (
+          <section
+            aria-label={t.lobby.prompts}
+            className="rounded-card hairline bg-surface-card p-5 space-y-3"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-label uppercase text-ink-mute">{t.lobby.prompts}</span>
+              {filledPrompts < 1 && (
+                <span className="text-label uppercase text-accent-rose">
+                  {t.lobby.promptsNeeded(1)}
+                </span>
+              )}
+            </div>
+            {prompts.map((val, i) => (
+              <textarea
+                key={i}
+                value={val}
+                onChange={(e) => setPromptAt(i, e.target.value)}
+                placeholder={t.lobby.promptPlaceholder(i + 1)}
+                aria-label={t.lobby.promptPlaceholder(i + 1)}
+                rows={2}
+                maxLength={160}
+                className="w-full bg-canvas hairline rounded-card px-4 py-3 text-body text-ink placeholder:text-ink-faint resize-none focus:outline-none focus-visible:border-ink"
+              />
+            ))}
+            <PillButton variant="ghost" size="sm" onClick={addPrompt}>
+              {t.lobby.addPrompt}
+            </PillButton>
+          </section>
+        )}
+
+        {isCustom && playersAuthor && (
+          <section className="rounded-card hairline bg-surface-card p-5">
+            <p className="text-body text-ink-mute">{t.lobby.customNotice}</p>
+          </section>
+        )}
 
         {/* Players */}
         <section aria-label={t.lobby.players(playerCount)} className="space-y-3">

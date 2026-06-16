@@ -170,7 +170,7 @@
       radial-gradient(circle at var(--x-4) var(--y-4), var(--c-4) var(--s-start-4), transparent var(--s-end-4));
     background-attachment: fixed;
     background-blend-mode: overlay, normal, normal, normal, normal, normal;
-    animation: corta-aurora 18s linear infinite alternate;
+    animation: alpasto-aurora 18s linear infinite alternate;
     will-change: background-position;
   }
 
@@ -186,6 +186,10 @@
       transform: none;
     }
   }
+}
+
+button {
+  @apply cursor-pointer;
 }
 
 /* ---- custom utilities ---- */
@@ -279,7 +283,7 @@
 /* ------------------------------------------------------------------ */
 /* Ambient aurora background — animated mesh gradient on <body>.       */
 /* Typed custom properties (@property) so the radial-gradient stops    */
-/* and colors interpolate smoothly across the `corta-aurora` keyframes.*/
+/* and colors interpolate smoothly across the `alpasto-aurora` keyframes.*/
 /* `prefers-reduced-motion` freezes this at frame 0 via the override   */
 /* above.                                                              */
 /* ------------------------------------------------------------------ */
@@ -313,7 +317,7 @@
 @property --x-4       { syntax: "<percentage>"; inherits: false; initial-value: 39%; }
 @property --y-4       { syntax: "<percentage>"; inherits: false; initial-value: 8%; }
 
-@keyframes corta-aurora {
+@keyframes alpasto-aurora {
   0% {
     --s-start-0: 12%;   --s-end-0: 38.96%;  --c-0: hsla(238, 40%, 7%, 1);    --x-0: 92%; --y-0: 49%;
     --s-start-1: 12%;   --s-end-1: 51.16%;  --c-1: hsla(238, 40%, 7%, 1);    --x-1: 14%; --y-1: 63%;

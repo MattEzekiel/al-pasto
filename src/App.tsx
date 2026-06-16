@@ -4,6 +4,7 @@ import { useGameStore } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
 import { HomeView } from "@/views/HomeView";
 import { LobbyView } from "@/views/LobbyView";
+import { AuthoringView } from "@/views/AuthoringView";
 import { GameplayView } from "@/views/GameplayView";
 import { JudgeView } from "@/views/JudgeView";
 import { RevealView } from "@/views/RevealView";
@@ -15,13 +16,15 @@ import { WinnerView } from "@/views/WinnerView";
  * matches the Host-as-server contract: routing logic that lived on the
  * server in a normal app lives in the broadcast state here.
  */
-type Screen = "home" | "lobby" | "player" | "judge" | "reveal" | "winner";
+type Screen = "home" | "lobby" | "authoring" | "player" | "judge" | "reveal" | "winner";
 
 function pickScreen(phase: string | undefined, hasRoom: boolean): Screen {
   if (!hasRoom) return "home";
   switch (phase) {
     case "lobby":
       return "lobby";
+    case "authoring":
+      return "authoring";
     case "submission":
       return "player";
     case "judging":
@@ -39,6 +42,7 @@ function pickScreen(phase: string | undefined, hasRoom: boolean): Screen {
 const SCREENS: Record<Screen, () => ReactNode> = {
   home: () => <HomeView joinHint={readJoinHint() ?? undefined} />,
   lobby: () => <LobbyView />,
+  authoring: () => <AuthoringView />,
   player: () => <GameplayView />,
   judge: () => <JudgeView />,
   reveal: () => <RevealView />,
