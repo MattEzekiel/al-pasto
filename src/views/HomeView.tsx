@@ -98,7 +98,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
           <h1 className="display text-display-xxl">
             <span className="sr-only">{t.app.name}</span>
             <span aria-hidden>
-              corta.<span className="text-brand">_</span>
+              al pasto.<span className="text-brand">_</span>
             </span>
           </h1>
           <p className="text-body text-ink-mute max-w-xs">{t.home.intro}</p>

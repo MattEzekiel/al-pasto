@@ -59,13 +59,13 @@ export function GameCard({
     >
       {faceDown ? (
         <div className="grid place-items-center h-full w-full">
-          <span className="display text-display-md leading-none">corta.</span>
+          <span className="display text-display-md leading-none">al pasto.</span>
         </div>
       ) : (
         <>
           <p className="display text-card-lg leading-[1.1]">{children}</p>
           <div className="flex items-end justify-between">
-            <span className="display text-[18px] tracking-[-0.5px]">corta.</span>
+            <span className="display text-[18px] tracking-[-0.5px]">al pasto.</span>
             {meta && (
               <span className="text-[11px] uppercase tracking-[0.4px] text-ink-mute">
                 {meta}

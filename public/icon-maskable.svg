@@ -1,15 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="corta.">
-  <title>corta.</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="al pasto.">
+  <title>al pasto.</title>
   <!-- 80% safe-zone for maskable: art lives inside the inner 410x410 -->
   <rect width="512" height="512" fill="#000000"/>
   <!-- white card (safe-zone padded) -->
   <rect x="156" y="118" width="200" height="276" rx="36" fill="#ffffff"/>
-  <!-- corta. wordmark on the card -->
-  <text x="256" y="262" text-anchor="middle"
+  <!-- al pasto. wordmark, stacked -->
+  <text x="256" y="232" text-anchor="middle"
         font-family="Inter, system-ui, sans-serif"
-        font-weight="700" font-size="62"
+        font-weight="700" font-size="60"
         letter-spacing="-3.5"
-        fill="#000000">corta.</text>
+        fill="#000000">al</text>
+  <text x="256" y="302" text-anchor="middle"
+        font-family="Inter, system-ui, sans-serif"
+        font-weight="700" font-size="56"
+        letter-spacing="-3.5"
+        fill="#000000">pasto.</text>
   <!-- cobalt-violet underscore stamp -->
-  <rect x="196" y="308" width="120" height="14" fill="#494fdf"/>
+  <rect x="196" y="318" width="120" height="14" fill="#494fdf"/>
 </svg>

@@ -2,7 +2,7 @@ import type { Strings } from "./strings";
 
 const en: Strings = {
   app: {
-    name: "corta.",
+    name: "al pasto.",
     tagline: "The off-the-record card game",
   },
   home: {

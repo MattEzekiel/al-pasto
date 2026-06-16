@@ -1,25 +1,25 @@
-# Corta: The Off-The-Record Card Game 🃏🤫
+# Al pasto: The Off-The-Record Card Game 🃏🤫
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Framework: React 19](https://img.shields.io/badge/Framework-React_19-61dafb.svg)](https://react.dev/)
 [![Compiler: Enabled](https://img.shields.io/badge/React_Compiler-Active-green.svg)](https://react.dev/learn/react-compiler)
 [![Database: None](https://img.shields.io/badge/Database-Zero_DB-ff69b4.svg)]()
 
-**Corta** is an open-source, mobile-first, politically incorrect multiplayer card game inspired by *Cards Against Humanity* and *HDP*. It is architected to be completely **database-less**, running entirely via local browser memory, P2P-style state replication, and client-side browser storage (`IndexedDB`).
+**Al pasto** is an open-source, mobile-first, politically incorrect multiplayer card game inspired by *Cards Against Humanity* and *HDP*. It is architected to be completely **database-less**, running entirely via local browser memory, P2P-style state replication, and client-side browser storage (`IndexedDB`).
 
-The name comes from the Argentine slang *"Corta"* (straight to the point, unfiltered) and reflects the game's structural speed: no signups, no data tracking, and instantaneous local play.
+The name comes from the Argentine expression *"te fuiste al pasto"* (you went way overboard / off the rails) and captures the spirit of the game: the most outrageous, over-the-line answer takes the round. No signups, no data tracking, instantaneous local play.
 
 ---
 
 ## ⚡ Key Characteristics & Architecture
 
 ### 1. Zero-Database Infrastructure
-Corta does not use any centralized database (No PostgreSQL, No Redis, No MongoDB). A lightweight Node.js signaling server handles initial peer-shaking and acts as a stateless "passthrough" router for WebSockets (`socket.io`).
+Al pasto does not use any centralized database (No PostgreSQL, No Redis, No MongoDB). A lightweight Node.js signaling server handles initial peer-shaking and acts as a stateless "passthrough" router for WebSockets (`socket.io`).
 * **The Host is the Server:** The player who spins up a room acts as the authoritative source of truth. The game loop, active decks, scores, and turn matrices reside entirely in the Host's browser memory via a synchronized `Zustand` global store.
 * **State Broadcasts:** On every card submission, vote, or setting change, the Host cryptographically anonymizes the data and broadcasts a sanitized state payload to all connected peers.
 
 ### 2. Peer-to-Peer Resiliency & Host Failover
-Because the entire match state lives in a browser, typical web drops could ruin a session. Corta eliminates this via a custom **Host Migration Protocol**:
+Because the entire match state lives in a browser, typical web drops could ruin a session. Al pasto eliminates this via a custom **Host Migration Protocol**:
 1. All peers continuously echo game updates to their local browser `IndexedDB`.
 2. The stateless signaling server constantly tracks network heartbeats.
 3. If the Host drops out or refreshes, the signaling server immediately promotes the next active peer in the connection array to Host.
@@ -27,7 +27,7 @@ Because the entire match state lives in a browser, typical web drops could ruin 
 5. If the total player count falls below 3, the session self-terminates to protect integrity.
 
 ### 3. Design System: "High-Contrast / Sin Filtro"
-Blending the rigid technical voice of ClickHouse with the clean editorial aesthetics of Revolut, Corta uses an ultra-clean, strict dark atmosphere.
+Blending the rigid technical voice of ClickHouse with the clean editorial aesthetics of Revolut, Al pasto uses an ultra-clean, strict dark atmosphere.
 * **Canvas Dark:** `#000000` (True black floor).
 * **Surface Card:** `#121212` (Prompts, deck elements, hairline borders `#2A2A2A`).
 * **Brand Accent:** `#494fdf` (Cobalt Violet, used sparingly for victories or selection indicators).
@@ -87,12 +87,12 @@ When coding or adding UI templates, strictly match the following Tailwind tokens
 
 ## 💜 Contributing & Support
 
-Corta is intentionally cheap to operate — zero database, zero infrastructure, host-as-server. The trade is that the project lives on contributions and goodwill. If it gave your *previa* a chaotic moment, the easiest ways to keep it alive are:
+Al pasto is intentionally cheap to operate — zero database, zero infrastructure, host-as-server. The trade is that the project lives on contributions and goodwill. If it gave your *previa* a chaotic moment, the easiest ways to keep it alive are:
 
 [![Sponsor on GitHub](https://img.shields.io/badge/GitHub_Sponsors-@mattezekiel-ea4aaa.svg?logo=github&logoColor=white)](https://github.com/sponsors/mattezekiel)
 [![Invitame un café en Cafecito](https://img.shields.io/badge/Cafecito-@mattezekiel-FFDD00.svg?logo=buy-me-a-coffee&logoColor=black)](https://cafecito.app/mattezekiel)
 
-Sponsorship is recognition-based and unlocks the in-app supporter features (custom human-readable room codes, Hall of Fame credit, optional custom deck packaging). It does **not** gate gameplay — Corta is and stays free under AGPLv3.
+Sponsorship is recognition-based and unlocks the in-app supporter features (custom human-readable room codes, Hall of Fame credit, optional custom deck packaging). It does **not** gate gameplay — Al pasto is and stays free under AGPLv3.
 
 ### Pull requests
 
@@ -106,4 +106,4 @@ PRs are welcome. The contribution workflow, code style, and supporter-perk wirin
 
 ## ⚖️ License
 
-Corta is open-source software licensed under the **GNU AGPLv3**. Under this copyleft license, if you modify this web application and host it publicly on a server, you are legally bound to make your complete modified source code publicly available under the same AGPL license.
+Al pasto is open-source software licensed under the **GNU AGPLv3**. Under this copyleft license, if you modify this web application and host it publicly on a server, you are legally bound to make your complete modified source code publicly available under the same AGPL license.

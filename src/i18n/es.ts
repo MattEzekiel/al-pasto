@@ -6,7 +6,7 @@ import type { Strings } from "./strings";
  */
 const es: Strings = {
   app: {
-    name: "corta.",
+    name: "al pasto.",
     tagline: "El juego de cartas extraoficial",
   },
   home: {
