@@ -40,6 +40,7 @@ const es: Strings = {
     deckSize: "Tamaño del mazo de consignas",
     countryTitle: "País",
     countryAll: "Todos los países",
+    countryChange: "Quiero jugar con el mazo de otro país",
     continue: "Continuar",
   },
   authoring: {

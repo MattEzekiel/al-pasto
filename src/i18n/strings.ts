@@ -46,6 +46,8 @@ export interface Strings {
     /** Country filter. Country names come from `src/data/countries.json`. */
     countryTitle: string;
     countryAll: string;
+    /** Checkbox that unlocks the country select. */
+    countryChange: string;
     continue: string;
   };
   /** Pre-game prompt-writing phase (custom black, players authoring). */

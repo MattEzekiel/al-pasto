@@ -242,6 +242,11 @@ export interface PrivateHandPayload {
   hand: WhiteCard[];
 }
 
+export type CountryOptions = {
+  code: CountryCode;
+  label: string;
+}
+
 /* ------------------------------------------------------------------ */
 /* Network — passthrough protocol                                      */
 /* ------------------------------------------------------------------ */

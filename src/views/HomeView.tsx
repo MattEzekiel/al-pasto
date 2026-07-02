@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PillButton } from "@/components/ui/PillButton";
 import { AppFrame } from "@/components/ui/AppFrame";
 import { useGameStore } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
-import { defaultSettings } from "@/lib/host";
-import { useT } from "@/i18n";
+import { defaultSettings, playableCountries } from "@/lib/host";
+import { detectCountry, readStoredCountry, writeStoredCountry } from "@/lib/country";
+import {type Strings, useT} from "@/i18n";
 import type { Locale } from "@/i18n/locale";
 import countries from "@/data/countries.json";
 import type {
   BlackAuthoring,
-  CountryCode,
+  CountryCode, CountryOptions,
   GameSettings,
 } from "@/types/game";
+import PresetRow from "@/components/ui/PresetRow";
+import ModeTile from "@/components/ui/ModeTile";
 
 type Mode = "select" | "create" | "mode" | "join";
 type Preset = "blank" | "customBlack" | "mix";
@@ -66,8 +69,8 @@ function buildSettings(
 }
 
 export function HomeView({ joinHint }: { joinHint?: string }) {
-  const t = useT();
-  const locale = useUIStore((s) => s.locale);
+  const t: Strings = useT();
+  const locale: "es" | "en" = useUIStore((s) => s.locale);
   const [mode, setMode] = useState<Mode>(joinHint ? "join" : "select");
   const [name, setName] = useState("");
   const [room, setRoom] = useState(joinHint ?? "");
@@ -79,16 +82,38 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
   const [preset, setPreset] = useState<Preset>("blank");
   const [authoring, setAuthoring] = useState<BlackAuthoring>("host");
   const [deckSize, setDeckSize] = useState(10);
-  const [country, setCountry] = useState<CountryCode | null>(null);
-  const localeCountries = COUNTRIES[locale] ?? [];
+
+  // Country picker: only countries whose filtered deck is playable (≥40
+  // white, ≥10 black) are offered — exactly one must be selected. The
+  // preference boots from localStorage, then the browser's region, then
+  // the first eligible country; the select stays locked until the player
+  // ticks the checkbox to change it.
+  const countryOptions: CountryOptions[] = useMemo(() => {
+    const localeCountries: CountryOptions[] = COUNTRIES[locale] ?? [];
+    const playable = new Set(
+      playableCountries(locale, localeCountries.map((c) => c.code)),
+    );
+    return localeCountries.filter((c) => playable.has(c.code));
+  }, [locale]);
+  const [countryPref, setCountryPref] = useState<CountryCode | null>(
+    () => readStoredCountry() ?? detectCountry(),
+  );
+  const [countryUnlocked, setCountryUnlocked] = useState(false);
+  const country: string =
+    countryOptions.find((c) => c.code === countryPref)?.code ??
+    countryOptions[0]?.code ??
+    null;
+  useEffect(() => {
+    if (country) writeStoredCountry(country);
+  }, [country]);
 
   // Randomised once per mount so the placeholders feel fresh, not canned.
   const [namePlaceholder] = useState(() => randomFrom(t.home.namePool));
   const [roomPlaceholder] = useState(() => randomCode());
 
-  const canCreate = name.trim().length >= 2;
-  const canJoin = canCreate && room.trim().length >= 8;
-  const needsAuthoringChoice = custom && preset !== "blank";
+  const canCreate: boolean = name.trim().length >= 2;
+  const canJoin: boolean = canCreate && room.trim().length >= 8;
+  const needsAuthoringChoice: boolean = custom && preset !== "blank";
 
   const create = () =>
     createRoom(
@@ -293,30 +318,37 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
               </div>
             )}
 
-            {localeCountries.length > 0 && (
+            {countryOptions.length > 1 && (
               <div className="space-y-2">
                 <span className="text-label uppercase text-ink-mute my-5 block">
                   {t.mode.countryTitle}
                 </span>
-                <div
-                  role="group"
+                <select
                   aria-label={t.mode.countryTitle}
-                  className="flex flex-wrap gap-2"
+                  value={country ?? ""}
+                  disabled={!countryUnlocked}
+                  onChange={(e) => setCountryPref(e.target.value)}
+                  className={[
+                    "w-full h-12 px-4 rounded-card hairline bg-surface-card text-body",
+                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+                    countryUnlocked ? "text-ink" : "text-ink-mute",
+                  ].join(" ")}
                 >
-                  <CountryPill
-                    active={country === null}
-                    label={t.mode.countryAll}
-                    onClick={() => setCountry(null)}
-                  />
-                  {localeCountries.map((c) => (
-                    <CountryPill
-                      key={c.code}
-                      active={country === c.code}
-                      label={c.label}
-                      onClick={() => setCountry(c.code)}
-                    />
+                  {countryOptions.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.label}
+                    </option>
                   ))}
-                </div>
+                </select>
+                <label className="flex items-center gap-3 min-h-12 text-body text-ink-mute">
+                  <input
+                    type="checkbox"
+                    checked={countryUnlocked}
+                    onChange={(e) => setCountryUnlocked(e.target.checked)}
+                    className="size-5 accent-ink"
+                  />
+                  {t.mode.countryChange}
+                </label>
               </div>
             )}
 
@@ -334,97 +366,5 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
         )}
       </div>
     </AppFrame>
-  );
-}
-
-function CountryPill({
-  active,
-  label,
-  onClick,
-}: {
-  active: boolean;
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={[
-        "h-12 px-5 rounded-pill text-label uppercase tracking-[0.4px] transition-colors",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
-        active
-          ? "bg-ink text-canvas"
-          : "bg-surface-card hairline text-ink-mute hover:text-ink",
-      ].join(" ")}
-    >
-      {label}
-    </button>
-  );
-}
-
-function ModeTile({
-  active,
-  title,
-  desc,
-  onClick,
-}: {
-  active: boolean;
-  title: string;
-  desc: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={[
-        "text-left rounded-card p-4 transition-colors",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
-        active ? "bg-ink text-canvas" : "bg-surface-card hairline text-ink",
-      ].join(" ")}
-    >
-      <span className="display text-display-sm block">{title}</span>
-      <span
-        className={[
-          "text-label mt-1 block leading-snug",
-          active ? "text-canvas/70" : "text-ink-mute",
-        ].join(" ")}
-      >
-        {desc}
-      </span>
-    </button>
-  );
-}
-
-function PresetRow({
-  active,
-  title,
-  desc,
-  onClick,
-}: {
-  active: boolean;
-  title: string;
-  desc: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={[
-        "w-full text-left rounded-card p-3 transition-colors",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
-        active ? "bg-brand text-ink" : "bg-canvas hairline text-ink",
-      ].join(" ")}
-    >
-      <span className="text-body font-semibold block">{title}</span>
-      <span className={["text-label block", active ? "text-ink/70" : "text-ink-mute"].join(" ")}>
-        {desc}
-      </span>
-    </button>
   );
 }

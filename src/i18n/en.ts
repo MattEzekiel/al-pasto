@@ -36,6 +36,7 @@ const en: Strings = {
     deckSize: "Prompt deck size",
     countryTitle: "Country",
     countryAll: "All countries",
+    countryChange: "I want to play with another country's deck",
     continue: "Continue",
   },
   authoring: {

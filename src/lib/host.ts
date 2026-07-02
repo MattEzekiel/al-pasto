@@ -59,6 +59,25 @@ function deckFor(locale: Locale, country: CountryCode | null) {
   };
 }
 
+/** Minimum filtered-deck sizes for a country to be offered in the picker. */
+const MIN_COUNTRY_WHITE = 40;
+const MIN_COUNTRY_BLACK = 10;
+
+/**
+ * Countries whose filtered deck is big enough to play: at least 40 white
+ * and 10 black cards after applying the `available` tags. Drives the
+ * room-creation country select — under-stocked countries are hidden.
+ */
+export function playableCountries(
+  locale: Locale,
+  codes: readonly CountryCode[],
+): CountryCode[] {
+  return codes.filter((code) => {
+    const { black, white } = deckFor(locale, code);
+    return white.length >= MIN_COUNTRY_WHITE && black.length >= MIN_COUNTRY_BLACK;
+  });
+}
+
 const newId = (prefix: string) =>
   `${prefix}-${Math.random().toString(36).slice(2, 8)}${Date.now().toString(36).slice(-4)}`;
 
