@@ -38,6 +38,8 @@ const es: Strings = {
     authoringHost: "Las escribe el anfitrión",
     authoringPlayers: "Las escriben todos",
     deckSize: "Tamaño del mazo de consignas",
+    countryTitle: "País",
+    countryAll: "Todos los países",
     continue: "Continuar",
   },
   authoring: {

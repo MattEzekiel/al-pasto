@@ -6,13 +6,18 @@ import { useUIStore } from "@/store/useUIStore";
 import { defaultSettings } from "@/lib/host";
 import { useT } from "@/i18n";
 import type { Locale } from "@/i18n/locale";
+import countries from "@/data/countries.json";
 import type {
   BlackAuthoring,
+  CountryCode,
   GameSettings,
 } from "@/types/game";
 
 type Mode = "select" | "create" | "mode" | "join";
 type Preset = "blank" | "customBlack" | "mix";
+
+/** Per-locale country registry — drives the picker; data-only to extend. */
+const COUNTRIES = countries as Record<Locale, { code: CountryCode; label: string }[]>;
 
 /**
  * Entry point. Create (become host) or join with a code, then the inputs for
@@ -39,12 +44,13 @@ function randomCode(len = 8): string {
 /** Assemble GameSettings from the mode picker. */
 function buildSettings(
   locale: Locale,
+  country: CountryCode | null,
   custom: boolean,
   preset: Preset,
   authoring: BlackAuthoring,
   deckSize: number,
 ): GameSettings {
-  const base = defaultSettings(locale);
+  const base = { ...defaultSettings(locale), country };
   if (!custom) return base;
   if (preset === "blank") {
     return { ...base, mode: "custom", whiteCards: "blank", blackCards: "deck" };
@@ -73,6 +79,8 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
   const [preset, setPreset] = useState<Preset>("blank");
   const [authoring, setAuthoring] = useState<BlackAuthoring>("host");
   const [deckSize, setDeckSize] = useState(10);
+  const [country, setCountry] = useState<CountryCode | null>(null);
+  const localeCountries = COUNTRIES[locale] ?? [];
 
   // Randomised once per mount so the placeholders feel fresh, not canned.
   const [namePlaceholder] = useState(() => randomFrom(t.home.namePool));
@@ -85,7 +93,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
   const create = () =>
     createRoom(
       name.trim(),
-      buildSettings(locale, custom, preset, authoring, deckSize),
+      buildSettings(locale, country, custom, preset, authoring, deckSize),
     );
 
   return (
@@ -285,6 +293,33 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
               </div>
             )}
 
+            {localeCountries.length > 0 && (
+              <div className="space-y-2">
+                <span className="text-label uppercase text-ink-mute">
+                  {t.mode.countryTitle}
+                </span>
+                <div
+                  role="group"
+                  aria-label={t.mode.countryTitle}
+                  className="flex flex-wrap gap-2"
+                >
+                  <CountryPill
+                    active={country === null}
+                    label={t.mode.countryAll}
+                    onClick={() => setCountry(null)}
+                  />
+                  {localeCountries.map((c) => (
+                    <CountryPill
+                      key={c.code}
+                      active={country === c.code}
+                      label={c.label}
+                      onClick={() => setCountry(c.code)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
             <PillButton variant="primary" size="lg" full onClick={create}>
               {t.mode.continue}
             </PillButton>
@@ -299,6 +334,33 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
         )}
       </div>
     </AppFrame>
+  );
+}
+
+function CountryPill({
+  active,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={[
+        "h-12 px-5 rounded-pill text-label uppercase tracking-[0.4px] transition-colors",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+        active
+          ? "bg-ink text-canvas"
+          : "bg-surface-card hairline text-ink-mute hover:text-ink",
+      ].join(" ")}
+    >
+      {label}
+    </button>
   );
 }
 

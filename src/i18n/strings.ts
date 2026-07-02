@@ -43,6 +43,9 @@ export interface Strings {
     authoringHost: string;
     authoringPlayers: string;
     deckSize: string;
+    /** Country filter. Country names come from `src/data/countries.json`. */
+    countryTitle: string;
+    countryAll: string;
     continue: string;
   };
   /** Pre-game prompt-writing phase (custom black, players authoring). */

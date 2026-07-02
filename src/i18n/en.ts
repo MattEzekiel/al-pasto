@@ -34,6 +34,8 @@ const en: Strings = {
     authoringHost: "Host writes them",
     authoringPlayers: "Everyone writes",
     deckSize: "Prompt deck size",
+    countryTitle: "Country",
+    countryAll: "All countries",
     continue: "Continue",
   },
   authoring: {

@@ -1,0 +1,37 @@
+{
+  "es": [
+    { "code": "ar", "label": "Argentina" },
+    { "code": "bo", "label": "Bolivia" },
+    { "code": "cl", "label": "Chile" },
+    { "code": "co", "label": "Colombia" },
+    { "code": "cr", "label": "Costa Rica" },
+    { "code": "cu", "label": "Cuba" },
+    { "code": "ec", "label": "Ecuador" },
+    { "code": "sv", "label": "El Salvador" },
+    { "code": "es", "label": "España" },
+    { "code": "gt", "label": "Guatemala" },
+    { "code": "gq", "label": "Guinea Ecuatorial" },
+    { "code": "hn", "label": "Honduras" },
+    { "code": "mx", "label": "México" },
+    { "code": "ni", "label": "Nicaragua" },
+    { "code": "pa", "label": "Panamá" },
+    { "code": "py", "label": "Paraguay" },
+    { "code": "pe", "label": "Perú" },
+    { "code": "pr", "label": "Puerto Rico" },
+    { "code": "do", "label": "República Dominicana" },
+    { "code": "uy", "label": "Uruguay" },
+    { "code": "ve", "label": "Venezuela" }
+  ],
+  "en": [
+    { "code": "au", "label": "Australia" },
+    { "code": "ca", "label": "Canada" },
+    { "code": "gb-eng", "label": "England" },
+    { "code": "ie", "label": "Ireland" },
+    { "code": "nz", "label": "New Zealand" },
+    { "code": "gb-nir", "label": "Northern Ireland" },
+    { "code": "gb-sct", "label": "Scotland" },
+    { "code": "za", "label": "South Africa" },
+    { "code": "us", "label": "United States" },
+    { "code": "gb-wls", "label": "Wales" }
+  ]
+}
