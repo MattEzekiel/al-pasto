@@ -165,6 +165,9 @@ const es: Strings = {
       "Quedaron menos de tres jugadores. Se terminó la partida.",
     terminatedHostGone:
       "El anfitrión se fue y no se pudo reasignar. Volvé al inicio.",
+    kicked: "Te expulsaron de la sala.",
+    serverUnreachable:
+      "No se pudo conectar con el servidor. Probá de nuevo en un momento.",
   },
   landing: {
     metaTitle: "Al pasto — juego de cartas online gratis para jugar con amigos",

@@ -19,6 +19,7 @@ import {
   submitAuthoredBlack,
   updateSettings,
 } from "@/lib/host";
+import type { CortaSocket } from "@/lib/network";
 import { mirrorState, readMirror } from "@/lib/persist";
 import { useNetworkStore } from "@/store/useNetworkStore";
 import { useUIStore } from "@/store/useUIStore";
@@ -104,6 +105,9 @@ export const useGameStore = create<GameStoreShape>()(
     /* ---------------------------------------------------------- */
     /* helpers                                                    */
     /* ---------------------------------------------------------- */
+
+    /** The socket whose handlers are already wired — connect() reuses sockets. */
+    let boundSocket: CortaSocket | null = null;
 
     /** Persist + broadcast after every host-side mutation. */
     const commitHost = (next: GameState) => {
@@ -197,7 +201,18 @@ export const useGameStore = create<GameStoreShape>()(
           return;
         }
         case "room/terminated": {
-          // Everyone goes back to home. UI can show a toast based on reason.
+          // Everyone goes back to home.
+          const ui = useUIStore.getState();
+          const errors = getStrings(ui.locale).errors;
+          ui.toast({
+            kind: "warn",
+            text:
+              msg.reason === "kicked"
+                ? errors.kicked
+                : msg.reason === "host-gone"
+                  ? errors.terminatedHostGone
+                  : errors.terminatedQuorum,
+          });
           get().leave();
           return;
         }
@@ -245,6 +260,35 @@ export const useGameStore = create<GameStoreShape>()(
 
       bindSocket: () => {
         const socket = useNetworkStore.getState().connect();
+        if (socket === boundSocket) return;
+        boundSocket = socket;
+
+        // Server unreachable while a join/create is in flight → fail fast, once.
+        socket.onConnectError(() => {
+          const ui = useUIStore.getState();
+          if (!ui.pendingRoom) return; // fires on every retry; pendingRoom is the once-guard
+          ui.setPendingRoom(false);
+          ui.toast({
+            kind: "danger",
+            text: getStrings(ui.locale).errors.serverUnreachable,
+          });
+          // Drop the buffered room/create|join so it can't fire against a future server.
+          useNetworkStore.getState().disconnect();
+        });
+
+        // "connect" while roomId is set can only be a RE-connect (roomId is
+        // set only after room/created|joined). The passthrough keeps no state
+        // across restarts, so the room is unrecoverable — bounce to Home.
+        socket.onConnect(() => {
+          if (!get().roomId) return;
+          const ui = useUIStore.getState();
+          ui.toast({
+            kind: "warn",
+            text: getStrings(ui.locale).errors.roomNotFound,
+          });
+          get().leave();
+        });
+
         socket.on((msg) => {
           // route based on role at message-time
           if (get().role === "host") {

@@ -288,8 +288,8 @@ export type ServerToClient =
   | { t: "state/broadcast"; state: SanitizedGameState }
   /** Private packet routed to only this peer. */
   | { t: "state/private"; payload: PrivateHandPayload }
-  /** Server-side termination — fewer than 3 players remain. */
-  | { t: "room/terminated"; reason: "below-quorum" | "host-gone" }
+  /** Server-side termination — fewer than 3 players remain — or a kick, sent only to the kicked socket. */
+  | { t: "room/terminated"; reason: "below-quorum" | "host-gone" | "kicked" }
   /** Wire-level error. */
   | { t: "error"; code: string; message: string };
 

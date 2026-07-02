@@ -153,6 +153,8 @@ const en: Strings = {
     handlerFailed: (m) => `Handler failed: ${m}`,
     terminatedQuorum: "Dropped below three players. The game ended.",
     terminatedHostGone: "Host left and could not be reassigned. Back to start.",
+    kicked: "You were removed from the room.",
+    serverUnreachable: "Can't reach the game server. Try again in a moment.",
   },
   landing: {
     metaTitle: "Al pasto — free online party card game to play with friends",

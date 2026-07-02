@@ -211,7 +211,15 @@ function handle(socket, msg) {
     case "host/kick": {
       const ref = players.get(msg.playerId);
       if (!ref) return;
+      const room = rooms.get(ref.roomId);
+      room?.players.delete(msg.playerId);
+      players.delete(msg.playerId);
+      broadcastTo(ref.roomId, { t: "peer/left", playerId: msg.playerId });
       const target = io.sockets.sockets.get(ref.socketId);
+      // Tell the kicked client why, then cut the wire. With the players-map
+      // entry already gone, the target's disconnect handler early-returns,
+      // so a deliberate kick never trips below-quorum termination.
+      target?.emit("msg", { t: "room/terminated", reason: "kicked" });
       target?.disconnect(true);
       return;
     }

@@ -156,6 +156,8 @@ export interface Strings {
     handlerFailed: (m: string) => string;
     terminatedQuorum: string;
     terminatedHostGone: string;
+    kicked: string;
+    serverUnreachable: string;
   };
   /** Prerendered marketing landing (/juego). SSR-pure — no runtime values. */
   landing: {
