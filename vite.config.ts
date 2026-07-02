@@ -21,13 +21,21 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg"],
       workbox: {
-        // Prerendered marketing routes must not be hijacked by the SPA
+        globPatterns: ["**/*.{js,css,html,svg,png,woff2}"],
+        // Prerendered marketing routes and static files (robots.txt,
+        // sitemap.xml, llms.txt, ...) must not be hijacked by the SPA
         // navigate fallback once the service worker is installed.
-        navigateFallbackDenylist: [/^\/juego/, /^\/game/, /^\/como-jugar/, /^\/how-to-play/],
+        navigateFallbackDenylist: [
+          /^\/juego/,
+          /^\/game/,
+          /^\/como-jugar/,
+          /^\/how-to-play/,
+          /\.[a-z0-9]+$/i,
+        ],
       },
       manifest: {
+        lang: "es-AR",
         name: "Al pasto — el juego de cartas extraoficial",
         short_name: "Al pasto",
         description:
@@ -38,12 +46,10 @@ export default defineConfig({
         orientation: "portrait",
         start_url: "/",
         icons: [
-          {
-            src: "/favicon.svg",
-            sizes: "any",
-            type: "image/svg+xml",
-            purpose: "any maskable",
-          },
+          { src: "/favicon.svg", sizes: "any", type: "image/svg+xml" },
+          { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
+          { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
+          { src: "/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
         ],
       },
     }),
