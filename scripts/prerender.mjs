@@ -57,7 +57,7 @@ for (const meta of ROUTE_META) {
     html = setMeta(html, "name", "twitter:description", meta.description);
   }
   html = html
-    .replace(/content="\/og-image\.svg"/g, `content="${SITE_URL}/og-image.svg"`)
+    .replace(/content="\/og-image\.png"/g, `content="${SITE_URL}/og-image.png"`)
     .replace("<!--app-head-->", headFor(meta))
     .replace("<!--app-html-->", () => render(meta.path));
 

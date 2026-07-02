@@ -27,22 +27,28 @@
   <!-- card stack on the right -->
   <g transform="translate(820,150) rotate(-6)">
     <rect width="220" height="300" rx="20" fill="#121212" stroke="#2A2A2A" stroke-width="1"/>
-    <text x="26" y="60" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="28" letter-spacing="-1.2" fill="#ffffff">
-      Lo que jamás dirías
+    <text x="26" y="58" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="22" letter-spacing="-0.8" fill="#ffffff">
+      Lo que jamás
     </text>
-    <text x="26" y="92" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="28" letter-spacing="-1.2" fill="#ffffff">
-      en el grupo familiar:
+    <text x="26" y="86" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="22" letter-spacing="-0.8" fill="#ffffff">
+      dirías en el
     </text>
-    <rect x="26" y="118" width="120" height="3" fill="#494fdf"/>
+    <text x="26" y="114" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="22" letter-spacing="-0.8" fill="#ffffff">
+      grupo familiar:
+    </text>
+    <rect x="26" y="134" width="120" height="3" fill="#494fdf"/>
     <text x="26" y="282" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="18" letter-spacing="-0.5" fill="#ffffff">al pasto.</text>
   </g>
   <g transform="translate(890,250) rotate(8)">
     <rect width="220" height="300" rx="20" fill="#ffffff"/>
-    <text x="26" y="60" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="26" letter-spacing="-1.2" fill="#000000">
+    <text x="26" y="58" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="22" letter-spacing="-0.8" fill="#000000">
       Una llamada del
     </text>
-    <text x="26" y="92" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="26" letter-spacing="-1.2" fill="#000000">
-      Galicia a las 3 a.m.
+    <text x="26" y="86" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="22" letter-spacing="-0.8" fill="#000000">
+      Banco a las
+    </text>
+    <text x="26" y="114" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="22" letter-spacing="-0.8" fill="#000000">
+      3 a.m.
     </text>
     <text x="26" y="282" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="18" letter-spacing="-0.5" fill="#000000">al pasto.</text>
   </g>
