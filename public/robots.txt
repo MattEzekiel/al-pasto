@@ -3,4 +3,6 @@ Allow: /
 Disallow: /api/
 
 # No tracking, no DB — but room URLs (?room=XXXX) are ephemeral and not
-# valuable to index. Crawlers should focus on the public landing.
+# valuable to index. Crawlers should focus on the public pages:
+# /juego + /game (landing ES/EN), /como-jugar + /how-to-play (rules ES/EN).
+# The Sitemap line is appended at build time by scripts/prerender.mjs.

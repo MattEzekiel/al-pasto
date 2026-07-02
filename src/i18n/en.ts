@@ -77,6 +77,9 @@ const en: Strings = {
     promptsNeeded: (n) =>
       n === 1 ? "Write at least 1 prompt" : `Write at least ${n} prompts`,
     customNotice: "Players will write the prompts before the game starts.",
+    localePrompt: (label) => `This room is in ${label}. Switch the interface language?`,
+    localeSwitch: "Switch",
+    localeKeep: "Keep",
   },
   player: {
     judgeBanner: "You are the judge",
@@ -132,6 +135,136 @@ const en: Strings = {
     handlerFailed: (m) => `Handler failed: ${m}`,
     terminatedQuorum: "Dropped below three players. The game ended.",
     terminatedHostGone: "Host left and could not be reassigned. Back to start.",
+  },
+  landing: {
+    metaTitle: "Al pasto — free online party card game to play with friends",
+    metaDescription:
+      "Multiplayer card game in the style of Cards Against Humanity. Free, no accounts, nothing to install: create a room, share the QR code and play from your phone.",
+    kicker: "Multiplayer · Free · No accounts",
+    heroTitle: "The off-the-record card game",
+    heroSubtitle:
+      "One prompt, one judge, and your friends' worst answers. Nothing leaves the room: the host runs the game from their own phone.",
+    heroCard: "What you'd never say in the family group chat: _.",
+    heroCardMeta: "1 pick",
+    heroAnswer: "A 3 a.m. call from the bank.",
+    playCta: "Create room",
+    rulesCta: "How to play",
+    howTitle: "This simple",
+    steps: [
+      {
+        title: "Create a room",
+        body: "Open it in your browser, type your name and pick a mode. No sign-up, nothing to install.",
+      },
+      {
+        title: "Share the QR",
+        body: "Friends scan the code or type the room code. Everyone plays from their own phone.",
+      },
+      {
+        title: "Play",
+        body: "Every round has a prompt and a judge. The most unhinged answer takes the point.",
+      },
+    ],
+    featuresTitle: "Why Al pasto",
+    features: [
+      {
+        title: "Free and open source",
+        body: "No ads, no subscriptions. The code is free software (AGPL) on GitHub.",
+      },
+      {
+        title: "No database",
+        body: "No server stores anything: the game lives on the host's phone. Kill the tab, kill the game.",
+      },
+      {
+        title: "Real anonymity",
+        body: "The judge sees answers shuffled and unnamed. Nobody knows who played what until the winner is revealed.",
+      },
+      {
+        title: "Your own cards",
+        body: "Custom mode: write your own answers and even your own prompts. The group builds the deck.",
+      },
+    ],
+    footerRules: "Game rules",
+    footerGithub: "Code on GitHub",
+  },
+  rules: {
+    metaTitle: "How to play Al pasto — card game rules",
+    metaDescription:
+      "Al pasto rules: what you need, how to set up a room, how each round works, the judge, scoring and custom mode. Explained in two minutes.",
+    title: "How to play",
+    intro:
+      "Al pasto is a card game for laughing at the things nobody says out loud, inspired by Cards Against Humanity. One prompt, one judge, and your friends' answers competing for the point.",
+    sections: [
+      {
+        title: "What you need",
+        body: [
+          "Three or more players, each with their own phone.",
+          "One person creates the room and shares the QR or the room code. That phone is the host: the game runs there, not on a server.",
+          "No account and nothing to download: it runs in the browser.",
+        ],
+      },
+      {
+        title: "Each round",
+        body: [
+          "A black card appears with a prompt and one or two blanks.",
+          "Everyone except the judge picks the white card from their hand that best (or worst) completes the sentence. In some modes you type your answer instead.",
+          "The judge receives the answers shuffled and anonymous: nobody knows who played what.",
+          "The judge picks the winner. That player takes the point, and only then is the author revealed.",
+        ],
+      },
+      {
+        title: "Scoring and winning",
+        body: [
+          "The judge role rotates every round, or everybody votes if the room is set up that way.",
+          "The first player to reach the score set in the room settings wins the game.",
+          "You can set a round timer so nobody stalls.",
+        ],
+      },
+      {
+        title: "Custom mode",
+        body: [
+          "Blank cards: instead of playing cards from your hand, you type your answer every round.",
+          "Your own prompts: the group writes the black cards before starting, or mixes them with the built-in deck.",
+          "Perfect for inside jokes: the group builds the deck and it dies with the game.",
+        ],
+      },
+      {
+        title: "Privacy",
+        body: [
+          "No database, no accounts: nothing you play is stored on a server.",
+          "If the host drops, another player takes over automatically. Below three players, the game ends itself.",
+        ],
+      },
+    ],
+    faqTitle: "FAQ",
+    faq: [
+      {
+        q: "Is it free?",
+        a: "Yes, completely. No ads, no purchases. The code is open source (AGPL) on GitHub.",
+      },
+      {
+        q: "Do I need an account or an app?",
+        a: "No. It runs in your phone's browser. You can add it to your home screen as an app if you want.",
+      },
+      {
+        q: "How many players do I need?",
+        a: "At least three, each on their own device. Below three, the game ends itself.",
+      },
+      {
+        q: "Where are games stored?",
+        a: "Nowhere. The game lives on the host's phone and disappears when the tab closes.",
+      },
+      {
+        q: "Can I write my own cards?",
+        a: "Yes. Custom mode lets you write your own answers and even your own prompts.",
+      },
+      {
+        q: "What languages is it in?",
+        a: "Rioplatense Spanish and English for now, each with its own card deck.",
+      },
+    ],
+    playCta: "Play now",
+    landingLink: "More about the game",
+    otherLang: "Leer las reglas en español",
   },
 };
 

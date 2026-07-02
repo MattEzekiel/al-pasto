@@ -22,6 +22,11 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg"],
+      workbox: {
+        // Prerendered marketing routes must not be hijacked by the SPA
+        // navigate fallback once the service worker is installed.
+        navigateFallbackDenylist: [/^\/juego/, /^\/game/, /^\/como-jugar/, /^\/how-to-play/],
+      },
       manifest: {
         name: "Al pasto — el juego de cartas extraoficial",
         short_name: "Al pasto",

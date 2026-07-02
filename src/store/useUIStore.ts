@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { Locale } from "@/i18n/locale";
-import { DEFAULT_LOCALE } from "@/i18n/locale";
+import { readStoredLocale, writeStoredLocale } from "@/i18n/locale";
 
 /**
  * Ephemeral UI state — nothing here survives a refresh. Drag-and-drop
@@ -21,7 +21,7 @@ export type Toast = {
 };
 
 interface UIState {
-  /** Active UI locale. Default = `DEFAULT_LOCALE` (es). */
+  /** Active UI locale. Boots from localStorage (`corta:locale`), default es. */
   locale: Locale;
   /** Card id currently being dragged in the hand carousel. */
   draggingCardId: string | null;
@@ -40,7 +40,8 @@ interface UIState {
 
   toasts: Toast[];
 
-  setLocale: (locale: Locale) => void;
+  /** `persist: false` = session-only (adopting a room's language must not clobber the stored preference). */
+  setLocale: (locale: Locale, persist?: boolean) => void;
   setDragging: (id: string | null) => void;
   stage: (id: string) => void;
   unstage: (id: string) => void;
@@ -53,7 +54,7 @@ interface UIState {
 }
 
 export const useUIStore = create<UIState>((set) => ({
-  locale: DEFAULT_LOCALE,
+  locale: readStoredLocale(),
   draggingCardId: null,
   stagedCardIds: [],
   submittedCardIds: [],
@@ -61,7 +62,10 @@ export const useUIStore = create<UIState>((set) => ({
   blankAnswers: [],
   toasts: [],
 
-  setLocale: (locale) => set({ locale }),
+  setLocale: (locale, persist = true) => {
+    if (persist) writeStoredLocale(locale);
+    set({ locale });
+  },
 
   setDragging: (id) => set({ draggingCardId: id }),
 

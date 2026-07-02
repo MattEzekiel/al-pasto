@@ -49,6 +49,9 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://rsms.me/" crossorigin />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+
+    <!-- Per-route canonical/hreflang/JSON-LD injected by scripts/prerender.mjs -->
+    <!--app-head-->
   </head>
   <body class="bg-canvas text-ink antialiased">
     <noscript>
@@ -56,7 +59,7 @@
         Al pasto necesita JavaScript para funcionar — habilitalo en tu navegador y volvé a intentarlo.
       </p>
     </noscript>
-    <div id="root"></div>
+    <div id="root"><!--app-html--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

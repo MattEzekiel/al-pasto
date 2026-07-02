@@ -4,8 +4,10 @@ import { AppFrame } from "@/components/ui/AppFrame";
 import { PillButton } from "@/components/ui/PillButton";
 import { Avatar } from "@/components/ui/Avatar";
 import { useGameStore } from "@/store/useGameStore";
+import { useUIStore } from "@/store/useUIStore";
 import { inviteUrl, renderInviteQR } from "@/lib/qr";
 import { useT } from "@/i18n";
+import { AVAILABLE_LOCALES } from "@/i18n/locale";
 
 /**
  * Pre-game waiting room.
@@ -24,6 +26,10 @@ export function LobbyView() {
   const start = useGameStore((s) => s.start);
   const kickPlayer = useGameStore((s) => s.kickPlayer);
   const selfId = useGameStore((s) => s.selfId);
+
+  const uiLocale = useUIStore((s) => s.locale);
+  const setLocale = useUIStore((s) => s.setLocale);
+  const [localeDismissed, setLocaleDismissed] = useState(false);
 
   const [qr, setQR] = useState<string | null>(null);
   // Host-authored prompts (host-only editor). Local source of truth; synced
@@ -73,6 +79,27 @@ export function LobbyView() {
             {view.roomId}
           </h1>
         </header>
+
+        {/* Room-language mismatch — joiners whose UI locale differs from the
+            room's deck locale get asked whether to switch (session-only). */}
+        {view.settings.locale !== uiLocale && !localeDismissed && (
+          <section className="rounded-card hairline bg-surface-elevated p-5 space-y-3">
+            <p className="text-body">
+              {t.lobby.localePrompt(
+                AVAILABLE_LOCALES.find((l) => l.code === view.settings.locale)?.label ??
+                  view.settings.locale,
+              )}
+            </p>
+            <div className="flex gap-2">
+              <PillButton size="sm" onClick={() => setLocale(view.settings.locale, false)}>
+                {t.lobby.localeSwitch}
+              </PillButton>
+              <PillButton size="sm" variant="ghost" onClick={() => setLocaleDismissed(true)}>
+                {t.lobby.localeKeep}
+              </PillButton>
+            </div>
+          </section>
+        )}
 
         {/* QR + invite */}
         <section

@@ -88,6 +88,10 @@ export interface Strings {
     addPrompt: string;
     promptsNeeded: (n: number) => string;
     customNotice: string;
+    /** Room-language mismatch prompt (joiner side). Label = room-locale display name. */
+    localePrompt: (label: string) => string;
+    localeSwitch: string;
+    localeKeep: string;
   };
   player: {
     judgeBanner: string;
@@ -145,5 +149,39 @@ export interface Strings {
     handlerFailed: (m: string) => string;
     terminatedQuorum: string;
     terminatedHostGone: string;
+  };
+  /** Prerendered marketing landing (/juego). SSR-pure — no runtime values. */
+  landing: {
+    metaTitle: string;
+    metaDescription: string;
+    kicker: string;
+    heroTitle: string;
+    heroSubtitle: string;
+    /** Prompt text printed on the hero card. */
+    heroCard: string;
+    heroCardMeta: string;
+    /** Answer printed on the overlapping white card. */
+    heroAnswer: string;
+    playCta: string;
+    rulesCta: string;
+    howTitle: string;
+    steps: { title: string; body: string }[];
+    featuresTitle: string;
+    features: { title: string; body: string }[];
+    footerRules: string;
+    footerGithub: string;
+  };
+  /** Prerendered rules page (/como-jugar, /how-to-play). */
+  rules: {
+    metaTitle: string;
+    metaDescription: string;
+    title: string;
+    intro: string;
+    sections: { title: string; body: string[] }[];
+    faqTitle: string;
+    faq: { q: string; a: string }[];
+    playCta: string;
+    landingLink: string;
+    otherLang: string;
   };
 }
