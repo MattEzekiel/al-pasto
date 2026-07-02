@@ -191,7 +191,6 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
                 placeholder={namePlaceholder}
                 aria-label={t.home.name}
                 autoComplete="nickname"
-                // biome-ignore lint/a11y/noAutofocus: single-input form; focusing it is the expected flow
                 autoFocus
                 maxLength={24}
                 className="mt-2 w-full h-12 bg-surface-card hairline rounded-card px-4 text-body text-ink placeholder:text-ink-faint focus:outline-none focus-visible:border-ink"

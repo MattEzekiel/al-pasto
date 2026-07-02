@@ -66,7 +66,7 @@ export function GameplayView() {
   }, [role, phase, deadline, expireSubmission]);
 
   // Reset selection when a new round begins.
-  // biome-ignore lint/correctness/useExhaustiveDependencies(roundIndex): roundIndex is the intentional trigger — reset on every new round
+
   useEffect(() => {
     clearStaged();
     setSubmittedCards([]);
@@ -179,7 +179,6 @@ export function GameplayView() {
           </span>
           {Array.from({ length: required }).map((_, i) => (
             <textarea
-              // biome-ignore lint/suspicious/noArrayIndexKey: fixed-size slot list; index is the identity
               key={i}
               value={answers[i] ?? ""}
               onChange={(e) => setAnswerAt(i, e.target.value)}
@@ -345,7 +344,6 @@ export function GameplayView() {
 
 function Chevron({ dir }: { dir: "left" | "right" }) {
   return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative icon, aria-hidden
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d={dir === "left" ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6"}

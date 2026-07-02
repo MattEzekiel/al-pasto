@@ -72,7 +72,6 @@ export function AuthoringView() {
         <p className="text-body text-ink-mute">{t.authoring.hint(quota)}</p>
         {drafts.map((val, i) => (
           <textarea
-            // biome-ignore lint/suspicious/noArrayIndexKey: fixed-size slot list; index is the identity
             key={i}
             value={val}
             onChange={(e) => setAt(i, e.target.value)}

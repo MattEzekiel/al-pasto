@@ -49,9 +49,9 @@ export function GameCard({
       className={[
         "relative flex flex-col justify-between",
         "rounded-card no-select",
-        "w-[244px] min-h-[326px] p-5",
+        "w-61 min-h-81.5 p-5",
         // 3:4 portrait — card-stock geometry
-        "aspect-[3/4]",
+        "aspect-3/4",
         TONE[tone],
         className,
       ].join(" ")}
@@ -87,18 +87,16 @@ export function GameCard({
  * placeholders as cobalt-violet underscored slots.
  */
 export function PromptText({ text }: { text: string }) {
-  const parts = text.split(/(_)/g);
+  const parts: string[] = text.split(/(_)/g);
   return (
     <p className="display text-card-lg leading-[1.1]">
       {parts.map((p, i) =>
         p === "_" ? (
           <span
-            // biome-ignore lint/suspicious/noArrayIndexKey: parts are positional fragments of a static string
             key={i}
-            className="inline-block min-w-[3.5em] border-b-2 border-brand pb-[2px] mx-1 align-baseline"
+            className="inline-block min-w-[3.5em] border-b-2 border-brand pb-0.5 mx-1 align-baseline"
           />
         ) : (
-          // biome-ignore lint/suspicious/noArrayIndexKey: parts are positional fragments of a static string
           <span key={i}>{p}</span>
         ),
       )}

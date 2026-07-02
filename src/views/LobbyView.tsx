@@ -265,7 +265,6 @@ export function LobbyView() {
             </div>
             {prompts.map((val, i) => (
               <textarea
-                // biome-ignore lint/suspicious/noArrayIndexKey: fixed-size slot list; index is the identity
                 key={i}
                 value={val}
                 onChange={(e) => setPromptAt(i, e.target.value)}
@@ -462,7 +461,7 @@ function TimerSetting({
             className={[
               "absolute top-0.5 size-5 rounded-full transition-transform",
               noTime
-                ? "translate-x-[22px] bg-canvas"
+                ? "translate-x-5.5 bg-canvas"
                 : "translate-x-0.5 bg-ink",
             ].join(" ")}
           />
