@@ -22,6 +22,7 @@ export interface CortaSocket {
    */
   on(handler: (msg: NetworkPayload) => void): () => void;
   onConnect(handler: () => void): () => void;
+  onConnectError(handler: (err: Error) => void): () => void;
   onDisconnect(handler: (reason: string) => void): () => void;
   disconnect(): void;
   readonly id: string | undefined;
@@ -50,6 +51,10 @@ export function connect(): CortaSocket {
     onConnect(handler) {
       socket.on("connect", handler);
       return () => socket.off("connect", handler);
+    },
+    onConnectError(handler) {
+      socket.on("connect_error", handler);
+      return () => socket.off("connect_error", handler);
     },
     onDisconnect(handler) {
       socket.on("disconnect", handler);
