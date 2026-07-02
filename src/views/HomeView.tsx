@@ -15,6 +15,7 @@ import type {
 } from "@/types/game";
 import PresetRow from "@/components/ui/PresetRow";
 import ModeTile from "@/components/ui/ModeTile";
+import TextLabel from "@/components/ui/TextLabel.tsx";
 
 type Mode = "select" | "create" | "mode" | "join";
 type Preset = "blank" | "customBlack" | "mix";
@@ -71,6 +72,7 @@ function buildSettings(
 export function HomeView({ joinHint }: { joinHint?: string }) {
   const t: Strings = useT();
   const locale: "es" | "en" = useUIStore((s) => s.locale);
+  const pendingRoom = useUIStore((s) => s.pendingRoom);
   const [mode, setMode] = useState<Mode>(joinHint ? "join" : "select");
   const [name, setName] = useState("");
   const [room, setRoom] = useState(joinHint ?? "");
@@ -121,6 +123,16 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
       buildSettings(locale, country, custom, preset, authoring, deckSize),
     );
 
+  const connecting = (
+    <>
+      <span
+        aria-hidden
+        className="size-4 rounded-pill border-2 border-current border-t-transparent animate-spin"
+      />
+      {t.home.connecting}
+    </>
+  );
+
   return (
     <AppFrame>
       <div className="flex-1 flex flex-col justify-between pt-12 pb-8">
@@ -156,7 +168,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
         {(mode === "create" || mode === "join") && (
           <section className="space-y-3 mt-10">
             <label className="block">
-              <span className="text-label uppercase text-ink-mute">{t.home.name}</span>
+              <TextLabel>{t.home.name}</TextLabel>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -171,9 +183,9 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
 
             {mode === "join" && (
               <label className="block">
-                <span className="text-label uppercase text-ink-mute">
+                <TextLabel>
                   {t.home.roomCode}
-                </span>
+                </TextLabel>
                 <input
                   value={room}
                   onChange={(e) => setRoom(e.target.value.toUpperCase())}
@@ -203,17 +215,18 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
                 variant="primary"
                 size="lg"
                 full
-                disabled={!canJoin}
+                disabled={!canJoin || pendingRoom}
                 onClick={() => joinRoom(room.trim(), name.trim())}
               >
-                {t.home.join}
+                {pendingRoom ? connecting : t.home.join}
               </PillButton>
             )}
 
             <button
               type="button"
+              disabled={pendingRoom}
               onClick={() => setMode("select")}
-              className="block w-full text-center text-label uppercase text-ink-mute py-3 focus:outline-none focus-visible:text-ink"
+              className="block w-full text-center text-label uppercase text-ink-mute py-3 focus:outline-none focus-visible:text-ink disabled:opacity-50"
             >
               {t.home.back}
             </button>
@@ -222,7 +235,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
 
         {mode === "mode" && (
           <section className="space-y-4 mt-8">
-            <span className="text-label uppercase text-ink-mute">{t.mode.title}</span>
+            <TextLabel>{t.mode.title}</TextLabel>
 
             <div className="grid grid-cols-2 gap-2">
               <ModeTile
@@ -241,9 +254,9 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
 
             {custom && (
               <div className="space-y-3 rounded-card hairline bg-surface-card p-4">
-                <span className="text-label uppercase text-ink-mute">
+                <TextLabel>
                   {t.mode.presetTitle}
-                </span>
+                </TextLabel>
                 <PresetRow
                   active={preset === "blank"}
                   title={t.mode.blank}
@@ -320,9 +333,9 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
 
             {countryOptions.length > 1 && (
               <div className="space-y-2">
-                <span className="text-label uppercase text-ink-mute my-5 block">
+                <TextLabel>
                   {t.mode.countryTitle}
-                </span>
+                </TextLabel>
                 <select
                   aria-label={t.mode.countryTitle}
                   value={country ?? ""}
@@ -352,13 +365,20 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
               </div>
             )}
 
-            <PillButton variant="primary" size="lg" full onClick={create}>
-              {t.mode.continue}
+            <PillButton
+              variant="primary"
+              size="lg"
+              full
+              disabled={pendingRoom}
+              onClick={create}
+            >
+              {pendingRoom ? connecting : t.mode.continue}
             </PillButton>
             <button
               type="button"
+              disabled={pendingRoom}
               onClick={() => setMode("create")}
-              className="block w-full text-center text-label uppercase text-ink-mute py-3 focus:outline-none focus-visible:text-ink"
+              className="block w-full text-center text-label uppercase text-ink-mute py-3 focus:outline-none focus-visible:text-ink disabled:opacity-50"
             >
               {t.home.back}
             </button>

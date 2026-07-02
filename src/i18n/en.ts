@@ -16,6 +16,7 @@ const en: Strings = {
     createCta: "Create room",
     joinCta: "Join room",
     back: "Back",
+    connecting: "Connecting…",
   },
   mode: {
     title: "Game mode",

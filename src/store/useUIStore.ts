@@ -37,6 +37,8 @@ interface UIState {
   flippedSubmissionId: string | null;
   /** Blank-mode typed answers for the current round, indexed by prompt slot. */
   blankAnswers: string[];
+  /** A room/create or room/join request is in flight — Home shows a spinner. */
+  pendingRoom: boolean;
 
   toasts: Toast[];
 
@@ -49,9 +51,12 @@ interface UIState {
   setSubmittedCards: (ids: string[]) => void;
   setBlankAnswers: (answers: string[]) => void;
   flip: (id: string | null) => void;
+  setPendingRoom: (pending: boolean) => void;
   toast: (t: Omit<Toast, "id" | "expiresAt"> & { ttlMs?: number }) => void;
   dismiss: (id: string) => void;
 }
+
+let pendingRoomTimer: number | undefined;
 
 export const useUIStore = create<UIState>((set) => ({
   locale: readStoredLocale(),
@@ -60,6 +65,7 @@ export const useUIStore = create<UIState>((set) => ({
   submittedCardIds: [],
   flippedSubmissionId: null,
   blankAnswers: [],
+  pendingRoom: false,
   toasts: [],
 
   setLocale: (locale, persist = true) => {
@@ -84,6 +90,18 @@ export const useUIStore = create<UIState>((set) => ({
   setBlankAnswers: (answers) => set({ blankAnswers: answers }),
 
   flip: (id) => set({ flippedSubmissionId: id }),
+
+  setPendingRoom: (pending) => {
+    window.clearTimeout(pendingRoomTimer);
+    if (pending) {
+      // Safety valve — if the server never answers, re-enable Home.
+      pendingRoomTimer = window.setTimeout(
+        () => set({ pendingRoom: false }),
+        10_000,
+      );
+    }
+    set({ pendingRoom: pending });
+  },
 
   toast: ({ kind, text, ttlMs }) => {
     const id = Math.random().toString(36).slice(2);
