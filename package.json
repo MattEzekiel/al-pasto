@@ -1,7 +1,7 @@
 {
   "name": "al-pasto",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,6 @@
     "format": "biome check --write .",
     "validate:decks": "node scripts/validate-decks.mjs",
     "preview": "vite preview",
-    "server": "node server/index.js",
     "skills": "npx autoskills"
   },
   "dependencies": {

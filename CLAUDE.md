@@ -9,7 +9,7 @@ Off-the-record multiplayer card game. Zero database, peer-hosted, mobile-first P
 - **Styling:** Tailwind v4 (CSS-first) via `@tailwindcss/vite`. Tokens live in the `@theme` block in `src/index.css` — there is no `tailwind.config.ts`. **Never inline hex** — every color/radius/typography ramp is a token.
 - **Motion:** Framer Motion for card drag, card flip (judge view), and screen transitions.
 - **Persistence:** `idb-keyval` mirrors the host state on every mutation (`src/lib/persist.ts`).
-- **Networking:** `socket.io-client` over a passthrough WebSocket. The server is dumb on purpose — see `server/index.js`.
+- **Networking:** `socket.io-client` over a passthrough WebSocket. The server is dumb on purpose — it lives in the sibling repo `../al-pasto-signal/index.js` (its own git repo, deployed to Render). `pnpm server` runs it from there.
 
 ## Architecture you must internalize before changing anything
 
@@ -84,8 +84,8 @@ src/
 scripts/
   prerender.mjs              writes the prerendered marketing routes after build
   validate-decks.mjs         deck JSON sanity checks (pnpm validate:decks)
-server/
-  index.js                   passthrough signaling + host election
+../al-pasto-signal/
+  index.js                   passthrough signaling + host election (separate repo, deployed to Render)
 ```
 
 ## Commands
@@ -93,7 +93,7 @@ server/
 ```bash
 pnpm install           # or npm i
 pnpm dev               # vite dev server on :5173
-pnpm server            # passthrough signaling server on :3001
+pnpm server            # passthrough signaling server on :3001 (runs ../al-pasto-signal — pnpm install there once)
 pnpm build             # tsc -b && vite build (+ SSR build + prerender)
 pnpm lint              # biome check .
 pnpm format            # biome check --write .
@@ -118,7 +118,7 @@ To run a real local match: open `pnpm dev` in three browser windows (or one phon
 
 - The `commitHost → mirror → broadcast → fan-out-private-hands` sequence in `useGameStore`. If any step fails, the failover guarantee breaks.
 - `anonymizeSubmissions` — the order of "shuffle then strip ids" matters; if you reverse it, position becomes a tell.
-- `promoteOrTerminate` in `server/index.js` — the 3-player quorum is the only correctness invariant on the server side.
+- `promoteOrTerminate` in `../al-pasto-signal/index.js` — the 3-player quorum is the only correctness invariant on the server side.
 
 ## Token-efficient working rules
 
