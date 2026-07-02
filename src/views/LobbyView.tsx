@@ -211,9 +211,7 @@ export function LobbyView() {
 
           <div>
             <span className="text-body block mb-2">{t.lobby.judgeMode}</span>
-            {/* biome-ignore lint/a11y/useSemanticElements: fieldset breaks the grid layout; role=group is equivalent */}
-            <div
-              role="group"
+            <ul
               aria-label={t.lobby.judgeMode}
               className="grid grid-cols-2 gap-2 rounded-card bg-canvas hairline p-1"
             >
@@ -223,27 +221,29 @@ export function LobbyView() {
                   { mode: "everybody", label: t.lobby.judgeEverybody },
                 ] as const
               ).map(({ mode, label }) => {
-                const active = view.settings.judgeMode === mode;
+                const active: boolean = view.settings.judgeMode === mode;
                 return (
-                  <button
-                    key={mode}
-                    type="button"
-                    aria-pressed={active}
-                    disabled={!isHost}
-                    onClick={() => setSettings({ judgeMode: mode })}
-                    className={[
-                      "h-10 rounded-card text-label uppercase tracking-[0.4px] transition-colors",
-                      "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
-                      active
-                        ? "bg-ink text-canvas"
-                        : "text-ink-mute hover:text-ink disabled:hover:text-ink-mute",
-                    ].join(" ")}
-                  >
-                    {label}
-                  </button>
+                  <li key={mode}>
+                    <button
+                      key={mode}
+                      type="button"
+                      aria-pressed={active}
+                      disabled={!isHost}
+                      onClick={() => setSettings({ judgeMode: mode })}
+                      className={[
+                        "h-10 rounded-card text-label uppercase tracking-[0.4px] transition-colors",
+                        "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+                        active
+                          ? "bg-ink text-canvas"
+                          : "text-ink-mute hover:text-ink disabled:hover:text-ink-mute",
+                      ].join(" ")}
+                    >
+                      {label}
+                    </button>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         </section>
 
@@ -460,9 +460,7 @@ function TimerSetting({
           <span
             className={[
               "absolute top-0.5 size-5 rounded-full transition-transform",
-              noTime
-                ? "translate-x-5.5 bg-canvas"
-                : "translate-x-0.5 bg-ink",
+              noTime ? "translate-x-5.5 bg-canvas" : "translate-x-0.5 bg-ink",
             ].join(" ")}
           />
         </button>

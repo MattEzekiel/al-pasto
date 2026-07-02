@@ -191,7 +191,6 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
                 placeholder={namePlaceholder}
                 aria-label={t.home.name}
                 autoComplete="nickname"
-                autoFocus
                 maxLength={24}
                 className="mt-2 w-full h-12 bg-surface-card hairline rounded-card px-4 text-body text-ink placeholder:text-ink-faint focus:outline-none focus-visible:border-ink"
               />
@@ -294,9 +293,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
                       <span className="text-body block mb-2">
                         {t.mode.authoringTitle}
                       </span>
-                      {/* biome-ignore lint/a11y/useSemanticElements: fieldset breaks the grid layout; role=group is equivalent */}
-                      <div
-                        role="group"
+                      <ul
                         aria-label={t.mode.authoringTitle}
                         className="grid grid-cols-2 gap-2 rounded-card bg-canvas hairline p-1"
                       >
@@ -306,23 +303,24 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
                             { v: "players", label: t.mode.authoringPlayers },
                           ] as const
                         ).map(({ v, label }) => (
-                          <button
-                            key={v}
-                            type="button"
-                            aria-pressed={authoring === v}
-                            onClick={() => setAuthoring(v)}
-                            className={[
-                              "h-10 rounded-card text-label uppercase tracking-[0.4px] transition-colors",
-                              "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
-                              authoring === v
-                                ? "bg-ink text-canvas"
-                                : "text-ink-mute hover:text-ink",
-                            ].join(" ")}
-                          >
-                            {label}
-                          </button>
+                          <li key={v}>
+                            <button
+                              type="button"
+                              aria-pressed={authoring === v}
+                              onClick={() => setAuthoring(v)}
+                              className={[
+                                "h-10 rounded-card text-label uppercase tracking-[0.4px] transition-colors",
+                                "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+                                authoring === v
+                                  ? "bg-ink text-canvas"
+                                  : "text-ink-mute hover:text-ink",
+                              ].join(" ")}
+                            >
+                              {label}
+                            </button>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
 
                     <div>

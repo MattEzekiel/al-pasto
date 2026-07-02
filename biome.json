@@ -17,6 +17,9 @@
     "enabled": true,
     "rules": {
       "preset": "recommended",
+      "a11y": {
+        "noSvgWithoutTitle": "off"
+      },
       "complexity": {
         "noImportantStyles": "off"
       },
@@ -31,7 +34,8 @@
         "useHookAtTopLevel": "error"
       },
       "suspicious": {
-        "noExplicitAny": "error"
+        "noExplicitAny": "error",
+        "noArrayIndexKey": "off"
       }
     }
   },

@@ -58,7 +58,7 @@ export function GameplayView() {
     if (role !== "host") return;
     if (phase !== "submission") return;
     if (!deadline) return;
-    const id = window.setTimeout(
+    const id: number = window.setTimeout(
       expireSubmission,
       Math.max(0, deadline - Date.now()),
     );
@@ -66,14 +66,14 @@ export function GameplayView() {
   }, [role, phase, deadline, expireSubmission]);
 
   // Reset selection when a new round begins.
-
+  // biome-ignore lint/correctness/useExhaustiveDependencies(roundIndex): roundIndex is the intentional trigger — reset on every new round
   useEffect(() => {
     clearStaged();
     setSubmittedCards([]);
     setAnswers([]);
   }, [roundIndex, clearStaged, setSubmittedCards, setAnswers]);
 
-  const stagedCards = useMemo(
+  const stagedCards: WhiteCard[] = useMemo(
     () =>
       staged
         .map((id) => hand.find((c) => c.id === id))
@@ -83,12 +83,12 @@ export function GameplayView() {
 
   if (!view || !round || !self) return null;
 
-  const hasSubmitted = submittedRound === round.index;
+  const hasSubmitted: boolean = submittedRound === round.index;
 
-  const expectedPlayers = view.players.filter(
+  const expectedPlayers: number = view.players.filter(
     (p) => p.connected && p.id !== round.judgeId,
   ).length;
-  const submitted = round.submissionCount;
+  const submitted: number = round.submissionCount;
 
   // The judge waits, and so does anyone who has already played.
   if (isJudge || hasSubmitted) {
