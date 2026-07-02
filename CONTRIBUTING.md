@@ -1,8 +1,8 @@
-# Contributing to Corta 🚀
+# Contributing to Al pasto 🚀
 
-First off, thank you for taking the time to contribute! Corta is built by developers who believe in high-performance, private, zero-dependency multiplayer experiences.
+First off, thank you for taking the time to contribute! Al pasto is built by developers who believe in high-performance, private, zero-dependency multiplayer experiences.
 
-By contributing to Corta, you help build a completely serverless-state ecosystem that shifts the power of computing directly to client devices.
+By contributing to Al pasto, you help build a completely serverless-state ecosystem that shifts the power of computing directly to client devices.
 
 ---
 
@@ -12,19 +12,19 @@ Before writing code, familiarize yourself with our architectural layout:
 
 ```text
 src/
-├── assets/          # Static icons, vector shapes
-├── data/            # black_cards.json and white_cards.json seeds
-├── components/      # UI components split by context
-│   ├── ui/          # Low-level primitives (PillButton, CustomInput)
-│   ├── game/        # Game domain UI (GameCard, TimerBar)
-│   └── shared/      # Global layout chrome (Navbar, Footer)
+├── assets/          # Static images, vector shapes
+├── data/            # Card deck seeds per locale (en/ and es/, each with black_cards.json + white_cards.json)
+├── i18n/            # UI strings (en.ts / es.ts) and locale detection
+├── components/      # UI components
+│   └── ui/          # Low-level primitives (PillButton, GameCard, TimerBar, Avatar, ScoreChip, AppFrame, PillLink, LangSwitch)
+├── lib/             # Pure logic: host reducer, anonymizers, IndexedDB persistence, socket wrapper, QR
+├── pages/           # Prerendered marketing routes (LandingPage, RulesPage, meta)
 ├── store/           # Zustand stores
 │   ├── useGameStore.ts      # Authoritative game machine logic
 │   ├── useNetworkStore.ts   # Socket connection, heartbeats
-│   └── useUIStore.ts        # Modals, drawer overlays
+│   └── useUIStore.ts        # Ephemeral UI state (drag, flip, toasts)
 ├── types/           # Strict TypeScript interfaces (.ts models)
-├── utils/           # Anonymizers, deck shufflers, IndexedDB handlers
-└── views/           # Structural layouts (LobbyView, GameplayView, JudgeView)
+└── views/           # Game screens (HomeView, LobbyView, GameplayView, JudgeView, RevealView, WinnerView, AuthoringView)
 ```
 
 ---
@@ -40,7 +40,7 @@ To maintain an clean, fast code ecosystem, we enforce the following rules:
 
 ### 2. Rendering Optimization & State
 
-* Do not sprinkle `useMemo` or `useCallback` everywhere. Corta runs on **React 19 + React Compiler**. The compiler automatically handles component memoization by parsing the dependency graphs during the build phase.
+* Do not sprinkle `useMemo` or `useCallback` everywhere. Al pasto runs on **React 19 + React Compiler**. The compiler automatically handles component memoization by parsing the dependency graphs during the build phase.
 * Keep your local component state minimal. If a variable impacts multiplayer state replication or host failover, place it inside `useGameStore.ts`.
 
 ### 3. Motion & Animation Principles
@@ -73,4 +73,4 @@ We operate a strict branching model to preserve master branch production readine
 3. **Commit Guidelines:** Use concise, semantic commit messages (e.g., `feat(game): implement automated tie-breaker grace ticker`, `fix(network): resolve indexeddb storage locking during host swap`).
 4. **Submit PR:** Detail the exact mechanics introduced, attach screenshot artifacts if you modified visual tokens, and link relevant tracking issues.
 
-Thank you for keeping Corta fast, private, and beautifully unfiltered!
+Thank you for keeping Al pasto fast, private, and beautifully unfiltered!

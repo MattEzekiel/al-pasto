@@ -1,4 +1,4 @@
-# CLAUDE.md — Corta
+# CLAUDE.md — Al pasto
 
 Off-the-record multiplayer card game. Zero database, peer-hosted, mobile-first PWA.
 
@@ -31,8 +31,13 @@ Failover lives at `useGameStore.promoteSelfToHost` — invoked when the server s
 src/
   App.tsx                    phase-driven screen router
   main.tsx                   bootstrap
-  index.css                  Tailwind layers + base resets
+  entry-server.tsx           SSR entry for the prerendered marketing routes
+  index.css                  Tailwind layers + base resets + the @theme token block
   types/game.ts              all domain types — start here
+  i18n/
+    en.ts / es.ts            UI strings per locale
+    strings.ts               the Strings type
+    locale.ts                locale detection + switching
   lib/
     host.ts                  pure game logic (deal, judge, score, tie-break, kick)
     anonymize.ts             sanitization for broadcast
@@ -44,15 +49,24 @@ src/
     useNetworkStore.ts       socket handle + wire status
     useUIStore.ts            ephemeral UI state (drag, flip, toasts)
   data/
-    black_cards.json         prompt deck — { id, text, spaces: 1|2 }
-    white_cards.json         response deck — { id, text }
-  components/ui/
-    PillButton.tsx           the canonical button
-    GameCard.tsx             GameCard + PromptText
-    TimerBar.tsx             round timer with rose alert below 25%
-    Avatar.tsx               initials-only, hairline ring
-    ScoreChip.tsx            teal positive chip
-    AppFrame.tsx             mobile-first frame with safe-area insets
+    en/ + es/                per-locale decks:
+      black_cards.json       prompt deck — { id, text, spaces: 1|2 }
+      white_cards.json       response deck — { id, text }
+  components/
+    ErrorBoundary.tsx        top-level render crash guard
+    ui/
+      PillButton.tsx         the canonical button
+      GameCard.tsx           GameCard + PromptText
+      TimerBar.tsx           round timer with rose alert below 25%
+      Avatar.tsx             initials-only, hairline ring
+      ScoreChip.tsx          teal positive chip
+      AppFrame.tsx           mobile-first frame with safe-area insets
+      PillLink.tsx           pill-shaped anchor
+      LangSwitch.tsx         es/en locale toggle
+  pages/
+    LandingPage.tsx          prerendered marketing landing
+    RulesPage.tsx            prerendered how-to-play page
+    meta.ts                  per-route meta tags
   views/
     HomeView.tsx
     LobbyView.tsx
@@ -60,6 +74,7 @@ src/
     JudgeView.tsx
     RevealView.tsx
     WinnerView.tsx
+    AuthoringView.tsx
 server/
   index.js                   passthrough signaling + host election
 ```

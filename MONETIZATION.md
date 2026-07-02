@@ -1,6 +1,6 @@
 # Monetization & Sustainability Strategy ☕💎
 
-Corta is an open-source project licensed under GNU AGPLv3. Because its architecture is completely **database-less** and runs entirely via client-side browsers, running costs are virtually zero. This makes the project highly sustainable and uniquely positioned to leverage crowdsourced backing mechanisms like **Cafecito** (for Latin America) and **GitHub Sponsors** (internationally).
+Al pasto is an open-source project licensed under GNU AGPLv3. Because its architecture is completely **database-less** and runs entirely via client-side browsers, running costs are virtually zero. This makes the project highly sustainable and uniquely positioned to leverage crowdsourced backing mechanisms like **Cafecito** (for Latin America) and **GitHub Sponsors** (internationally).
 
 Our monetization engine focuses exclusively on aesthetic recognition, advanced local configurations, and tooling enhancements without gating the core game logic behind paywalls.
 
@@ -27,6 +27,6 @@ The application provides native local hooks to validate premium supporter capabi
 
 ## 💼 Self-Hosting Commercial Deployments
 
-Because the codebase is open-source under the GNU AGPLv3, developers are permitted to fork the codebase and host independent deployments of Corta. However:
+Because the codebase is open-source under the GNU AGPLv3, developers are permitted to fork the codebase and host independent deployments of Al pasto. However:
 * If you charge fees or monetize a custom instance (via ads or subscriptions), your complete codebase modifications **must** be made public under the exact same AGPLv3 terms.
 * Commercial networks can legally utilize this architecture to run high-speed localized interactive events inside corporate servers, festivals, or local Wi-Fi nodes due to its zero-maintenance database overhead.

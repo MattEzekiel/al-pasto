@@ -1,11 +1,11 @@
-# AGENTS.md — Corta
+# AGENTS.md — Al pasto
 
 This file is the contract for AI coding agents touching this repo. It is intentionally narrower than `CLAUDE.md` and stricter than a README.
 
 ## Non-negotiables
 
 1. **No database, ever.** If you find yourself reaching for Redis, Postgres, Supabase, KV, or any persistent server-side store: stop. The architecture is host-as-server. Re-read `CLAUDE.md` § "Architecture" before continuing.
-2. **No tokens get inlined.** Hex colors, pixel radii, custom font-sizes — they all live in `tailwind.config.ts`. A PR with `bg-[#494fdf]` or `text-[14px]` is invalid.
+2. **No tokens get inlined.** Hex colors, pixel radii, custom font-sizes — they all live in the `@theme` block in `src/index.css` (Tailwind v4; there is no `tailwind.config.ts`). A PR with `bg-[#494fdf]` or `text-[14px]` is invalid.
 3. **No shadow utilities on cards.** The design system has zero shadow vocabulary. `shadow-md`, `drop-shadow-*`, custom box-shadow — none of them. Depth is color-blocking + hairline borders.
 4. **Cobalt-violet is sacred.** `bg-brand` is allowed only on: the winning card (`RevealView`), the active-judge marker, the final WinnerView. **Never** as a primary button color.
 5. **Touch targets ≥ 48px.** PillButton `md` is the default. Do not introduce 32px buttons.
@@ -32,7 +32,7 @@ When you finish a task, look for these and add them if they apply:
 
 - Add server-side game logic. The server is a passthrough; if you can't express a behavior in the host reducer, the architecture is being violated.
 - Add a "loading" or "skeleton" wireframe. The brand is editorial: empty states are real type with real content (see HomeView for the voice).
-- Switch the app to light mode. Corta is dark-mode native. The only "light" surface is the white PillButton CTA.
+- Switch the app to light mode. Al pasto is dark-mode native. The only "light" surface is the white PillButton CTA.
 - Use Inter at weight 500. The system has 400 (body), 600 (UI), and 700 (display). 500 is forbidden — see `DESIGN.md`.
 - Introduce an animation library other than Framer Motion.
 
@@ -46,5 +46,5 @@ When you finish a task, look for these and add them if they apply:
 ## Out of scope
 
 - Authentication. There are no accounts.
-- Telemetry. Corta is the off-the-record game; do not add analytics.
-- Localization. The decks are seeded in Spanish/English; the UI copy is English. If you add i18n, factor the decks into a separate concern from the UI strings — they have different translation budgets.
+- Telemetry. Al pasto is the off-the-record game; do not add analytics.
+- New locales beyond Spanish/English. i18n exists: UI strings live in `src/i18n` (`es.ts` / `en.ts`) and the decks in `src/data/<locale>`. Keep decks factored as a separate concern from the UI strings — they have different translation budgets.

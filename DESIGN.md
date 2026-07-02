@@ -1,8 +1,8 @@
-# DESIGN.md — Corta / Sin Filtro
+# DESIGN.md — Al pasto / Sin Filtro
 
 ## Overview
 
-Corta's interface is **dark-mode native, high-contrast, editorial**. It blends ClickHouse's engineering precision (single-family Inter at weight 700, near-pure black canvas, no shadow vocabulary) with Revolut's editorial minimalism (full-bleed band rhythm, large display headlines at tight negative tracking, the white-pill primary CTA on dark canvas).
+Al pasto's interface is **dark-mode native, high-contrast, editorial**. It blends ClickHouse's engineering precision (single-family Inter at weight 700, near-pure black canvas, no shadow vocabulary) with Revolut's editorial minimalism (full-bleed band rhythm, large display headlines at tight negative tracking, the white-pill primary CTA on dark canvas).
 
 There is no light-mode counterpart. "Light" appears only as inverted primary actions — a white pill with black ink on the dark canvas. The system has one brand color, **cobalt violet** (`{colors.brand}` — `#494fdf`), and it is reserved for: the winning-card stamp, the active-judge marker, and the final WinnerView. Cobalt is **not** a primary-button color.
 
@@ -61,7 +61,7 @@ JetBrains Mono is declared but currently unused — reserved for any future debu
 
 | Token | Size | Weight | Line Height | Tracking | Use |
 |---|---|---|---|---|---|
-| `text-display-xxl` | 80px | 700 | 1.0 | -1.6px | `HomeView` flagship `corta.`, `WinnerView` winner name. |
+| `text-display-xxl` | 80px | 700 | 1.0 | -1.6px | `HomeView` flagship `al pasto.`, `WinnerView` winner name. |
 | `text-display-xl` | 56px | 700 | 1.05 | -1.5px | Reserved. |
 | `text-display-lg` | 40px | 700 | 1.1 | -1.2px | Lobby room code, the judging waiting-state headline. |
 | `text-display-md` | 32px | 700 | 1.15 | -1px | RevealView headline, the "tap to reveal" waiting state. |
@@ -75,7 +75,7 @@ JetBrains Mono is declared but currently unused — reserved for any future debu
 
 ### Principles
 
-- Display sizes always run at weight 700 with negative tracking. Inter at 700 without negative tracking reads as too wide — the tightened tracking gives Corta its precise, engineered voice.
+- Display sizes always run at weight 700 with negative tracking. Inter at 700 without negative tracking reads as too wide — the tightened tracking gives Al pasto its precise, engineered voice.
 - Body and labels stay at 400 (body) and 600 (UI). **Weight 500 is forbidden** — the hierarchy depends on size + the 200-step weight gap.
 - UI labels are uppercase, +0.4px tracked. The small spacing nudge makes them feel slightly mechanical — fintech-precision applied to a party game.
 - Card prompts are display-700 with `_` slots rendered as cobalt-violet underlines, not as text. See `PromptText` in `src/components/ui/GameCard.tsx`.
@@ -129,7 +129,7 @@ The system has **no traditional drop shadow**. Depth is communicated through thr
 | `rounded-pill` / `rounded-chip` | 9999px | Every button, every chip, every avatar. |
 | `rounded-none` | 0px | The canvas itself, full-bleed sections. |
 
-**Playing-card geometry.** Cards are 244×326px (aspect 3:4 portrait). The corner radius is `rounded-card` (16px) — generous enough to read as card stock but tight enough to feel modern. The prompt sits top-left at `text-card-lg`; the `corta.` wordmark sits bottom-left at 18px / -0.5px tracking.
+**Playing-card geometry.** Cards are 244×326px (aspect 3:4 portrait). The corner radius is `rounded-card` (16px) — generous enough to read as card stock but tight enough to feel modern. The prompt sits top-left at `text-card-lg`; the `al pasto.` wordmark sits bottom-left at 18px / -0.5px tracking.
 
 ## Components
 
@@ -220,4 +220,4 @@ The app is mobile-first and intentionally **not** desktop-optimized. At any view
 - Pressed/active visual states are documented for `PillButton` only. Other components rely on the browser focus ring.
 - The accent palette (`teal`, `rose`, `amber`) is sized for the current surfaces. If you add success/error semantics elsewhere, document the new use site.
 - Animation timings for the failover transition (when a peer is promoted to host mid-game) are not designed yet. The current implementation simply re-mounts without an explicit visual.
-- The wordmark `corta.` is currently typeset rather than illustrated. A custom logotype would replace it on cards and on `HomeView`.
+- The wordmark `al pasto.` is currently typeset rather than illustrated. A custom logotype would replace it on cards and on `HomeView`.
