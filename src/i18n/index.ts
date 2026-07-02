@@ -1,8 +1,8 @@
 import { useUIStore } from "@/store/useUIStore";
-import type { Strings } from "./strings";
-import { DEFAULT_LOCALE, type Locale } from "./locale";
-import es from "./es";
 import en from "./en";
+import es from "./es";
+import { DEFAULT_LOCALE, type Locale } from "./locale";
+import type { Strings } from "./strings";
 
 /**
  * In-house i18n. Re-exports locale constants from `./locale` and adds the
@@ -18,8 +18,8 @@ import en from "./en";
  *   4. Register both in `DICT` below and in `lib/host.ts:DECKS`.
  */
 
-export { DEFAULT_LOCALE, AVAILABLE_LOCALES } from "./locale";
 export type { Locale } from "./locale";
+export { AVAILABLE_LOCALES, DEFAULT_LOCALE } from "./locale";
 export type { Strings };
 
 const DICT: Record<Locale, Strings> = { es, en };

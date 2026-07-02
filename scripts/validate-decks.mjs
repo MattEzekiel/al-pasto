@@ -10,9 +10,9 @@
  * Exits non-zero with a per-problem message so CI and pre-flight checks
  * fail fast. Adding a country or tagging a card stays data-only.
  */
-import { readFile, readdir } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const dataDir = fileURLToPath(new URL("../src/data", import.meta.url));
 
@@ -28,7 +28,9 @@ const locales = entries.filter((e) => e.isDirectory()).map((e) => e.name);
 for (const locale of locales) {
   const registered = new Set((countries[locale] ?? []).map((c) => c.code));
   if (!(locale in countries)) {
-    errors.push(`countries.json: locale "${locale}" has no entry (add "${locale}": []).`);
+    errors.push(
+      `countries.json: locale "${locale}" has no entry (add "${locale}": []).`,
+    );
   }
 
   for (const file of ["white_cards.json", "black_cards.json"]) {
@@ -37,7 +39,9 @@ for (const locale of locales) {
     try {
       cards = JSON.parse(await readFile(deckPath, "utf8"));
     } catch (err) {
-      errors.push(`${locale}/${file}: unreadable or invalid JSON (${err.message}).`);
+      errors.push(
+        `${locale}/${file}: unreadable or invalid JSON (${err.message}).`,
+      );
       continue;
     }
 
@@ -68,9 +72,13 @@ for (const locale of locales) {
 }
 
 if (errors.length > 0) {
-  console.error(`Deck validation failed (${errors.length} problem${errors.length === 1 ? "" : "s"}):`);
+  console.error(
+    `Deck validation failed (${errors.length} problem${errors.length === 1 ? "" : "s"}):`,
+  );
   for (const e of errors) console.error(`  - ${e}`);
   process.exit(1);
 }
 
-console.log(`Deck validation passed (${locales.length} locale${locales.length === 1 ? "" : "s"}: ${locales.join(", ")}).`);
+console.log(
+  `Deck validation passed (${locales.length} locale${locales.length === 1 ? "" : "s"}: ${locales.join(", ")}).`,
+);

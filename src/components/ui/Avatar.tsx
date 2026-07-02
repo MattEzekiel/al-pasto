@@ -25,8 +25,8 @@ export function Avatar({
     ring === "judge"
       ? "ring-2 ring-brand"
       : ring === "host"
-      ? "ring-2 ring-ink"
-      : "hairline";
+        ? "ring-2 ring-ink"
+        : "hairline";
 
   return (
     <div

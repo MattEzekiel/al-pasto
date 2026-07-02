@@ -9,7 +9,18 @@ const en: Strings = {
     intro:
       "Multiplayer. No accounts. Nothing leaves the room. Host runs the game from their own device — kill the tab, kill the game.",
     name: "Your name",
-    namePool: ["Sam", "Alex", "Jo", "Riley", "Max", "Casey", "Noa", "Robin", "Charlie", "Frankie"],
+    namePool: [
+      "Sam",
+      "Alex",
+      "Jo",
+      "Riley",
+      "Max",
+      "Casey",
+      "Noa",
+      "Robin",
+      "Charlie",
+      "Frankie",
+    ],
     roomCode: "Room code",
     join: "Join",
     host: "Host",
@@ -21,9 +32,11 @@ const en: Strings = {
   mode: {
     title: "Game mode",
     classic: "Classic",
-    classicDesc: "The original. Built-in prompts, white cards dealt to your hand.",
+    classicDesc:
+      "The original. Built-in prompts, white cards dealt to your hand.",
     custom: "Custom",
-    customDesc: "Players type their own answers. Choose where prompts come from.",
+    customDesc:
+      "Players type their own answers. Choose where prompts come from.",
     presetTitle: "Custom setup",
     blank: "Blank white cards",
     blankDesc: "Type your own answers; prompts come from the built-in deck.",
@@ -81,7 +94,8 @@ const en: Strings = {
     promptsNeeded: (n) =>
       n === 1 ? "Write at least 1 prompt" : `Write at least ${n} prompts`,
     customNotice: "Players will write the prompts before the game starts.",
-    localePrompt: (label) => `This room is in ${label}. Switch the interface language?`,
+    localePrompt: (label) =>
+      `This room is in ${label}. Switch the interface language?`,
     localeSwitch: "Switch",
     localeKeep: "Keep",
   },

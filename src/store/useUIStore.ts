@@ -77,7 +77,9 @@ export const useUIStore = create<UIState>((set) => ({
 
   stage: (id) =>
     set((s) =>
-      s.stagedCardIds.includes(id) ? s : { stagedCardIds: [...s.stagedCardIds, id] },
+      s.stagedCardIds.includes(id)
+        ? s
+        : { stagedCardIds: [...s.stagedCardIds, id] },
     ),
 
   unstage: (id) =>
@@ -113,5 +115,6 @@ export const useUIStore = create<UIState>((set) => ({
     );
   },
 
-  dismiss: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
+  dismiss: (id) =>
+    set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 }));

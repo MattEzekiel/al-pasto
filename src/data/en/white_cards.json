@@ -4,7 +4,10 @@
   { "id": "w003", "text": "The smell of grandma's lasagna." },
   { "id": "w004", "text": "My therapist making the 'oh no' face." },
   { "id": "w005", "text": "An unformatted Excel sheet." },
-  { "id": "w006", "text": "The cousin who sells insurance at every family event." },
+  {
+    "id": "w006",
+    "text": "The cousin who sells insurance at every family event."
+  },
   { "id": "w007", "text": "9 a.m. karaoke." },
   { "id": "w008", "text": "A celebrity crying in the bathroom." },
   { "id": "w009", "text": "A photocopy of my ID folded in four." },
@@ -27,8 +30,14 @@
   { "id": "w026", "text": "The 7-minute voice note." },
   { "id": "w027", "text": "My boyfriend playing Fortnite at 4 a.m." },
   { "id": "w028", "text": "A lost fry under the car seat." },
-  { "id": "w029", "text": "Saying 'thanks, you too' to the movie theater cashier." },
-  { "id": "w030", "text": "Staring at the ceiling at 3 a.m. remembering that 2014 embarrassment." },
+  {
+    "id": "w029",
+    "text": "Saying 'thanks, you too' to the movie theater cashier."
+  },
+  {
+    "id": "w030",
+    "text": "Staring at the ceiling at 3 a.m. remembering that 2014 embarrassment."
+  },
   { "id": "w031", "text": "Getting on the bus without my card." },
   { "id": "w032", "text": "The GPS voice saying 'your destination'." },
   { "id": "w033", "text": "Too much hot sauce." },
@@ -39,7 +48,10 @@
   { "id": "w038", "text": "A Tinder match with your ex." },
   { "id": "w039", "text": "A knock-off Spider-Man piñata." },
   { "id": "w040", "text": "Going to a baby shower empty-handed." },
-  { "id": "w041", "text": "A 'your package was delivered to a neighbor' notification." },
+  {
+    "id": "w041",
+    "text": "A 'your package was delivered to a neighbor' notification."
+  },
   { "id": "w042", "text": "Singing English karaoke very badly." },
   { "id": "w043", "text": "The animated sticker of a dancing dog." },
   { "id": "w044", "text": "Five shots of mezcal." },
@@ -57,7 +69,10 @@
   { "id": "w056", "text": "A two-for-one movie ticket deal." },
   { "id": "w057", "text": "My mother-in-law forwarding prayer chains." },
   { "id": "w058", "text": "The reason I stopped answering the phone." },
-  { "id": "w059", "text": "A 'family Spotify' subscription that doesn't include me." },
+  {
+    "id": "w059",
+    "text": "A 'family Spotify' subscription that doesn't include me."
+  },
   { "id": "w060", "text": "Booking a cruise online without reading anything." },
   { "id": "w061", "text": "The smell of a middle-school gym." },
   { "id": "w062", "text": "Turning down a really nice scotch." },

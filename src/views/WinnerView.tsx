@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { PillButton } from "@/components/ui/PillButton";
 import { Avatar } from "@/components/ui/Avatar";
-import { useGameStore } from "@/store/useGameStore";
+import { PillButton } from "@/components/ui/PillButton";
 import { useT } from "@/i18n";
+import { useGameStore } from "@/store/useGameStore";
 
 /**
  * Final celebration. The cobalt-violet brand stamp lives at full volume
@@ -29,7 +29,9 @@ export function WinnerView() {
           transition={{ duration: 0.4 }}
           className="space-y-2"
         >
-          <span className="text-label uppercase opacity-80">{t.winner.gameOver}</span>
+          <span className="text-label uppercase opacity-80">
+            {t.winner.gameOver}
+          </span>
           <h1 className="display text-display-xxl leading-none">
             {t.winner.wins(winnerName)}
           </h1>
@@ -52,7 +54,9 @@ export function WinnerView() {
               </span>
               <Avatar name={p.name} size={36} />
               <span className="flex-1 text-body font-semibold">{p.name}</span>
-              <span className="display text-display-sm tabular-nums">{p.score}</span>
+              <span className="display text-display-sm tabular-nums">
+                {p.score}
+              </span>
             </div>
           ))}
         </motion.section>

@@ -1,4 +1,4 @@
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { type HTMLMotionProps, motion } from "framer-motion";
 import type { ReactNode } from "react";
 
 /**
@@ -59,13 +59,17 @@ export function GameCard({
     >
       {faceDown ? (
         <div className="grid place-items-center h-full w-full">
-          <span className="display text-display-md leading-none">al pasto.</span>
+          <span className="display text-display-md leading-none">
+            al pasto.
+          </span>
         </div>
       ) : (
         <>
           <p className="display text-card-lg leading-[1.1]">{children}</p>
           <div className="flex items-end justify-between">
-            <span className="display text-[18px] tracking-[-0.5px]">al pasto.</span>
+            <span className="display text-[18px] tracking-[-0.5px]">
+              al pasto.
+            </span>
             {meta && (
               <span className="text-[11px] uppercase tracking-[0.4px] text-ink-mute">
                 {meta}
@@ -89,10 +93,12 @@ export function PromptText({ text }: { text: string }) {
       {parts.map((p, i) =>
         p === "_" ? (
           <span
+            // biome-ignore lint/suspicious/noArrayIndexKey: parts are positional fragments of a static string
             key={i}
             className="inline-block min-w-[3.5em] border-b-2 border-brand pb-[2px] mx-1 align-baseline"
           />
         ) : (
+          // biome-ignore lint/suspicious/noArrayIndexKey: parts are positional fragments of a static string
           <span key={i}>{p}</span>
         ),
       )}

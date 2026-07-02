@@ -31,7 +31,9 @@ export class ErrorBoundary extends Component<Props, State> {
 
     return (
       <div className="min-h-[100dvh] flex flex-col justify-center gap-4 px-rail max-w-md mx-auto text-ink">
-        <span className="text-label uppercase text-accent-rose">Something broke</span>
+        <span className="text-label uppercase text-accent-rose">
+          Something broke
+        </span>
         <p className="display text-display-sm">{error.message}</p>
         {error.stack && (
           <pre className="text-body-sm text-ink-mute whitespace-pre-wrap overflow-auto max-h-64">

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AppFrame } from "@/components/ui/AppFrame";
 import { PillButton } from "@/components/ui/PillButton";
-import { useGameStore } from "@/store/useGameStore";
 import { useT } from "@/i18n";
+import { useGameStore } from "@/store/useGameStore";
 
 /**
  * Authoring phase — custom/mix black source with "players" authoring. Every
@@ -30,8 +30,12 @@ export function AuthoringView() {
     return (
       <AppFrame>
         <div className="flex-1 flex flex-col justify-center items-center text-center gap-4 px-rail">
-          <span className="text-label uppercase text-ink-mute">{t.authoring.header}</span>
-          <p className="display text-display-md max-w-xs">{t.authoring.waiting}</p>
+          <span className="text-label uppercase text-ink-mute">
+            {t.authoring.header}
+          </span>
+          <p className="display text-display-md max-w-xs">
+            {t.authoring.waiting}
+          </p>
           <span className="display text-display-lg tabular-nums mt-1">
             {t.authoring.progress(done, expected)}
           </span>
@@ -55,7 +59,9 @@ export function AuthoringView() {
     <AppFrame
       header={
         <div className="pt-3 pb-4 flex items-center justify-between">
-          <span className="text-label uppercase text-brand">{t.authoring.header}</span>
+          <span className="text-label uppercase text-brand">
+            {t.authoring.header}
+          </span>
           <span className="text-label uppercase text-ink-mute tabular-nums">
             {t.authoring.progress(done, expected)}
           </span>
@@ -66,6 +72,7 @@ export function AuthoringView() {
         <p className="text-body text-ink-mute">{t.authoring.hint(quota)}</p>
         {drafts.map((val, i) => (
           <textarea
+            // biome-ignore lint/suspicious/noArrayIndexKey: fixed-size slot list; index is the identity
             key={i}
             value={val}
             onChange={(e) => setAt(i, e.target.value)}
@@ -79,7 +86,13 @@ export function AuthoringView() {
       </div>
 
       <div className="mt-auto pt-6 pb-2">
-        <PillButton variant="primary" size="lg" full disabled={!ready} onClick={send}>
+        <PillButton
+          variant="primary"
+          size="lg"
+          full
+          disabled={!ready}
+          onClick={send}
+        >
           {t.authoring.submit}
         </PillButton>
       </div>

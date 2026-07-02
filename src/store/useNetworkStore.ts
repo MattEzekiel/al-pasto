@@ -6,7 +6,12 @@ import { connect } from "@/lib/network";
  * Holds the socket handle plus the live wire status. The game store
  * subscribes to this — it doesn't own the connection.
  */
-export type WireStatus = "idle" | "connecting" | "open" | "reconnecting" | "closed";
+export type WireStatus =
+  | "idle"
+  | "connecting"
+  | "open"
+  | "reconnecting"
+  | "closed";
 
 interface NetworkState {
   socket: CortaSocket | null;
@@ -28,7 +33,9 @@ export const useNetworkStore = create<NetworkState>((set, get) => ({
 
     socket.onConnect(() => set({ status: "open" }));
     socket.onDisconnect((reason) => {
-      set({ status: reason === "io client disconnect" ? "closed" : "reconnecting" });
+      set({
+        status: reason === "io client disconnect" ? "closed" : "reconnecting",
+      });
     });
 
     set({ socket });

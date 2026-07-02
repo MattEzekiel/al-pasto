@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import { AppFrame } from "@/components/ui/AppFrame";
-import { PillButton } from "@/components/ui/PillButton";
-import { GameCard, PromptText } from "@/components/ui/GameCard";
 import { Avatar } from "@/components/ui/Avatar";
-import { useGameStore } from "@/store/useGameStore";
+import { GameCard, PromptText } from "@/components/ui/GameCard";
+import { PillButton } from "@/components/ui/PillButton";
 import { useT } from "@/i18n";
+import { useGameStore } from "@/store/useGameStore";
 
 /**
  * Post-judging beat. Surfaces the winning submission as a cobalt-violet
@@ -19,7 +19,9 @@ export function RevealView() {
 
   if (!view) return null;
   const round = view.round;
-  const winnerSub = round.anonymous.find((s) => s.id === round.winnerSubmissionId);
+  const winnerSub = round.anonymous.find(
+    (s) => s.id === round.winnerSubmissionId,
+  );
   const winner = view.players.find((p) => p.id === round.winnerPlayerId);
   const winnerName = winner?.name ?? "—";
 
@@ -27,7 +29,9 @@ export function RevealView() {
     <AppFrame>
       <div className="pt-6 space-y-6">
         <header className="space-y-2">
-          <span className="text-label uppercase text-brand">{t.reveal.badge}</span>
+          <span className="text-label uppercase text-brand">
+            {t.reveal.badge}
+          </span>
           <h1 className="display text-display-md">
             {t.reveal.takesRound(winnerName)}
           </h1>
@@ -55,7 +59,9 @@ export function RevealView() {
             <Avatar name={winner.name} size={40} />
             <div>
               <p className="text-body font-semibold">{winner.name}</p>
-              <p className="text-label uppercase text-ink-mute">{t.reveal.pointPlus}</p>
+              <p className="text-label uppercase text-ink-mute">
+                {t.reveal.pointPlus}
+              </p>
             </div>
           </div>
         )}

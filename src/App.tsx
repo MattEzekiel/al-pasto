@@ -1,12 +1,12 @@
-import { useEffect, useMemo, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { type ReactNode, useEffect, useMemo } from "react";
 import { useGameStore } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
-import { HomeView } from "@/views/HomeView";
-import { LobbyView } from "@/views/LobbyView";
 import { AuthoringView } from "@/views/AuthoringView";
 import { GameplayView } from "@/views/GameplayView";
+import { HomeView } from "@/views/HomeView";
 import { JudgeView } from "@/views/JudgeView";
+import { LobbyView } from "@/views/LobbyView";
 import { RevealView } from "@/views/RevealView";
 import { WinnerView } from "@/views/WinnerView";
 
@@ -16,7 +16,14 @@ import { WinnerView } from "@/views/WinnerView";
  * matches the Host-as-server contract: routing logic that lived on the
  * server in a normal app lives in the broadcast state here.
  */
-type Screen = "home" | "lobby" | "authoring" | "player" | "judge" | "reveal" | "winner";
+type Screen =
+  | "home"
+  | "lobby"
+  | "authoring"
+  | "player"
+  | "judge"
+  | "reveal"
+  | "winner";
 
 function pickScreen(phase: string | undefined, hasRoom: boolean): Screen {
   if (!hasRoom) return "home";
@@ -60,7 +67,10 @@ export default function App() {
   const hasRoom = !!useGameStore((s) => s.roomId);
   const toasts = useUIStore((s) => s.toasts);
 
-  const screen = useMemo(() => pickScreen(view?.phase, hasRoom), [view?.phase, hasRoom]);
+  const screen = useMemo(
+    () => pickScreen(view?.phase, hasRoom),
+    [view?.phase, hasRoom],
+  );
 
   // Clean URL once the room is in-flight so a refresh hits Home cleanly.
   useEffect(() => {

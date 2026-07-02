@@ -1,18 +1,21 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { AppFrame } from "@/components/ui/AppFrame";
-import { PillButton } from "@/components/ui/PillButton";
 import { Avatar } from "@/components/ui/Avatar";
+import { PillButton } from "@/components/ui/PillButton";
+import countries from "@/data/countries.json";
+import { useT } from "@/i18n";
+import type { Locale } from "@/i18n/locale";
+import { AVAILABLE_LOCALES } from "@/i18n/locale";
+import { inviteUrl, renderInviteQR } from "@/lib/qr";
 import { useGameStore } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
-import { inviteUrl, renderInviteQR } from "@/lib/qr";
-import { useT } from "@/i18n";
-import { AVAILABLE_LOCALES } from "@/i18n/locale";
-import type { Locale } from "@/i18n/locale";
-import countries from "@/data/countries.json";
 
 /** Per-locale country registry — labels for the room-country display. */
-const COUNTRIES = countries as Record<Locale, { code: string; label: string }[]>;
+const COUNTRIES = countries as Record<
+  Locale,
+  { code: string; label: string }[]
+>;
 
 /**
  * Pre-game waiting room.
@@ -65,7 +68,8 @@ export function LobbyView() {
   const authoredBlack =
     view.settings.blackCards === "custom" || view.settings.blackCards === "mix";
   const hostAuthors = authoredBlack && view.settings.blackAuthoring === "host";
-  const playersAuthor = authoredBlack && view.settings.blackAuthoring === "players";
+  const playersAuthor =
+    authoredBlack && view.settings.blackAuthoring === "players";
   const filledPrompts = prompts.filter((p) => p.trim().length > 0).length;
 
   const syncPrompts = (next: string[]) => {
@@ -83,7 +87,9 @@ export function LobbyView() {
     <AppFrame>
       <div className="space-y-6 pt-6">
         <header className="space-y-2">
-          <span className="text-label uppercase text-ink-mute">{t.lobby.room}</span>
+          <span className="text-label uppercase text-ink-mute">
+            {t.lobby.room}
+          </span>
           <h1 className="display text-display-lg tracking-[-1.2px]">
             {view.roomId}
           </h1>
@@ -95,15 +101,22 @@ export function LobbyView() {
           <section className="rounded-card hairline bg-surface-elevated p-5 space-y-3">
             <p className="text-body">
               {t.lobby.localePrompt(
-                AVAILABLE_LOCALES.find((l) => l.code === view.settings.locale)?.label ??
-                  view.settings.locale,
+                AVAILABLE_LOCALES.find((l) => l.code === view.settings.locale)
+                  ?.label ?? view.settings.locale,
               )}
             </p>
             <div className="flex gap-2">
-              <PillButton size="sm" onClick={() => setLocale(view.settings.locale, false)}>
+              <PillButton
+                size="sm"
+                onClick={() => setLocale(view.settings.locale, false)}
+              >
                 {t.lobby.localeSwitch}
               </PillButton>
-              <PillButton size="sm" variant="ghost" onClick={() => setLocaleDismissed(true)}>
+              <PillButton
+                size="sm"
+                variant="ghost"
+                onClick={() => setLocaleDismissed(true)}
+              >
                 {t.lobby.localeKeep}
               </PillButton>
             </div>
@@ -168,7 +181,11 @@ export function LobbyView() {
               step={1}
               aria-label={t.lobby.scoreToWin}
               disabled={!isHost}
-              value={view.settings.win.kind === "score" ? view.settings.win.target : 7}
+              value={
+                view.settings.win.kind === "score"
+                  ? view.settings.win.target
+                  : 7
+              }
               onChange={(e) =>
                 setSettings({ win: { kind: "score", target: +e.target.value } })
               }
@@ -194,6 +211,7 @@ export function LobbyView() {
 
           <div>
             <span className="text-body block mb-2">{t.lobby.judgeMode}</span>
+            {/* biome-ignore lint/a11y/useSemanticElements: fieldset breaks the grid layout; role=group is equivalent */}
             <div
               role="group"
               aria-label={t.lobby.judgeMode}
@@ -236,7 +254,9 @@ export function LobbyView() {
             className="rounded-card hairline bg-surface-card p-5 space-y-3"
           >
             <div className="flex items-center justify-between">
-              <span className="text-label uppercase text-ink-mute">{t.lobby.prompts}</span>
+              <span className="text-label uppercase text-ink-mute">
+                {t.lobby.prompts}
+              </span>
               {filledPrompts < 1 && (
                 <span className="text-label uppercase text-accent-rose">
                   {t.lobby.promptsNeeded(1)}
@@ -245,6 +265,7 @@ export function LobbyView() {
             </div>
             {prompts.map((val, i) => (
               <textarea
+                // biome-ignore lint/suspicious/noArrayIndexKey: fixed-size slot list; index is the identity
                 key={i}
                 value={val}
                 onChange={(e) => setPromptAt(i, e.target.value)}
@@ -268,7 +289,10 @@ export function LobbyView() {
         )}
 
         {/* Players */}
-        <section aria-label={t.lobby.players(playerCount)} className="space-y-3">
+        <section
+          aria-label={t.lobby.players(playerCount)}
+          className="space-y-3"
+        >
           <div className="flex items-center justify-between">
             <span className="text-label uppercase text-ink-mute">
               {t.lobby.players(playerCount)}
@@ -418,7 +442,9 @@ function TimerSetting({
         className="w-full accent-ink disabled:opacity-40"
       />
       <label className="mt-2 flex items-center justify-between">
-        <span className="text-label uppercase text-ink-mute">{t.lobby.noTime}</span>
+        <span className="text-label uppercase text-ink-mute">
+          {t.lobby.noTime}
+        </span>
         <button
           type="button"
           role="switch"
@@ -435,7 +461,9 @@ function TimerSetting({
           <span
             className={[
               "absolute top-0.5 size-5 rounded-full transition-transform",
-              noTime ? "translate-x-[22px] bg-canvas" : "translate-x-0.5 bg-ink",
+              noTime
+                ? "translate-x-[22px] bg-canvas"
+                : "translate-x-0.5 bg-ink",
             ].join(" ")}
           />
         </button>

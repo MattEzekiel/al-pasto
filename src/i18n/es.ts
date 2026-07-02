@@ -13,7 +13,18 @@ const es: Strings = {
     intro:
       "Multijugador. Sin cuentas. Nada sale del cuarto. El anfitrión corre la partida desde su propio celular — cerraste la pestaña, se terminó.",
     name: "Tu nombre",
-    namePool: ["Mati", "Naza", "Juli", "Fran", "Pato", "Tincho", "Caro", "Agus", "Lu", "Rocho"],
+    namePool: [
+      "Mati",
+      "Naza",
+      "Juli",
+      "Fran",
+      "Pato",
+      "Tincho",
+      "Caro",
+      "Agus",
+      "Lu",
+      "Rocho",
+    ],
     roomCode: "Código de sala",
     join: "Entrar",
     host: "Crear sala",
@@ -25,9 +36,11 @@ const es: Strings = {
   mode: {
     title: "Modo de juego",
     classic: "Clásico",
-    classicDesc: "El original. Consignas del mazo y cartas blancas repartidas en tu mano.",
+    classicDesc:
+      "El original. Consignas del mazo y cartas blancas repartidas en tu mano.",
     custom: "Personalizado",
-    customDesc: "Los jugadores escriben sus respuestas. Elegí de dónde salen las consignas.",
+    customDesc:
+      "Los jugadores escriben sus respuestas. Elegí de dónde salen las consignas.",
     presetTitle: "Configuración personalizada",
     blank: "Cartas blancas en blanco",
     blankDesc: "Escribí tus respuestas; las consignas salen del mazo.",
@@ -83,8 +96,11 @@ const es: Strings = {
     promptPlaceholder: (n) => `Consigna ${n}`,
     addPrompt: "Agregar consigna",
     promptsNeeded: (n) =>
-      n === 1 ? "Escribí al menos 1 consigna" : `Escribí al menos ${n} consignas`,
-    customNotice: "Los jugadores van a escribir las consignas antes de empezar.",
+      n === 1
+        ? "Escribí al menos 1 consigna"
+        : `Escribí al menos ${n} consignas`,
+    customNotice:
+      "Los jugadores van a escribir las consignas antes de empezar.",
     localePrompt: (label) =>
       `Esta sala está en ${label}. ¿Cambiamos el idioma de la interfaz?`,
     localeSwitch: "Cambiar",
@@ -97,7 +113,9 @@ const es: Strings = {
     picks: (n) => (n === 1 ? "1 elección" : `${n} elecciones`),
     playZone: "Zona de juego",
     dragHere: (n) =>
-      n === 1 ? "Tocá una carta para jugarla." : `Tocá ${n} cartas para jugarlas.`,
+      n === 1
+        ? "Tocá una carta para jugarla."
+        : `Tocá ${n} cartas para jugarlas.`,
     tapToPlay: (n) => (n === 1 ? "Tocá una carta" : `Tocá ${n} cartas`),
     submit: "Jugar",
     submitProgress: (a, b) => `${a}/${b}`,
@@ -109,7 +127,8 @@ const es: Strings = {
     cardsProgress: (a, b) => `${a}/${b} cartas`,
     yourAnswer: "Tu respuesta",
     answerPlaceholder: (n) => `Respuesta ${n}`,
-    writeAnswer: (n) => (n === 1 ? "Escribí tu respuesta" : `Escribí ${n} respuestas`),
+    writeAnswer: (n) =>
+      n === 1 ? "Escribí tu respuesta" : `Escribí ${n} respuestas`,
   },
   judge: {
     youAreJudge: "Sos el juez",
@@ -142,8 +161,10 @@ const es: Strings = {
   errors: {
     roomNotFound: "La sala no existe.",
     handlerFailed: (m) => `Falló el handler: ${m}`,
-    terminatedQuorum: "Quedaron menos de tres jugadores. Se terminó la partida.",
-    terminatedHostGone: "El anfitrión se fue y no se pudo reasignar. Volvé al inicio.",
+    terminatedQuorum:
+      "Quedaron menos de tres jugadores. Se terminó la partida.",
+    terminatedHostGone:
+      "El anfitrión se fue y no se pudo reasignar. Volvé al inicio.",
   },
   landing: {
     metaTitle: "Al pasto — juego de cartas online gratis para jugar con amigos",

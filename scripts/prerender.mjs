@@ -4,25 +4,39 @@
  * sitemap.xml + llms.txt. Runs after `vite build` (client) and
  * `vite build --ssr` (see the build script in package.json).
  */
-import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  appendFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
 
-const ssrEntry = pathToFileURL(path.join(root, "dist-ssr", "entry-server.js")).href;
+const ssrEntry = pathToFileURL(
+  path.join(root, "dist-ssr", "entry-server.js"),
+).href;
 const { render, ROUTE_META, SITE_URL, GITHUB_URL } = await import(ssrEntry);
 
 if (!SITE_URL) {
-  throw new Error("VITE_SITE_URL is not set. Add it to .env (see .env.example).");
+  throw new Error(
+    "VITE_SITE_URL is not set. Add it to .env (see .env.example).",
+  );
 }
 
 const template = readFileSync(path.join(dist, "index.html"), "utf8");
 const href = (p) => SITE_URL + (p === "/" ? "/" : p);
 
 const esc = (s) =>
-  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 
 const setMeta = (html, attr, key, value) =>
   html.replace(
@@ -33,7 +47,9 @@ const setMeta = (html, attr, key, value) =>
 function headFor(meta) {
   const lines = [`<link rel="canonical" href="${href(meta.path)}" />`];
   for (const alt of meta.alternates) {
-    lines.push(`<link rel="alternate" hreflang="${alt.hreflang}" href="${href(alt.path)}" />`);
+    lines.push(
+      `<link rel="alternate" hreflang="${alt.hreflang}" href="${href(alt.path)}" />`,
+    );
   }
   lines.push(`<meta property="og:url" content="${href(meta.path)}" />`);
   for (const ld of meta.jsonLd) {
@@ -48,7 +64,10 @@ for (const meta of ROUTE_META) {
   let html = template;
   if (meta.title) {
     html = html
-      .replace(/<title>[^<]*<\/title>/, () => `<title>${esc(meta.title)}</title>`)
+      .replace(
+        /<title>[^<]*<\/title>/,
+        () => `<title>${esc(meta.title)}</title>`,
+      )
       .replace('lang="es-AR"', `lang="${meta.lang}"`);
     html = setMeta(html, "name", "description", meta.description);
     html = setMeta(html, "property", "og:title", meta.title);
@@ -67,7 +86,9 @@ for (const meta of ROUTE_META) {
   console.log(`prerendered ${meta.path}`);
 }
 
-const urls = ROUTE_META.map((m) => `  <url><loc>${href(m.path)}</loc></url>`).join("\n");
+const urls = ROUTE_META.map(
+  (m) => `  <url><loc>${href(m.path)}</loc></url>`,
+).join("\n");
 writeFileSync(
   path.join(dist, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,

@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { AppFrame } from "@/components/ui/AppFrame";
-import { PillButton } from "@/components/ui/PillButton";
 import { GameCard, PromptText } from "@/components/ui/GameCard";
+import { PillButton } from "@/components/ui/PillButton";
 import { TimerBar } from "@/components/ui/TimerBar";
+import { useT } from "@/i18n";
 import { useGameStore, useSelfPlayer } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
-import { useT } from "@/i18n";
 
 /**
  * Voting Matrix — Judge / Vote View.
@@ -55,11 +55,11 @@ export function JudgeView() {
   // Locally match the player's own submission so they can't vote for it.
   const ownId =
     everybody && submittedCardIds.length > 0
-      ? round.anonymous.find(
+      ? (round.anonymous.find(
           (s) =>
             s.cards.length === submittedCardIds.length &&
             s.cards.every((c) => submittedCardIds.includes(c.id)),
-        )?.id ?? null
+        )?.id ?? null)
       : null;
   const playedThisRound = submittedCardIds.length > 0;
 
@@ -131,7 +131,9 @@ export function JudgeView() {
 
       {/* Matrix */}
       <section
-        aria-label={everybody ? t.judge.tapACardToVote : t.judge.tapACardToReveal}
+        aria-label={
+          everybody ? t.judge.tapACardToVote : t.judge.tapACardToReveal
+        }
         className="mt-5 grid grid-cols-2 gap-3"
       >
         {round.anonymous.map((sub, idx) => {
@@ -202,7 +204,9 @@ function WaitScreen({
         <span className="text-label uppercase text-ink-mute">{title}</span>
         <p className="display text-display-md max-w-xs">{subtitle}</p>
         {progress && (
-          <span className="display text-display-lg tabular-nums mt-1">{progress}</span>
+          <span className="display text-display-lg tabular-nums mt-1">
+            {progress}
+          </span>
         )}
         {deadline && timerOn && (
           <div className="w-48 mt-4">

@@ -1,16 +1,6 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import type {
-  ClientToServer,
-  GameSettings,
-  GameState,
-  NetworkPayload,
-  PlayerId,
-  RoomId,
-  SanitizedGameState,
-  Submission,
-  WhiteCard,
-} from "@/types/game";
+import { getStrings } from "@/i18n";
 import { sanitizeState } from "@/lib/anonymize";
 import {
   addPlayer,
@@ -32,7 +22,17 @@ import {
 import { mirrorState, readMirror } from "@/lib/persist";
 import { useNetworkStore } from "@/store/useNetworkStore";
 import { useUIStore } from "@/store/useUIStore";
-import { getStrings } from "@/i18n";
+import type {
+  ClientToServer,
+  GameSettings,
+  GameState,
+  NetworkPayload,
+  PlayerId,
+  RoomId,
+  SanitizedGameState,
+  Submission,
+  WhiteCard,
+} from "@/types/game";
 
 /**
  * The single Zustand store that holds:
@@ -152,7 +152,10 @@ export const useGameStore = create<GameStoreShape>()(
         }
         case "action/author-black": {
           commitHost(
-            submitAuthoredBlack(state, { playerId: msg.playerId, prompts: msg.prompts }),
+            submitAuthoredBlack(state, {
+              playerId: msg.playerId,
+              prompts: msg.prompts,
+            }),
           );
           return;
         }
@@ -161,7 +164,12 @@ export const useGameStore = create<GameStoreShape>()(
           return;
         }
         case "action/vote": {
-          commitHost(castVote(state, { voterId: msg.voterId, submissionId: msg.submissionId }));
+          commitHost(
+            castVote(state, {
+              voterId: msg.voterId,
+              submissionId: msg.submissionId,
+            }),
+          );
           return;
         }
         default:
@@ -292,7 +300,9 @@ export const useGameStore = create<GameStoreShape>()(
         useUIStore.getState().setPendingRoom(true);
         set({ selfName: name });
         get().bindSocket();
-        useNetworkStore.getState().socket?.send({ t: "room/join", roomId, name });
+        useNetworkStore
+          .getState()
+          .socket?.send({ t: "room/join", roomId, name });
       },
 
       leave: () => {
@@ -379,9 +389,10 @@ export const useGameStore = create<GameStoreShape>()(
         }));
 
         const wireSub: Omit<Submission, "id"> = { playerId: me, cards };
-        useNetworkStore
-          .getState()
-          .socket?.send({ t: "action/submit", submission: wireSub } as ClientToServer);
+        useNetworkStore.getState().socket?.send({
+          t: "action/submit",
+          submission: wireSub,
+        } as ClientToServer);
       },
 
       vote: (submissionId) => {
@@ -417,7 +428,8 @@ export const useGameStore = create<GameStoreShape>()(
           .socket?.send({ t: "action/author-black", playerId: me, prompts });
       },
 
-      __setHostState: (state) => set({ hostState: state, view: sanitizeState(state) }),
+      __setHostState: (state) =>
+        set({ hostState: state, view: sanitizeState(state) }),
     };
   }),
 );

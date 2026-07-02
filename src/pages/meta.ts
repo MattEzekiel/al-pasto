@@ -1,5 +1,5 @@
-import es from "@/i18n/es";
 import en from "@/i18n/en";
+import es from "@/i18n/es";
 
 /**
  * Per-route head metadata for the prerendered marketing pages. Consumed by
@@ -8,7 +8,10 @@ import en from "@/i18n/en";
  */
 
 /** Both come from .env — scripts/prerender.mjs fails the build if SITE_URL is unset. */
-export const SITE_URL: string = (import.meta.env.VITE_SITE_URL ?? "").replace(/\/+$/, "");
+export const SITE_URL: string = (import.meta.env.VITE_SITE_URL ?? "").replace(
+  /\/+$/,
+  "",
+);
 export const GITHUB_URL: string = import.meta.env.VITE_GITHUB_URL ?? "";
 
 export interface RouteMeta {

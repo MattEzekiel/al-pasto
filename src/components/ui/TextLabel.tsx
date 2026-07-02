@@ -1,13 +1,15 @@
-import React from 'react';
+import type React from "react";
 
 type TextProps = {
-    children: React.ReactNode;
-}
+  children: React.ReactNode;
+};
 
-function TextLabel({children}: TextProps) {
-    return (
-        <span className="text-label uppercase text-ink-mute my-5 block">{children}</span>
-    );
+function TextLabel({ children }: TextProps) {
+  return (
+    <span className="text-label uppercase text-ink-mute my-5 block">
+      {children}
+    </span>
+  );
 }
 
 export default TextLabel;

@@ -1,26 +1,29 @@
-import type { Locale } from "@/i18n/locale";
-import es from "@/i18n/es";
-import en from "@/i18n/en";
-import { PillLink } from "@/components/ui/PillLink";
 import { LangSwitch } from "@/components/ui/LangSwitch";
+import { PillLink } from "@/components/ui/PillLink";
+import type { Strings } from "@/i18n";
+import en from "@/i18n/en";
+import es from "@/i18n/es";
+import type { Locale } from "@/i18n/locale";
 import { GITHUB_URL } from "./meta";
-import type {Strings} from "@/i18n";
 
-const RULES_HREFS: Record<Locale, string> = { es: "/como-jugar", en: "/how-to-play" };
+const RULES_HREFS: Record<Locale, string> = {
+  es: "/como-jugar",
+  en: "/how-to-play",
+};
 const LANDING_HREFS: Record<Locale, string> = { es: "/juego", en: "/game" };
 
 type langRules = {
-    metaTitle: string;
-    metaDescription: string;
-    title: string;
-    intro: string;
-    sections: { title: string; body: string[] }[];
-    faqTitle: string;
-    faq: { q: string; a: string }[];
-    playCta: string;
-    landingLink: string;
-    otherLang: string
-}
+  metaTitle: string;
+  metaDescription: string;
+  title: string;
+  intro: string;
+  sections: { title: string; body: string[] }[];
+  faqTitle: string;
+  faq: { q: string; a: string }[];
+  playCta: string;
+  landingLink: string;
+  otherLang: string;
+};
 
 /**
  * Rules page — /como-jugar (es) and /how-to-play (en). Prerendered to static
@@ -66,7 +69,7 @@ export default function RulesPage({ locale }: { locale: Locale }) {
       <section className="mt-16">
         <h2 className="display text-display-md">{t.faqTitle}</h2>
         <div className="mt-6 space-y-6">
-          {t.faq.map(({ q, a } : { q: string, a: string }) => (
+          {t.faq.map(({ q, a }: { q: string; a: string }) => (
             <div key={q} className="max-w-prose">
               <h3 className="text-body font-semibold">{q}</h3>
               <p className="mt-1 text-body text-ink-mute">{a}</p>
@@ -82,13 +85,25 @@ export default function RulesPage({ locale }: { locale: Locale }) {
       </div>
 
       <footer className="mt-16 flex flex-wrap gap-x-6 gap-y-2 border-t border-hairline pt-6 text-body-sm text-ink-mute">
-        <a href={landingHref} className="hover:text-ink transition-colors duration-300">
+        <a
+          href={landingHref}
+          className="hover:text-ink transition-colors duration-300"
+        >
           {t.landingLink}
         </a>
-        <a href={otherHref} className="hover:text-ink transition-colors duration-300">
+        <a
+          href={otherHref}
+          className="hover:text-ink transition-colors duration-300"
+        >
           {t.otherLang}
         </a>
-        <a target={"_blank"} referrerPolicy={"no-referrer"} href={GITHUB_URL} rel="noopener" className="hover:text-ink transition-colors duration-300">
+        <a
+          target="_blank"
+          referrerPolicy="no-referrer"
+          href={GITHUB_URL}
+          rel="noopener"
+          className="hover:text-ink transition-colors duration-300"
+        >
           {dict.landing.footerGithub}
         </a>
       </footer>

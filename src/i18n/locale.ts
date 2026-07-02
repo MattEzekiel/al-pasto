@@ -10,10 +10,11 @@ export type Locale = "es" | "en";
 
 export const DEFAULT_LOCALE: Locale = "es";
 
-export const AVAILABLE_LOCALES: ReadonlyArray<{ code: Locale; label: string }> = [
-  { code: "es", label: "Español (AR)" },
-  { code: "en", label: "English" },
-];
+export const AVAILABLE_LOCALES: ReadonlyArray<{ code: Locale; label: string }> =
+  [
+    { code: "es", label: "Español (AR)" },
+    { code: "en", label: "English" },
+  ];
 
 /** Same `corta:` namespace as the IndexedDB mirror in lib/persist.ts. */
 const STORAGE_KEY = "corta:locale";

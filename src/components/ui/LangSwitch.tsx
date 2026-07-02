@@ -6,9 +6,18 @@ import { AVAILABLE_LOCALES } from "@/i18n/locale.ts";
  * each language is its own static URL, so switching is a full-page nav.
  * The destination landing page persists the choice on mount.
  */
-export function LangSwitch({ current, hrefs }: { current: Locale; hrefs: Record<Locale, string> }) {
+export function LangSwitch({
+  current,
+  hrefs,
+}: {
+  current: Locale;
+  hrefs: Record<Locale, string>;
+}) {
   return (
-    <nav aria-label="Language" className="flex gap-3 text-label uppercase tracking-[0.4px]">
+    <nav
+      aria-label="Language"
+      className="flex gap-3 text-label uppercase tracking-[0.4px]"
+    >
       {AVAILABLE_LOCALES.map(({ code }) => (
         <a
           key={code}

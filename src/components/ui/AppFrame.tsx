@@ -26,7 +26,9 @@ export function AppFrame({
         {header && <div className="px-rail">{header}</div>}
         <main className="flex-1 flex flex-col px-rail">{children}</main>
         {footer && (
-          <div className="px-rail pt-3 hairline border-x-0 border-b-0">{footer}</div>
+          <div className="px-rail pt-3 hairline border-x-0 border-b-0">
+            {footer}
+          </div>
         )}
       </div>
     </div>

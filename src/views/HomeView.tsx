@@ -1,27 +1,35 @@
 import { useEffect, useMemo, useState } from "react";
-import { PillButton } from "@/components/ui/PillButton";
 import { AppFrame } from "@/components/ui/AppFrame";
+import ModeTile from "@/components/ui/ModeTile";
+import { PillButton } from "@/components/ui/PillButton";
+import PresetRow from "@/components/ui/PresetRow";
+import TextLabel from "@/components/ui/TextLabel.tsx";
+import countries from "@/data/countries.json";
+import { type Strings, useT } from "@/i18n";
+import type { Locale } from "@/i18n/locale";
+import {
+  detectCountry,
+  readStoredCountry,
+  writeStoredCountry,
+} from "@/lib/country";
+import { defaultSettings, playableCountries } from "@/lib/host";
 import { useGameStore } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
-import { defaultSettings, playableCountries } from "@/lib/host";
-import { detectCountry, readStoredCountry, writeStoredCountry } from "@/lib/country";
-import {type Strings, useT} from "@/i18n";
-import type { Locale } from "@/i18n/locale";
-import countries from "@/data/countries.json";
 import type {
   BlackAuthoring,
-  CountryCode, CountryOptions,
+  CountryCode,
+  CountryOptions,
   GameSettings,
 } from "@/types/game";
-import PresetRow from "@/components/ui/PresetRow";
-import ModeTile from "@/components/ui/ModeTile";
-import TextLabel from "@/components/ui/TextLabel.tsx";
 
 type Mode = "select" | "create" | "mode" | "join";
 type Preset = "blank" | "customBlack" | "mix";
 
 /** Per-locale country registry — drives the picker; data-only to extend. */
-const COUNTRIES = countries as Record<Locale, { code: CountryCode; label: string }[]>;
+const COUNTRIES = countries as Record<
+  Locale,
+  { code: CountryCode; label: string }[]
+>;
 
 /**
  * Entry point. Create (become host) or join with a code, then the inputs for
@@ -93,7 +101,10 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
   const countryOptions: CountryOptions[] = useMemo(() => {
     const localeCountries: CountryOptions[] = COUNTRIES[locale] ?? [];
     const playable = new Set(
-      playableCountries(locale, localeCountries.map((c) => c.code)),
+      playableCountries(
+        locale,
+        localeCountries.map((c) => c.code),
+      ),
     );
     return localeCountries.filter((c) => playable.has(c.code));
   }, [locale]);
@@ -159,7 +170,12 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
             >
               {t.home.createCta}
             </PillButton>
-            <PillButton variant="ghost" size="lg" full onClick={() => setMode("join")}>
+            <PillButton
+              variant="ghost"
+              size="lg"
+              full
+              onClick={() => setMode("join")}
+            >
               {t.home.joinCta}
             </PillButton>
           </section>
@@ -175,6 +191,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
                 placeholder={namePlaceholder}
                 aria-label={t.home.name}
                 autoComplete="nickname"
+                // biome-ignore lint/a11y/noAutofocus: single-input form; focusing it is the expected flow
                 autoFocus
                 maxLength={24}
                 className="mt-2 w-full h-12 bg-surface-card hairline rounded-card px-4 text-body text-ink placeholder:text-ink-faint focus:outline-none focus-visible:border-ink"
@@ -183,9 +200,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
 
             {mode === "join" && (
               <label className="block">
-                <TextLabel>
-                  {t.home.roomCode}
-                </TextLabel>
+                <TextLabel>{t.home.roomCode}</TextLabel>
                 <input
                   value={room}
                   onChange={(e) => setRoom(e.target.value.toUpperCase())}
@@ -254,9 +269,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
 
             {custom && (
               <div className="space-y-3 rounded-card hairline bg-surface-card p-4">
-                <TextLabel>
-                  {t.mode.presetTitle}
-                </TextLabel>
+                <TextLabel>{t.mode.presetTitle}</TextLabel>
                 <PresetRow
                   active={preset === "blank"}
                   title={t.mode.blank}
@@ -279,7 +292,10 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
                 {needsAuthoringChoice && (
                   <>
                     <div className="pt-1">
-                      <span className="text-body block mb-2">{t.mode.authoringTitle}</span>
+                      <span className="text-body block mb-2">
+                        {t.mode.authoringTitle}
+                      </span>
+                      {/* biome-ignore lint/a11y/useSemanticElements: fieldset breaks the grid layout; role=group is equivalent */}
                       <div
                         role="group"
                         aria-label={t.mode.authoringTitle}
@@ -313,7 +329,9 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-body">{t.mode.deckSize}</span>
-                        <span className="text-body font-semibold tabular-nums">{deckSize}</span>
+                        <span className="text-body font-semibold tabular-nums">
+                          {deckSize}
+                        </span>
                       </div>
                       <input
                         type="range"
@@ -333,9 +351,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
 
             {countryOptions.length > 1 && (
               <div className="space-y-2">
-                <TextLabel>
-                  {t.mode.countryTitle}
-                </TextLabel>
+                <TextLabel>{t.mode.countryTitle}</TextLabel>
                 <select
                   aria-label={t.mode.countryTitle}
                   value={country ?? ""}

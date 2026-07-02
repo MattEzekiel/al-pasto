@@ -1,7 +1,7 @@
-import esBlack from "@/data/es/black_cards.json";
-import esWhite from "@/data/es/white_cards.json";
 import enBlack from "@/data/en/black_cards.json";
 import enWhite from "@/data/en/white_cards.json";
+import esBlack from "@/data/es/black_cards.json";
+import esWhite from "@/data/es/white_cards.json";
 import type { Locale } from "@/i18n/locale";
 import { DEFAULT_LOCALE } from "@/i18n/locale";
 import type {
@@ -74,7 +74,9 @@ export function playableCountries(
 ): CountryCode[] {
   return codes.filter((code) => {
     const { black, white } = deckFor(locale, code);
-    return white.length >= MIN_COUNTRY_WHITE && black.length >= MIN_COUNTRY_BLACK;
+    return (
+      white.length >= MIN_COUNTRY_WHITE && black.length >= MIN_COUNTRY_BLACK
+    );
   });
 }
 
@@ -220,7 +222,9 @@ export function removePlayer(state: GameState, playerId: string): GameState {
     players: state.players.filter((p) => p.id !== playerId),
     round: {
       ...state.round,
-      submissions: state.round.submissions.filter((s) => s.playerId !== playerId),
+      submissions: state.round.submissions.filter(
+        (s) => s.playerId !== playerId,
+      ),
       anonymous: state.round.anonymous.filter(
         (s) =>
           !state.round.submissions.find(
@@ -245,7 +249,10 @@ export function markConnection(
   };
 }
 
-export function updateSettings(state: GameState, patch: Partial<GameSettings>): GameState {
+export function updateSettings(
+  state: GameState,
+  patch: Partial<GameSettings>,
+): GameState {
   return {
     ...state,
     version: state.version + 1,
@@ -263,13 +270,20 @@ export function updateSettings(state: GameState, patch: Partial<GameSettings>): 
  */
 function needsAuthoringPhase(state: GameState): boolean {
   const { blackCards, blackAuthoring } = state.settings;
-  return (blackCards === "custom" || blackCards === "mix") && blackAuthoring === "players";
+  return (
+    (blackCards === "custom" || blackCards === "mix") &&
+    blackAuthoring === "players"
+  );
 }
 
 /** Begin the round(s): deal (classic) or hand off to play, building any deck. */
 function beginPlay(state: GameState): GameState {
-  const custom = state.settings.blackCards === "custom" || state.settings.blackCards === "mix";
-  const prepared = custom ? { ...state, blackDeck: buildCustomBlackDeck(state) } : state;
+  const custom =
+    state.settings.blackCards === "custom" ||
+    state.settings.blackCards === "mix";
+  const prepared = custom
+    ? { ...state, blackDeck: buildCustomBlackDeck(state) }
+    : state;
   const dealt =
     state.settings.whiteCards === "blank"
       ? prepared
@@ -283,7 +297,10 @@ export function startGame(state: GameState): GameState {
   // Custom/mix prompts written by all players: collect them first.
   if (needsAuthoringPhase(state)) {
     const connected = state.players.filter((p) => p.connected).length;
-    const quota = Math.max(1, Math.floor(state.settings.blackTotal / Math.max(1, connected)));
+    const quota = Math.max(
+      1,
+      Math.floor(state.settings.blackTotal / Math.max(1, connected)),
+    );
     return {
       ...state,
       version: state.version + 1,
@@ -301,7 +318,11 @@ export function startGame(state: GameState): GameState {
  * Lobby host-authoring editor — replace the host's prompt list. Stored under
  * the host's id; `buildCustomBlackDeck` pads to `blackTotal` at start.
  */
-export function setHostPrompts(state: GameState, hostId: string, prompts: string[]): GameState {
+export function setHostPrompts(
+  state: GameState,
+  hostId: string,
+  prompts: string[],
+): GameState {
   const others = state.authoredPrompts.filter((p) => p.playerId !== hostId);
   const mine = prompts
     .map((t) => t.trim())
@@ -337,7 +358,9 @@ export function submitAuthoredBlack(
   };
 
   const submitted = new Set(next.authoredBy);
-  const allIn = next.players.filter((p) => p.connected).every((p) => submitted.has(p.id));
+  const allIn = next.players
+    .filter((p) => p.connected)
+    .every((p) => submitted.has(p.id));
   if (!allIn) return next;
 
   return beginPlay(next);
@@ -366,7 +389,8 @@ export function startNextRound(
 ): GameState {
   // Deck depletion is a global win condition. With blank (typed) white
   // answers there is no white deck to deplete — only the black deck ends it.
-  const whiteDepleted = state.settings.whiteCards !== "blank" && state.whiteDeck.length === 0;
+  const whiteDepleted =
+    state.settings.whiteCards !== "blank" && state.whiteDeck.length === 0;
   if (state.blackDeck.length === 0 || whiteDepleted) {
     return endGameByHighScore(state);
   }
@@ -445,7 +469,8 @@ export function submit(
 ): GameState {
   if (state.phase !== "submission") return state;
   if (args.playerId === state.round.judgeId) return state;
-  if (state.round.submissions.some((s) => s.playerId === args.playerId)) return state;
+  if (state.round.submissions.some((s) => s.playerId === args.playerId))
+    return state;
 
   const sub: Submission = {
     id: newId("sub"),
@@ -474,14 +499,20 @@ export function submit(
     round: {
       ...state.round,
       submissions,
-      anonymous: phase === "judging" ? anonymize(submissions) : state.round.anonymous,
+      anonymous:
+        phase === "judging" ? anonymize(submissions) : state.round.anonymous,
       // Switch to the judging clock the moment judging begins.
-      deadline: phase === "judging" ? judgingDeadline(state) : state.round.deadline,
+      deadline:
+        phase === "judging" ? judgingDeadline(state) : state.round.deadline,
     },
   };
 
   // Everybody-votes with a single submission can't be voted on — award it.
-  if (phase === "judging" && next.settings.judgeMode === "everybody" && submissions.length <= 1) {
+  if (
+    phase === "judging" &&
+    next.settings.judgeMode === "everybody" &&
+    submissions.length <= 1
+  ) {
     return resolveVotes(next);
   }
   return next;
@@ -555,11 +586,15 @@ export function castVote(
   if (state.round.votes.some((v) => v.voterId === args.voterId)) return state; // one vote
 
   const voter = state.players.find((p) => p.id === args.voterId);
-  if (!voter || !voter.connected) return state;
+  if (!voter?.connected) return state;
   // Only players who actually played get a vote.
-  if (!state.round.submissions.some((s) => s.playerId === args.voterId)) return state;
+  if (!state.round.submissions.some((s) => s.playerId === args.voterId))
+    return state;
 
-  const votes = [...state.round.votes, { voterId: args.voterId, submissionId: args.submissionId }];
+  const votes = [
+    ...state.round.votes,
+    { voterId: args.voterId, submissionId: args.submissionId },
+  ];
   const withVote: GameState = {
     ...state,
     version: state.version + 1,
@@ -567,7 +602,8 @@ export function castVote(
   };
 
   // Everyone who played gets a vote. Resolve once they're all in.
-  if (votes.length >= state.round.submissions.length) return resolveVotes(withVote);
+  if (votes.length >= state.round.submissions.length)
+    return resolveVotes(withVote);
   return withVote;
 }
 
@@ -606,8 +642,12 @@ export function resolveVotes(state: GameState): GameState {
  * resolve whatever votes are in; only fall back to random if nobody voted.
  */
 export function resolveTieBreaker(state: GameState): GameState {
-  if (state.phase !== "judging" || state.round.submissions.length === 0) return state;
-  if (state.settings.judgeMode === "everybody" && state.round.votes.length > 0) {
+  if (state.phase !== "judging" || state.round.submissions.length === 0)
+    return state;
+  if (
+    state.settings.judgeMode === "everybody" &&
+    state.round.votes.length > 0
+  ) {
     return resolveVotes(state);
   }
   const idx = Math.floor(Math.random() * state.round.submissions.length);
@@ -655,7 +695,12 @@ export function kick(state: GameState, playerId: string): GameState {
   const next = removePlayer(state, playerId);
   const remaining = next.players.filter((p) => p.connected).length;
   if (remaining < 3 && next.phase !== "lobby") {
-    return { ...next, phase: "game-over", winnerId: null, version: next.version + 1 };
+    return {
+      ...next,
+      phase: "game-over",
+      winnerId: null,
+      version: next.version + 1,
+    };
   }
   return { ...next, banned: [...next.banned, playerId] };
 }

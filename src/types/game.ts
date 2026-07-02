@@ -245,7 +245,7 @@ export interface PrivateHandPayload {
 export type CountryOptions = {
   code: CountryCode;
   label: string;
-}
+};
 
 /* ------------------------------------------------------------------ */
 /* Network — passthrough protocol                                      */

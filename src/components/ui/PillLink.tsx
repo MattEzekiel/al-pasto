@@ -14,7 +14,12 @@ const VARIANT: Record<Variant, string> = {
 
 type Props = ComponentPropsWithoutRef<"a"> & { variant?: Variant };
 
-export function PillLink({ variant = "primary", className = "", children, ...rest }: Props) {
+export function PillLink({
+  variant = "primary",
+  className = "",
+  children,
+  ...rest
+}: Props) {
   return (
     <a
       className={[

@@ -26,7 +26,9 @@ export function anonymizeSubmissions(
   return anon;
 }
 
-export function sanitizePlayer(p: GameState["players"][number]): SanitizedPlayer {
+export function sanitizePlayer(
+  p: GameState["players"][number],
+): SanitizedPlayer {
   return {
     id: p.id,
     name: p.name,
@@ -43,10 +45,11 @@ export function sanitizePlayer(p: GameState["players"][number]): SanitizedPlayer
  * peer ever sees of the game.
  */
 export function sanitizeState(state: GameState): SanitizedGameState {
-  const winnerSub =
-    state.round.winnerSubmissionId
-      ? state.round.submissions.find((s) => s.id === state.round.winnerSubmissionId)
-      : null;
+  const winnerSub = state.round.winnerSubmissionId
+    ? state.round.submissions.find(
+        (s) => s.id === state.round.winnerSubmissionId,
+      )
+    : null;
 
   return {
     roomId: state.roomId,

@@ -10,7 +10,7 @@ import RulesPage from "./pages/RulesPage";
  * up in this bundle).
  */
 
-export { ROUTE_META, SITE_URL, GITHUB_URL } from "./pages/meta";
+export { GITHUB_URL, ROUTE_META, SITE_URL } from "./pages/meta";
 
 const PAGES: Record<string, () => ReactElement> = {
   "/juego": () => <LandingPage locale="es" />,

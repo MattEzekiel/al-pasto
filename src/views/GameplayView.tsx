@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppFrame } from "@/components/ui/AppFrame";
-import { PillButton } from "@/components/ui/PillButton";
 import { GameCard, PromptText } from "@/components/ui/GameCard";
-import { TimerBar } from "@/components/ui/TimerBar";
+import { PillButton } from "@/components/ui/PillButton";
 import { ScoreChip } from "@/components/ui/ScoreChip";
+import { TimerBar } from "@/components/ui/TimerBar";
+import { useT } from "@/i18n";
 import { useGameStore, useSelfHand, useSelfPlayer } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
-import { useT } from "@/i18n";
 import type { WhiteCard } from "@/types/game";
 
 // One card (244px) + gap (12px). Used by the desktop arrow buttons.
@@ -58,11 +58,15 @@ export function GameplayView() {
     if (role !== "host") return;
     if (phase !== "submission") return;
     if (!deadline) return;
-    const id = window.setTimeout(expireSubmission, Math.max(0, deadline - Date.now()));
+    const id = window.setTimeout(
+      expireSubmission,
+      Math.max(0, deadline - Date.now()),
+    );
     return () => window.clearTimeout(id);
   }, [role, phase, deadline, expireSubmission]);
 
   // Reset selection when a new round begins.
+  // biome-ignore lint/correctness/useExhaustiveDependencies(roundIndex): roundIndex is the intentional trigger — reset on every new round
   useEffect(() => {
     clearStaged();
     setSubmittedCards([]);
@@ -70,7 +74,10 @@ export function GameplayView() {
   }, [roundIndex, clearStaged, setSubmittedCards, setAnswers]);
 
   const stagedCards = useMemo(
-    () => staged.map((id) => hand.find((c) => c.id === id)).filter(Boolean) as WhiteCard[],
+    () =>
+      staged
+        .map((id) => hand.find((c) => c.id === id))
+        .filter(Boolean) as WhiteCard[],
     [staged, hand],
   );
 
@@ -91,7 +98,14 @@ export function GameplayView() {
         subtitle={isJudge ? t.player.judgeWait : t.player.submittedWaiting}
         accent={isJudge}
         players={t.player.playersProgress(submitted, expectedPlayers)}
-        cards={required > 1 ? t.player.cardsProgress(submitted * required, expectedPlayers * required) : null}
+        cards={
+          required > 1
+            ? t.player.cardsProgress(
+                submitted * required,
+                expectedPlayers * required,
+              )
+            : null
+        }
         deadline={deadline}
         totalMs={view.settings.timeLimitSec * 1000}
         timerOn={view.settings.timeLimitSec > 0}
@@ -111,10 +125,12 @@ export function GameplayView() {
       setAnswers(next);
     };
     const submitBlank = () => {
-      const cards: WhiteCard[] = Array.from({ length: required }).map((_, i) => ({
-        id: `ans-${round.index}-${i}-${Math.random().toString(36).slice(2, 8)}`,
-        text: (answers[i] ?? "").trim(),
-      }));
+      const cards: WhiteCard[] = Array.from({ length: required }).map(
+        (_, i) => ({
+          id: `ans-${round.index}-${i}-${Math.random().toString(36).slice(2, 8)}`,
+          text: (answers[i] ?? "").trim(),
+        }),
+      );
       setSubmittedCards(cards.map((c) => c.id));
       submitCards(cards);
       setAnswers([]);
@@ -132,7 +148,10 @@ export function GameplayView() {
           </div>
         }
       >
-        <section aria-label={t.player.round(round.index)} className="pt-2 overflow-hidden">
+        <section
+          aria-label={t.player.round(round.index)}
+          className="pt-2 overflow-hidden"
+        >
           <div className="rounded-card hairline bg-surface-card p-5 space-y-4">
             {black && <PromptText text={black.text} />}
             <div className="flex items-center justify-between">
@@ -141,19 +160,26 @@ export function GameplayView() {
               </span>
               {deadline && view.settings.timeLimitSec > 0 && (
                 <div className="w-32">
-                  <TimerBar deadline={deadline} totalMs={view.settings.timeLimitSec * 1000} />
+                  <TimerBar
+                    deadline={deadline}
+                    totalMs={view.settings.timeLimitSec * 1000}
+                  />
                 </div>
               )}
             </div>
           </div>
         </section>
 
-        <section aria-label={t.player.yourAnswer} className="mt-auto pt-6 pb-2 space-y-3">
+        <section
+          aria-label={t.player.yourAnswer}
+          className="mt-auto pt-6 pb-2 space-y-3"
+        >
           <span className="text-label uppercase text-ink-mute">
             {t.player.writeAnswer(required)}
           </span>
           {Array.from({ length: required }).map((_, i) => (
             <textarea
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed-size slot list; index is the identity
               key={i}
               value={answers[i] ?? ""}
               onChange={(e) => setAnswerAt(i, e.target.value)}
@@ -211,7 +237,10 @@ export function GameplayView() {
       }
     >
       {/* Prompt */}
-      <section aria-label={t.player.round(round.index)} className="pt-2 overflow-hidden">
+      <section
+        aria-label={t.player.round(round.index)}
+        className="pt-2 overflow-hidden"
+      >
         <div className="rounded-card hairline bg-surface-card p-5 space-y-4">
           {black && <PromptText text={black.text} />}
           <div className="flex items-center justify-between">
@@ -220,7 +249,10 @@ export function GameplayView() {
             </span>
             {deadline && view.settings.timeLimitSec > 0 && (
               <div className="w-32">
-                <TimerBar deadline={deadline} totalMs={view.settings.timeLimitSec * 1000} />
+                <TimerBar
+                  deadline={deadline}
+                  totalMs={view.settings.timeLimitSec * 1000}
+                />
               </div>
             )}
           </div>
@@ -230,9 +262,12 @@ export function GameplayView() {
       {/* Hand carousel */}
       <section aria-label={t.player.yourHand} className="mt-auto pt-6 pb-2">
         <div className="flex items-center justify-between px-1 mb-3">
-          <span className="text-label uppercase text-ink-mute">{t.player.yourHand}</span>
           <span className="text-label uppercase text-ink-mute">
-            {t.player.tapToPlay(required)} · {t.player.submitProgress(stagedCards.length, required)}
+            {t.player.yourHand}
+          </span>
+          <span className="text-label uppercase text-ink-mute">
+            {t.player.tapToPlay(required)} ·{" "}
+            {t.player.submitProgress(stagedCards.length, required)}
           </span>
         </div>
 
@@ -255,7 +290,10 @@ export function GameplayView() {
             <Chevron dir="right" />
           </button>
 
-          <div ref={railRef} className="card-rail flex gap-3 -mx-rail px-rail pb-3 pt-2">
+          <div
+            ref={railRef}
+            className="card-rail flex gap-3 -mx-rail px-rail pb-3 pt-2"
+          >
             {hand.map((c) => {
               const isStaged = staged.includes(c.id);
               const order = staged.indexOf(c.id) + 1;
@@ -289,7 +327,13 @@ export function GameplayView() {
 
       {/* Submit */}
       <div className="mt-4">
-        <PillButton variant="primary" size="lg" full disabled={!ready} onClick={submit}>
+        <PillButton
+          variant="primary"
+          size="lg"
+          full
+          disabled={!ready}
+          onClick={submit}
+        >
           {ready
             ? t.player.submit
             : `${t.player.submit} ${t.player.submitProgress(stagedCards.length, required)}`}
@@ -301,6 +345,7 @@ export function GameplayView() {
 
 function Chevron({ dir }: { dir: "left" | "right" }) {
   return (
+    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative icon, aria-hidden
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d={dir === "left" ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6"}
@@ -337,16 +382,23 @@ function WaitScreen({
     <AppFrame>
       <div className="flex-1 flex flex-col justify-center items-center text-center gap-4 px-rail">
         <span
-          className={["text-label uppercase", accent ? "text-brand" : "text-ink-mute"].join(" ")}
+          className={[
+            "text-label uppercase",
+            accent ? "text-brand" : "text-ink-mute",
+          ].join(" ")}
         >
           {title}
         </span>
         <p className="display text-display-md max-w-xs">{subtitle}</p>
 
         <div className="mt-2 flex flex-col items-center gap-1">
-          <span className="display text-display-lg tabular-nums">{players}</span>
+          <span className="display text-display-lg tabular-nums">
+            {players}
+          </span>
           {cards && (
-            <span className="text-label uppercase text-ink-mute tabular-nums">{cards}</span>
+            <span className="text-label uppercase text-ink-mute tabular-nums">
+              {cards}
+            </span>
           )}
         </div>
 
