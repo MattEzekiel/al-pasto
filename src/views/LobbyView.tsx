@@ -8,6 +8,11 @@ import { useUIStore } from "@/store/useUIStore";
 import { inviteUrl, renderInviteQR } from "@/lib/qr";
 import { useT } from "@/i18n";
 import { AVAILABLE_LOCALES } from "@/i18n/locale";
+import type { Locale } from "@/i18n/locale";
+import countries from "@/data/countries.json";
+
+/** Per-locale country registry — labels for the room-country display. */
+const COUNTRIES = countries as Record<Locale, { code: string; label: string }[]>;
 
 /**
  * Pre-game waiting room.
@@ -53,6 +58,10 @@ export function LobbyView() {
   const playerCount = view.players.length;
 
   const isCustom = view.settings.mode === "custom";
+  const roomCountry = view.settings.country ?? null;
+  const countryLabel =
+    (COUNTRIES[view.settings.locale] ?? []).find((c) => c.code === roomCountry)
+      ?.label ?? t.mode.countryAll;
   const authoredBlack =
     view.settings.blackCards === "custom" || view.settings.blackCards === "mix";
   const hostAuthors = authoredBlack && view.settings.blackAuthoring === "host";
@@ -137,6 +146,11 @@ export function LobbyView() {
             <span className="text-body font-semibold">
               {isCustom ? t.lobby.modeCustom : t.lobby.modeClassic}
             </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-body">{t.mode.countryTitle}</span>
+            <span className="text-body font-semibold">{countryLabel}</span>
           </div>
 
           <Setting

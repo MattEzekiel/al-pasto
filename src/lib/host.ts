@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/locale";
 import { DEFAULT_LOCALE } from "@/i18n/locale";
 import type {
   BlackCard,
+  CountryCode,
   GameSettings,
   GameState,
   Player,
@@ -35,8 +36,46 @@ const DECKS: Record<Locale, { black: BlackCard[]; white: WhiteCard[] }> = {
   en: { black: enBlack as BlackCard[], white: enWhite as WhiteCard[] },
 };
 
-function deckFor(locale: Locale) {
-  return DECKS[locale] ?? DECKS[DEFAULT_LOCALE];
+/**
+ * Whether a card is dealt in a room set to `country`. Cards without an
+ * `available` tag (or tagged `"*"`) are global; `country === null` means
+ * the room plays with every card ("All countries").
+ */
+function cardAvailableIn(
+  card: { available?: CountryCode[] },
+  country: CountryCode | null,
+): boolean {
+  if (!card.available || card.available.includes("*")) return true;
+  if (country === null) return true;
+  return card.available.includes(country);
+}
+
+function deckFor(locale: Locale, country: CountryCode | null) {
+  const deck = DECKS[locale] ?? DECKS[DEFAULT_LOCALE];
+  if (country === null) return deck;
+  return {
+    black: deck.black.filter((c) => cardAvailableIn(c, country)),
+    white: deck.white.filter((c) => cardAvailableIn(c, country)),
+  };
+}
+
+/** Minimum filtered-deck sizes for a country to be offered in the picker. */
+const MIN_COUNTRY_WHITE = 40;
+const MIN_COUNTRY_BLACK = 10;
+
+/**
+ * Countries whose filtered deck is big enough to play: at least 40 white
+ * and 10 black cards after applying the `available` tags. Drives the
+ * room-creation country select — under-stocked countries are hidden.
+ */
+export function playableCountries(
+  locale: Locale,
+  codes: readonly CountryCode[],
+): CountryCode[] {
+  return codes.filter((code) => {
+    const { black, white } = deckFor(locale, code);
+    return white.length >= MIN_COUNTRY_WHITE && black.length >= MIN_COUNTRY_BLACK;
+  });
 }
 
 const newId = (prefix: string) =>
@@ -63,6 +102,7 @@ export function defaultSettings(locale: Locale = DEFAULT_LOCALE): GameSettings {
     win: { kind: "score", target: 7 },
     judgeMode: "rotate",
     locale,
+    country: null,
     mode: "classic",
     whiteCards: "deck",
     blackCards: "deck",
@@ -77,7 +117,7 @@ export function createInitialState(args: {
   settings?: GameSettings;
 }): GameState {
   const settings = args.settings ?? defaultSettings();
-  const { black, white } = deckFor(settings.locale);
+  const { black, white } = deckFor(settings.locale, settings.country ?? null);
   // Custom mode builds its black deck later (host-authored at start, or after
   // the authoring phase). Blank white answers are typed — no dealt deck.
   const builtInBlack = settings.blackCards === "deck" ? shuffle(black) : [];
@@ -121,7 +161,10 @@ function buildCustomBlackDeck(state: GameState): BlackCard[] {
     .map((p) => p.text.trim())
     .filter(Boolean)
     .map((text) => ({ id: newId("b"), text, spaces: 1 as const }));
-  const builtIn = deckFor(state.settings.locale).black;
+  const builtIn = deckFor(
+    state.settings.locale,
+    state.settings.country ?? null,
+  ).black;
   if (state.settings.blackCards === "mix") {
     return shuffle([...authored, ...builtIn]);
   }

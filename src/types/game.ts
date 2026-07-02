@@ -15,16 +15,23 @@ export type CardId = string;
 export type RoomId = string;
 export type SubmissionId = string;
 
+/** Lowercase ISO 3166-1 alpha-2 country code, or "*" wildcard in card tags. */
+export type CountryCode = string;
+
 export interface BlackCard {
   id: CardId;
   text: string;
   /** Number of `_` slots in the prompt. 1 or 2. */
   spaces: 1 | 2;
+  /** Countries where the card is dealt. Absent or ["*"] = everywhere. */
+  available?: CountryCode[];
 }
 
 export interface WhiteCard {
   id: CardId;
   text: string;
+  /** Countries where the card is dealt. Absent or ["*"] = everywhere. */
+  available?: CountryCode[];
 }
 
 /** Host-side player record. Includes the socket id — never broadcast. */
@@ -157,6 +164,8 @@ export interface GameSettings {
   judgeMode: JudgeMode;
   /** Deck locale — set by the host. All peers play with the same deck. */
   locale: "es" | "en";
+  /** Room country filter — set by the host. `null` = all countries. */
+  country: CountryCode | null;
   /** Classic or custom. Chosen before the lobby. Defaults to "classic". */
   mode: GameMode;
   /** White answer source. "blank" only in custom mode. */
@@ -231,6 +240,11 @@ export interface SanitizedGameState {
 export interface PrivateHandPayload {
   playerId: PlayerId;
   hand: WhiteCard[];
+}
+
+export type CountryOptions = {
+  code: CountryCode;
+  label: string;
 }
 
 /* ------------------------------------------------------------------ */
