@@ -35,23 +35,26 @@ src/
   index.css                  Tailwind layers + base resets + the @theme token block
   types/game.ts              all domain types — start here
   i18n/
+    index.ts                 dictionary lookup + useT() hook; how-to-add-a-locale steps
     en.ts / es.ts            UI strings per locale
     strings.ts               the Strings type
-    locale.ts                locale detection + switching
+    locale.ts                locale detection + switching (leaf module)
   lib/
-    host.ts                  pure game logic (deal, judge, score, tie-break, kick)
+    host.ts                  pure game logic (deal, judge, score, tie-break, kick, country deck filter)
     anonymize.ts             sanitization for broadcast
     persist.ts               IndexedDB mirror
     network.ts               socket.io-client wrapper
+    country.ts               stored country preference (leaf module, mirrors locale.ts)
     qr.ts                    invite QR rendering
   store/
     useGameStore.ts          THE store. Host-side state + peer view + actions
     useNetworkStore.ts       socket handle + wire status
     useUIStore.ts            ephemeral UI state (drag, flip, toasts)
   data/
+    countries.json           picker options per locale — { code, label }
     en/ + es/                per-locale decks:
-      black_cards.json       prompt deck — { id, text, spaces: 1|2 }
-      white_cards.json       response deck — { id, text }
+      black_cards.json       prompt deck — { id, text, spaces: 1|2, available?: CountryCode[] }
+      white_cards.json       response deck — { id, text, available?: CountryCode[] }
   components/
     ErrorBoundary.tsx        top-level render crash guard
     ui/
@@ -63,6 +66,9 @@ src/
       AppFrame.tsx           mobile-first frame with safe-area insets
       PillLink.tsx           pill-shaped anchor
       LangSwitch.tsx         es/en locale toggle
+      ModeTile.tsx           selectable mode tile (aria-pressed)
+      PresetRow.tsx          selectable settings row (aria-pressed)
+      TextLabel.tsx          uppercase section label
   pages/
     LandingPage.tsx          prerendered marketing landing
     RulesPage.tsx            prerendered how-to-play page
@@ -75,6 +81,9 @@ src/
     RevealView.tsx
     WinnerView.tsx
     AuthoringView.tsx
+scripts/
+  prerender.mjs              writes the prerendered marketing routes after build
+  validate-decks.mjs         deck JSON sanity checks (pnpm validate:decks)
 server/
   index.js                   passthrough signaling + host election
 ```
@@ -85,8 +94,10 @@ server/
 pnpm install           # or npm i
 pnpm dev               # vite dev server on :5173
 pnpm server            # passthrough signaling server on :3001
-pnpm build             # tsc -b && vite build
-pnpm lint
+pnpm build             # tsc -b && vite build (+ SSR build + prerender)
+pnpm lint              # biome check .
+pnpm format            # biome check --write .
+pnpm validate:decks    # deck JSON sanity checks
 ```
 
 To run a real local match: open `pnpm dev` in three browser windows (or one phone + two tabs) and have one host + two joiners. The signaling server **must** be running.
@@ -100,6 +111,7 @@ To run a real local match: open `pnpm dev` in three browser windows (or one phon
 - **Touch targets ≥ 48px.** PillButton ships at 48px (`md`); inputs at 48px; bump small chips with padding when on mobile.
 - **Host actions are pure.** Add new behavior as a `(state) => state` reducer in `src/lib/host.ts`. The store calls it inside `commitHost`. Never mutate state from a view.
 - **Sanitize, then broadcast.** If you add a host-side mutation, make sure `commitHost` still produces a valid `SanitizedGameState`. Update `lib/anonymize.ts` if the public projection needs to expose more.
+- **Decks filter by room country.** Rooms carry a `CountryCode | null`; cards without an `available` tag (or tagged `"*"`) are global. `lib/host.ts:deckFor` filters; under-stocked countries are hidden from the picker. New cards default to global — only tag when the joke is regional.
 - **Failover is real.** Anything you add to `GameState` will be IndexedDB-mirrored automatically. If it can't be reconstructed from a mirror (e.g. a Date pointer to a setTimeout id), keep it out of the store and put it in `useUIStore`.
 
 ## What to leave alone unless you understand it
