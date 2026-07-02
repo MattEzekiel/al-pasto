@@ -295,7 +295,7 @@ export function HomeView({ joinHint }: { joinHint?: string }) {
 
             {localeCountries.length > 0 && (
               <div className="space-y-2">
-                <span className="text-label uppercase text-ink-mute">
+                <span className="text-label uppercase text-ink-mute my-5 block">
                   {t.mode.countryTitle}
                 </span>
                 <div
