@@ -31,6 +31,8 @@ import {
 } from "@/lib/host";
 import { mirrorState, readMirror } from "@/lib/persist";
 import { useNetworkStore } from "@/store/useNetworkStore";
+import { useUIStore } from "@/store/useUIStore";
+import { getStrings } from "@/i18n";
 
 /**
  * The single Zustand store that holds:
@@ -244,6 +246,7 @@ export const useGameStore = create<GameStoreShape>()(
 
           // Bootstrap messages — handled regardless of role.
           if (msg.t === "room/created") {
+            useUIStore.getState().setPendingRoom(false);
             set({ roomId: msg.roomId, selfId: msg.selfId, role: "host" });
             const name = get().selfName ?? "Host";
             const hostState = createInitialState({
@@ -254,16 +257,30 @@ export const useGameStore = create<GameStoreShape>()(
             commitHost(hostState);
           }
           if (msg.t === "room/joined") {
+            useUIStore.getState().setPendingRoom(false);
             set({
               roomId: msg.roomId,
               selfId: msg.selfId,
               role: msg.host === msg.selfId ? "host" : "peer",
             });
           }
+          if (msg.t === "error") {
+            const ui = useUIStore.getState();
+            ui.setPendingRoom(false);
+            const errors = getStrings(ui.locale).errors;
+            ui.toast({
+              kind: "danger",
+              text:
+                msg.code === "no-such-room"
+                  ? errors.roomNotFound
+                  : errors.handlerFailed(msg.message),
+            });
+          }
         });
       },
 
       createRoom: (name, settings) => {
+        useUIStore.getState().setPendingRoom(true);
         set({ selfName: name, pendingSettings: settings });
         get().bindSocket();
         useNetworkStore
@@ -272,12 +289,14 @@ export const useGameStore = create<GameStoreShape>()(
       },
 
       joinRoom: (roomId, name) => {
+        useUIStore.getState().setPendingRoom(true);
         set({ selfName: name });
         get().bindSocket();
         useNetworkStore.getState().socket?.send({ t: "room/join", roomId, name });
       },
 
       leave: () => {
+        useUIStore.getState().setPendingRoom(false);
         useNetworkStore.getState().disconnect();
         set({
           selfId: null,

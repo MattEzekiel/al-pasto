@@ -22,6 +22,8 @@ export interface Strings {
     createCta: string;
     joinCta: string;
     back: string;
+    /** Shown while a room/create or room/join request is in flight. */
+    connecting: string;
   };
   /** Pre-lobby game-mode picker. */
   mode: {

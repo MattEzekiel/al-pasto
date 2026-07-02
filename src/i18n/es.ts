@@ -20,6 +20,7 @@ const es: Strings = {
     createCta: "Crear sala",
     joinCta: "Entrar a una sala",
     back: "Volver",
+    connecting: "Conectando…",
   },
   mode: {
     title: "Modo de juego",
