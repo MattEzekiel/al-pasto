@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { type ReactNode, useEffect, useMemo } from "react";
+import { FloatingSupport } from "@/components/ui/FloatingSupport";
 import { useGameStore } from "@/store/useGameStore";
 import { useUIStore } from "@/store/useUIStore";
 import { AuthoringView } from "@/views/AuthoringView";
@@ -96,6 +97,8 @@ export default function App() {
       <div key={screen} className="screen-enter">
         {Screen()}
       </div>
+
+      {screen === "home" && <FloatingSupport />}
 
       {/* Toast tray */}
       <div className="fixed top-3 inset-x-0 mx-auto max-w-md px-rail flex flex-col gap-2 pointer-events-none z-50">

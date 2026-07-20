@@ -9,7 +9,7 @@ Off-the-record multiplayer card game. Zero database, peer-hosted, mobile-first P
 - **Styling:** Tailwind v4 (CSS-first) via `@tailwindcss/vite`. Tokens live in the `@theme` block in `src/index.css` — there is no `tailwind.config.ts`. **Never inline hex** — every color/radius/typography ramp is a token.
 - **Motion:** Framer Motion for card drag, card flip (judge view), and screen transitions.
 - **Persistence:** `idb-keyval` mirrors the host state on every mutation (`src/lib/persist.ts`).
-- **Networking:** `socket.io-client` over a passthrough WebSocket. The server is dumb on purpose — it lives in the sibling repo `../al-pasto-signal/index.js` (its own git repo, deployed to Render). `pnpm server` runs it from there.
+- **Networking:** `socket.io-client` over a passthrough WebSocket. The server is dumb on purpose — it lives in the sibling repo `../al-pasto-signal` (its own git repo, deployed to Render). Run it from there: `pnpm dev` in `../al-pasto-signal`.
 
 ## Architecture you must internalize before changing anything
 
@@ -93,7 +93,7 @@ scripts/
 ```bash
 pnpm install           # or npm i
 pnpm dev               # vite dev server on :5173
-pnpm server            # passthrough signaling server on :3001 (runs ../al-pasto-signal — pnpm install there once)
+pnpm --dir ../al-pasto-signal dev   # passthrough signaling server on :3001 (pnpm install there once)
 pnpm build             # tsc -b && vite build (+ SSR build + prerender)
 pnpm lint              # biome check .
 pnpm format            # biome check --write .
