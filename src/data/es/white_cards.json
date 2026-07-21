@@ -6,7 +6,7 @@
   },
   {
     "id": "w002",
-    "text": "La pasión inexplicable por la cumbia villera vieja.",
+    "text": "La pasión inexplicable por cantar como el negro tecla.",
     "available": ["ar"]
   },
   {
@@ -16,7 +16,7 @@
   },
   {
     "id": "w004",
-    "text": "Mi psicóloga haciendo cara de 'uy, no'.",
+    "text": "Mi psicóloga escribiendo en sus notas 'Retraso mental'.",
     "available": ["ar"]
   },
   {
@@ -26,7 +26,7 @@
   },
   {
     "id": "w006",
-    "text": "El primo que vende seguros en cada cumpleaños.",
+    "text": "3 disparos en las costillas.",
     "available": ["ar"]
   },
   {
@@ -36,7 +36,7 @@
   },
   {
     "id": "w008",
-    "text": "Bizarrap llorando en el baño.",
+    "text": "Mis sueños llorando en el baño.",
     "available": ["ar"]
   },
   {
@@ -51,10 +51,14 @@
   },
   {
     "id": "w011",
-    "text": "Llegar tarde y echarle la culpa al subte.",
+    "text": "Llegar tarde y echarle la culpa al bondi.",
     "available": ["ar"]
   },
-  { "id": "w012", "text": "Plasticola escolar.", "available": ["ar"] },
+  {
+    "id": "w012",
+    "text": "Plasticola escolar.",
+    "available": ["ar"]
+  },
   {
     "id": "w013",
     "text": "Una notificación de LinkedIn.",
@@ -67,12 +71,12 @@
   },
   {
     "id": "w015",
-    "text": "Un Cabify a las 2 a.m. saliendo de Constitución.",
+    "text": "Un Cabi moto a las 2 a.m. saliendo de Constitución.",
     "available": ["ar"]
   },
   {
     "id": "w016",
-    "text": "Mi mamá publicando 'Buen día' con un sticker de un león.",
+    "text": "Mi mamá publicando 'Buen día' con un gif de un piolín.",
     "available": ["ar"]
   },
   {
@@ -87,18 +91,18 @@
   },
   {
     "id": "w019",
-    "text": "Empezar el lunes con depresión existencial.",
+    "text": "Tirarse un pedo en el ascensor con los vecinos dentro.",
     "available": ["ar"]
   },
   {
     "id": "w020",
-    "text": "El silencio incómodo en el ascensor.",
+    "text": "La combinación en el baño de desodorante y caca.",
     "available": ["ar"]
   },
-  { "id": "w021", "text": "Una boleta de ARBA atrasada.", "available": ["ar"] },
+  { "id": "w021", "text": "Una boleta de luz atrasada.", "available": ["ar"] },
   {
     "id": "w022",
-    "text": "Comprar facturas a la 1 de la mañana.",
+    "text": "Comprar facturas a la 5 de la mañana.",
     "available": ["ar"]
   },
   {
@@ -108,7 +112,7 @@
   },
   {
     "id": "w024",
-    "text": "Confundir a tu jefe con tu cuñado.",
+    "text": "Confundir a tu jefe con tu pareja.",
     "available": ["ar"]
   },
   {
@@ -123,12 +127,12 @@
   },
   {
     "id": "w027",
-    "text": "Mi novio jugando al FIFA a las 4 de la mañana.",
+    "text": "Mi amigo/a diciendo 'Yo la/o amaba una banda' mientras pisa a fondo el auto.",
     "available": ["ar"]
   },
   {
     "id": "w028",
-    "text": "Una papa frita perdida en el asiento del auto.",
+    "text": "Una mancha peculiar en el asiento del auto.",
     "available": ["ar"]
   },
   {
@@ -138,17 +142,17 @@
   },
   {
     "id": "w030",
-    "text": "Mirar el techo a las 3 a.m. acordándome de aquella vergüenza del 2014.",
+    "text": "Mirar el techo a las 3 a.m. acordándome de aquella vergüenza de mi adolescencia.",
     "available": ["ar"]
   },
   {
     "id": "w031",
-    "text": "Subirme al colectivo sin SUBE.",
+    "text": "Subirme al colectivo sin saldo en la SUBE.",
     "available": ["ar"]
   },
   {
     "id": "w032",
-    "text": "La voz de la mina del DiDi diciendo 'su destino'.",
+    "text": "La voz de la mina del GPS diciendo 'Recalculando'.",
     "available": ["ar"]
   },
   { "id": "w033", "text": "Chimichurri en exceso.", "available": ["ar"] },
@@ -159,7 +163,7 @@
   },
   {
     "id": "w035",
-    "text": "El gato del vecino mirándome y juzgándome.",
+    "text": "Escuchando los ruidos de los vecínos a las 11 de la noche.",
     "available": ["ar"]
   },
   {
@@ -175,7 +179,7 @@
   },
   {
     "id": "w039",
-    "text": "Una piñata de Spider-Man trucha.",
+    "text": "Una piñata de Messi trucha.",
     "available": ["ar"]
   },
   {
@@ -185,17 +189,17 @@
   },
   {
     "id": "w041",
-    "text": "Una notificación de 'tu paquete fue entregado al vecino'.",
+    "text": "Una notificación de 'tu paquete fue entregado' y no lo recibió nadie.",
     "available": ["ar"]
   },
   {
     "id": "w042",
-    "text": "Cantar mal el karaoke en inglés.",
+    "text": "Reventar un tailandés.",
     "available": ["ar"]
   },
   {
     "id": "w043",
-    "text": "El sticker animado de un perro bailando.",
+    "text": "El sticker animado de un goro bailando.",
     "available": ["ar"]
   },
   { "id": "w044", "text": "Cinco fernets con coca.", "available": ["ar"] },
@@ -204,7 +208,7 @@
     "text": "El audio de 'ya llegué' enviado tres cuadras antes.",
     "available": ["ar"]
   },
-  { "id": "w046", "text": "Una pijamada con tus tías.", "available": ["ar"] },
+  { "id": "w046", "text": "Una pijamada con tus tíos.", "available": ["ar"] },
   {
     "id": "w047",
     "text": "El olor a cancha de fútbol mojada.",
@@ -213,12 +217,12 @@
   { "id": "w048", "text": "Un boletín del secundario.", "available": ["ar"] },
   {
     "id": "w049",
-    "text": "La voz de Google Maps recalculando ruta.",
+    "text": "La voz de tu conciencia acordándote de todo lo que hiciste esta semana.",
     "available": ["ar"]
   },
   {
     "id": "w050",
-    "text": "Una reunión por Zoom con la cámara apagada.",
+    "text": "Una reunión de la mañana con la cámara apagada.",
     "available": ["ar"]
   },
   {
@@ -236,13 +240,21 @@
     "text": "Aquella sesión de fotos en jogging.",
     "available": ["ar"]
   },
-  { "id": "w054", "text": "Un PowerPoint de 80 láminas.", "available": ["ar"] },
+  {
+    "id": "w054",
+    "text": "Mi perro cagando sobre la mesa.",
+    "available": ["ar"]
+  },
   {
     "id": "w055",
     "text": "La musiquita del ascensor en la sala de espera del dentista.",
     "available": ["ar"]
   },
-  { "id": "w056", "text": "Una promo del Cinemark VIP.", "available": ["ar"] },
+  {
+    "id": "w056",
+    "text": "Un nene gritando a todo pulmón por una inyección.",
+    "available": ["ar"]
+  },
   {
     "id": "w057",
     "text": "Mi suegra mandándome cadenas de oración por WhatsApp.",
@@ -250,62 +262,62 @@
   },
   {
     "id": "w058",
-    "text": "El motivo por el que ya no atiendo el teléfono.",
+    "text": "Milei presidente.",
     "available": ["ar"]
   },
   {
     "id": "w059",
-    "text": "Un pago de 'Spotify familiar' que no me incluye.",
+    "text": "Escuchar infraganti a mis suegros.",
     "available": ["ar"]
   },
   {
     "id": "w060",
-    "text": "Comprar un pasaje a Bariloche sin leer la letra chica.",
+    "text": "Comprar un pasaje a Tailandia sin leer la letra chica.",
     "available": ["ar"]
   },
   {
     "id": "w061",
-    "text": "El olor a gimnasio de secundaria.",
+    "text": "El olor a tufo del aula en la secundaria.",
     "available": ["ar"]
   },
   {
     "id": "w062",
-    "text": "Decirle 'no, gracias' a un fernet.",
+    "text": "Vomitar sobre el/la que me gusta.",
     "available": ["ar"]
   },
   {
     "id": "w063",
-    "text": "Una charla TED sobre vulnerabilidad.",
+    "text": "Una charla TED sobre el ano.",
     "available": ["ar"]
   },
   {
     "id": "w064",
-    "text": "Mi mejor amiga llorando en un casamiento.",
+    "text": "El tio borracho golpeando al mesero en el casamiento.",
     "available": ["ar"]
   },
   {
     "id": "w065",
-    "text": "El tono de notificación de Slack.",
+    "text": "El tono de notificación de Slack/Teams.",
     "available": ["ar"]
   },
   {
     "id": "w066",
-    "text": "Una taza con frase motivacional de Pinterest.",
+    "text": "Una taza con frase motivacional enviado por tu abuela en formato gif por whatsapp.",
     "available": ["ar"]
   },
   {
     "id": "w067",
-    "text": "El ruido del microondas a las 2 a.m.",
+    "text": "El ruido del microondas a las 3 a.m.",
     "available": ["ar"]
   },
   {
     "id": "w068",
-    "text": "Una camisa hawaiana con manchas de chimichurri.",
+    "text": "Bajonear un Mc.",
     "available": ["ar"]
   },
   {
     "id": "w069",
-    "text": "Borrar el historial del navegador antes de morir.",
+    "text": "No borrar el historial del navegador.",
     "available": ["ar"]
   },
   {
@@ -320,12 +332,12 @@
   },
   {
     "id": "w072",
-    "text": "Un podcast de un influencer hablando de estoicismo.",
+    "text": "Esta.",
     "available": ["ar"]
   },
   {
     "id": "w073",
-    "text": "Un casamiento en una bodega de Mendoza.",
+    "text": "Kukas.",
     "available": ["ar"]
   },
   {
@@ -335,32 +347,36 @@
   },
   {
     "id": "w075",
-    "text": "Mi terapia online con la cámara apagada.",
+    "text": "Matar marrones.",
     "available": ["ar"]
   },
   {
     "id": "w076",
-    "text": "Un libro de autoayuda con post-its rosas.",
+    "text": "'Eh amigo ¿Tenés hora?'.",
     "available": ["ar"]
   },
   {
     "id": "w077",
-    "text": "El cobrador del Banco diciendo mi nombre completo.",
+    "text": "Una erección en medio de la clase.",
     "available": ["ar"]
   },
   {
     "id": "w078",
-    "text": "Una charla obligatoria con el dentista.",
+    "text": "Pegarle a un jubilado.",
     "available": ["ar"]
   },
   {
     "id": "w079",
-    "text": "El primer temblor del año en Mendoza.",
+    "text": "Pegarle a un bebé.",
     "available": ["ar"]
   },
-  { "id": "w080", "text": "Quedarme dormida en el yoga.", "available": ["ar"] },
+  {
+    "id": "w080",
+    "text": "No llegar con el timing entre la tos y el pedo.",
+    "available": ["ar"]
+  },
   { "id": "w081", "text": "Sida en vivo.", "available": ["ar"] },
-  { "id": "w082", "text": "Lo lloran los zurdos.", "available": ["ar"] },
+  { "id": "w082", "text": "Lagrimas de zurdos.", "available": ["ar"] },
   {
     "id": "w083",
     "text": "El remate de los bienes de Cristina Kirchner.",
@@ -368,5 +384,9 @@
   },
   { "id": "w084", "text": "Un oso mimoso.", "available": ["ar"] },
   { "id": "w085", "text": "Negros.", "available": ["ar"] },
-  { "id": "w086", "text": "Puto el que lee.", "available": ["ar"] }
+  { "id": "w086", "text": "Puto el que lee.", "available": ["ar"] },
+  { "id": "w087", "text": "Cancer.", "available": ["ar"] },
+  { "id": "w088", "text": "Tiro y al río.", "available": ["ar"] },
+  { "id": "w089", "text": "Las manos de Peron.", "available": ["ar"] },
+  { "id": "w090", "text": "Gol al último minuto.", "available": ["ar"] }
 ]

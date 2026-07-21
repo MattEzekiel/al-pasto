@@ -13,7 +13,7 @@
   },
   {
     "id": "b003",
-    "text": "Mi psicóloga me dejó de atender cuando le confesé _.",
+    "text": "Mi psicóloga me dejó de atender cuando le conté _.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -31,13 +31,13 @@
   },
   {
     "id": "b006",
-    "text": "Confesé en el confesionario que mi peor pecado fue _.",
+    "text": "Le conté al cura que mi peor pecado fue _.",
     "spaces": 1,
     "available": ["ar"]
   },
   {
     "id": "b007",
-    "text": "Bienvenidos al nuevo reality de Telefe: _ vs _.",
+    "text": "Bienvenidos al nuevo reality de la televisión pública: _ vs _.",
     "spaces": 2,
     "available": ["ar"]
   },
@@ -55,7 +55,7 @@
   },
   {
     "id": "b010",
-    "text": "El nuevo perfume de Bizarrap huele a _.",
+    "text": "El nuevo perfume de Mirtha huele a _.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -67,7 +67,7 @@
   },
   {
     "id": "b012",
-    "text": "El secreto mejor guardado de mi abuela: _.",
+    "text": "El secreto mejor guardado de mi abuela _.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -85,19 +85,19 @@
   },
   {
     "id": "b015",
-    "text": "La razón por la que me echaron del Cabify: _.",
+    "text": "La razón por la que me echaron del uber: _.",
     "spaces": 1,
     "available": ["ar"]
   },
   {
     "id": "b016",
-    "text": "El próximo capítulo de Casados con Hijos trata sobre _.",
+    "text": "La nueva temporada de Casados con Hijos trata sobre _.",
     "spaces": 1,
     "available": ["ar"]
   },
   {
     "id": "b017",
-    "text": "En el secundario mi apodo era _ — y por eso voy a terapia.",
+    "text": "En el secundario mi apodo era _ y por eso voy a terapia.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -121,13 +121,13 @@
   },
   {
     "id": "b021",
-    "text": "Lo que encontró la cana en mi guantera: _.",
+    "text": "Lo que encontró la cana en mi baúl: _.",
     "spaces": 1,
     "available": ["ar"]
   },
   {
     "id": "b022",
-    "text": "El nuevo eslogan del Banco Nación es: _.",
+    "text": "El nuevo eslogan del Gobierno es: _.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -139,7 +139,7 @@
   },
   {
     "id": "b024",
-    "text": "La carta del Tarot que me salió hoy: _.",
+    "text": "El versículo que me salió hoy: _.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -151,7 +151,7 @@
   },
   {
     "id": "b026",
-    "text": "El sabor de helado que nadie pidió en Freddo: _.",
+    "text": "Compraron helado pero nadie pidió el sabor de _.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -181,7 +181,7 @@
   },
   {
     "id": "b031",
-    "text": "La razón por la que la CONAE canceló la misión fue _.",
+    "text": "La razón por la que me suspendieron en la secundaria fue _.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -193,7 +193,7 @@
   },
   {
     "id": "b033",
-    "text": "Algo que repito mientras hago como que escucho la reunión por Zoom: _.",
+    "text": "Algo que repito mientras hago como que estoy en la meet: _.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -205,7 +205,7 @@
   },
   {
     "id": "b035",
-    "text": "La teoría conspirativa que nadie quiere admitir: _.",
+    "text": "La teoría conspirativa que nadie quiere admitir _.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -223,7 +223,7 @@
   },
   {
     "id": "b038",
-    "text": "La nueva fragancia de Natura se llama 'Aroma a _'.",
+    "text": "La nueva fragancia que compré se llama 'Aroma a _'.",
     "spaces": 1,
     "available": ["ar"]
   },
@@ -236,6 +236,66 @@
   {
     "id": "b040",
     "text": "Si la vida fuera un videojuego, el jefe final sería _.",
+    "spaces": 1,
+    "available": ["ar"]
+  },
+  {
+    "id": "b041",
+    "text": "Tres gordos en twitter dijeron que _.",
+    "spaces": 1,
+    "available": ["ar"]
+  },
+  {
+    "id": "b042",
+    "text": "Cristina está encerrada por _.",
+    "spaces": 1,
+    "available": ["ar"]
+  },
+  {
+    "id": "b043",
+    "text": "Si la selección gana el mundial _.",
+    "spaces": 1,
+    "available": ["ar"]
+  },
+  {
+    "id": "b044",
+    "text": "En realidad cuando el hombre llegó a la luna dijo: _.",
+    "spaces": 1,
+    "available": ["ar"]
+  },
+  {
+    "id": "b045",
+    "text": "Dejé abierto el portón y se me escapó _.",
+    "spaces": 1,
+    "available": ["ar"]
+  },
+  {
+    "id": "b046",
+    "text": "Llegué tarde porque hubo un choque causado por _.",
+    "spaces": 1,
+    "available": ["ar"]
+  },
+  {
+    "id": "b047",
+    "text": "Adopté una mascota y de nombre le puse: _.",
+    "spaces": 1,
+    "available": ["ar"]
+  },
+  {
+    "id": "b048",
+    "text": "El record de _ lo tiene _.",
+    "spaces": 2,
+    "available": ["ar"]
+  },
+  {
+    "id": "b049",
+    "text": "Salí impune del juicio por: _",
+    "spaces": 1,
+    "available": ["ar"]
+  },
+  {
+    "id": "b050",
+    "text": "Lo que tenía el fiscal decía: _",
     "spaces": 1,
     "available": ["ar"]
   }
