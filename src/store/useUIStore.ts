@@ -21,7 +21,7 @@ export type Toast = {
 };
 
 interface UIState {
-  /** Active UI locale. Boots from localStorage (`corta:locale`), default es. */
+  /** Active UI locale. Boots from localStorage (`al-pasto:locale`), default es. */
   locale: Locale;
   /** Card id currently being dragged in the hand carousel. */
   draggingCardId: string | null;

@@ -16,8 +16,8 @@ export const AVAILABLE_LOCALES: ReadonlyArray<{ code: Locale; label: string }> =
     { code: "en", label: "English" },
   ];
 
-/** Same `corta:` namespace as the IndexedDB mirror in lib/persist.ts. */
-const STORAGE_KEY = "corta:locale";
+/** Same `al-pasto:` namespace as the IndexedDB mirror in lib/persist.ts. */
+const STORAGE_KEY = "al-pasto:locale";
 
 /**
  * Stored language preference. Window-guarded so the prerendered marketing

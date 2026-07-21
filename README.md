@@ -57,8 +57,8 @@ Blending the rigid technical voice of ClickHouse with the clean editorial aesthe
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/corta.git
-   cd corta
+   git clone https://github.com/yourusername/al-pasto.git
+   cd al-pasto
    ```
 
 2. Install dependencies:

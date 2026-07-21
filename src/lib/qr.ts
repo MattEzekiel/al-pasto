@@ -23,6 +23,6 @@ export function inviteUrl(roomId: string): string {
   const origin =
     typeof window !== "undefined"
       ? window.location.origin
-      : "https://corta.app";
+      : "https://al-pasto.vercel.app/";
   return `${origin}/?room=${encodeURIComponent(roomId)}`;
 }

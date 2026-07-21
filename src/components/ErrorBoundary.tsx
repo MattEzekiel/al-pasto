@@ -22,7 +22,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     // Keep the full detail in the console for debugging.
-    console.error("[corta] render crash:", error, info.componentStack);
+    console.error("[al-pasto] render crash:", error, info.componentStack);
   }
 
   render() {

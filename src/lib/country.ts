@@ -7,8 +7,8 @@ import type { CountryCode } from "@/types/game";
  * the host ends up with.
  */
 
-/** Same `corta:` namespace as the locale preference and the IndexedDB mirror. */
-const STORAGE_KEY = "corta:country";
+/** Same `al-pasto:` namespace as the locale preference and the IndexedDB mirror. */
+const STORAGE_KEY = "al-pasto:country";
 
 /**
  * Stored country preference. Window-guarded so the prerendered marketing

@@ -10,7 +10,7 @@ import type { GameState } from "@/types/game";
  * host died. We therefore mirror on every mutation, fire-and-forget.
  */
 
-const KEY = (roomId: string) => `corta:state:${roomId}`;
+const KEY = (roomId: string) => `al-pasto:state:${roomId}`;
 
 export async function mirrorState(state: GameState): Promise<void> {
   try {
